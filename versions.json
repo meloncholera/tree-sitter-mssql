@@ -1,0 +1,57 @@
+{
+  "_meta": {
+    "description": "Minimum-SQL-Server-version and deprecated-construct data for a subset of this grammar's node kinds, keyed by the kind name in test/node-kinds.txt. Anything not listed is either accepted starting from the grammar's documented floor (SQL Server 2008, see README's 'SQL Server versions' section) or is not yet classified here.",
+    "limitations": [
+      "Several node kinds are shared by more than one construct with different minimum versions (e.g. 'trim' covers both the plain SQL Server 2017 TRIM(string) form and the SQL Server 2022 TRIM(chars FROM string) form; 'returning_clause' covers both JSON_OBJECT/JSON_ARRAY's 2022 RETURNING and JSON_VALUE/JSON_QUERY's 2025 RETURNING/WITH ARRAY WRAPPER). Where this happens, minVersion is the earliest attested use and a note names the later-only forms.",
+      "Not every version-specific or deprecated construct has its own node kind (e.g. the VECTOR data type and numbered-procedure ';N' suffix are fields/tokens on an existing rule, not distinct kinds), so this file cannot represent them at node-kind granularity yet.",
+      "This file is not currently validated in CI — test/generate-node-kinds.mjs does not yet fail when a node kind is unclassified here. That is future work, not a claim that every kind below (or every kind period) has been reviewed."
+    ]
+  },
+  "nodeKinds": {
+    "named_window": {
+      "minVersion": "2022",
+      "corpusCase": "test/corpus/window_functions.txt — \"Named windows (SQL Server 2022)\""
+    },
+    "json_object": {
+      "minVersion": "2022",
+      "corpusCase": "test/corpus/json.txt — \"JSON_OBJECT and JSON_ARRAY constructors with NULL handling and RETURNING (2022)\""
+    },
+    "json_array": {
+      "minVersion": "2022",
+      "corpusCase": "test/corpus/json.txt — \"JSON_OBJECT and JSON_ARRAY constructors with NULL handling and RETURNING (2022)\""
+    },
+    "ai_generate_embeddings": {
+      "minVersion": "2025",
+      "corpusCase": "test/corpus/expressions.txt — \"AI_GENERATE_EMBEDDINGS with USE MODEL and PARAMETERS (2025)\""
+    },
+    "trim": {
+      "minVersion": "2022",
+      "note": "Only the FROM/LEADING/TRAILING/BOTH form needs 2022; the plain TRIM(string) form is available since SQL Server 2017. This node kind covers both, so treat 2022 as the conservative floor when a downstream rule cannot see the argument shape.",
+      "corpusCase": "test/corpus/expressions.txt — \"TRIM with a FROM argument and LEADING, TRAILING, BOTH (2022)\""
+    },
+    "returning_clause": {
+      "minVersion": "2022",
+      "note": "JSON_OBJECT/JSON_ARRAY's RETURNING needs 2022; JSON_VALUE's RETURNING and JSON_QUERY's WITH ARRAY WRAPPER need 2025. This node kind cannot distinguish the two contexts, so treat 2022 as the floor and 2025 as the safe target when the parent invocation is JSON_VALUE or JSON_QUERY.",
+      "corpusCase": "test/corpus/json.txt — \"JSON_OBJECT and JSON_ARRAY constructors with NULL handling and RETURNING (2022)\" and \"JSON_VALUE RETURNING and JSON_QUERY WITH ARRAY WRAPPER (2025)\""
+    }
+  },
+  "deprecated": {
+    "readtext_statement": {
+      "reason": "READTEXT is deprecated in favor of .WRITE/OPENROWSET(BULK) large-value access; still executes.",
+      "corpusCase": "test/fixtures/README.md and test/corpus — see the READTEXT/WRITETEXT/SETUSER family"
+    },
+    "writetext_statement": {
+      "reason": "WRITETEXT is deprecated in favor of the same replacement as READTEXT; still executes.",
+      "corpusCase": "test/fixtures/README.md and test/corpus — see the READTEXT/WRITETEXT/SETUSER family"
+    },
+    "setuser_statement": {
+      "reason": "SETUSER is deprecated in favor of EXECUTE AS; still executes.",
+      "corpusCase": "test/fixtures/README.md and test/corpus — see the READTEXT/WRITETEXT/SETUSER family"
+    },
+    "table_hint": {
+      "reason": "The bare table-hint form (FROM t (NOLOCK), with no WITH keyword) is deprecated in favor of FROM t WITH (NOLOCK); still executes.",
+      "note": "This node kind also represents the current WITH (...) form. This entry applies only when the table_hint node has no keyword_with child.",
+      "corpusCase": "AGENTS.md documents the bare form (_bare_table_hint) at length; see the relation/table_hint corpus cases"
+    }
+  }
+}

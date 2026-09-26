@@ -211,7 +211,8 @@ SQL Server 2012), nothing the grammar's consumers run can execute them, and no c
 
 Every file above parses with zero `ERROR`/`MISSING` nodes; nothing is pending. The T-SQL shapes
 the grammar knowingly leaves out, so a new fixture does not go looking for a rule that was
-decided against:
+decided against. `../../docs/accepted-gaps.md` consolidates this table alongside the grammar's
+known over-acceptances (constructs accepted here that SQL Server itself rejects):
 
 | Construct | Why |
 |---|---|

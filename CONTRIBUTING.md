@@ -3,7 +3,7 @@
 ## Build
 
 ```sh
-npx --package=tree-sitter-cli@0.26.3 -- tree-sitter generate
+npx --package=tree-sitter-cli@0.27.0 -- tree-sitter generate
 cargo build
 ```
 
@@ -17,7 +17,7 @@ compiler even on a machine without MSVC.
 ## Test
 
 ```sh
-CC=gcc CXX=g++ tree-sitter test
+CC=gcc CXX=g++ npx --package=tree-sitter-cli@0.27.0 -- tree-sitter test
 cargo test
 ```
 
@@ -26,9 +26,24 @@ files checked for zero `ERROR`/`MISSING`/zero-width nodes. `test/corpus/errors.t
 pins error recovery on invalid input and is hand-written — `tree-sitter test --update` refuses to
 touch it.
 
+Check every fixture for `ERROR`/`MISSING` nodes:
+
+```sh
+for f in test/fixtures/*.sql; do printf "%s: " "$f"; CC=gcc CXX=g++ npx --package=tree-sitter-cli@0.27.0 -- tree-sitter parse "$f" 2>/dev/null | grep -c "ERROR\|MISSING"; done
+```
+
+Regenerate `test/node-kinds.txt` after any change to a node kind or field name:
+
+```sh
+node test/generate-node-kinds.mjs
+```
+
 ## Pull requests
 
 - Regenerate and commit `src/parser.c` and `test/node-kinds.txt` alongside any `grammar.js` change;
   CI diffs both against a fresh regenerate and fails on drift.
 - Add a corpus case (or extend a fixture) for any new construct.
 - `cargo fmt` and `cargo clippy` must pass with no warnings.
+- A node-kind addition, removal, or rename is part of the grammar's published API surface
+  (see README's "Consuming this grammar" section) — call it out explicitly in the commit message
+  or PR description so it is visible in `CHANGELOG.md`.
