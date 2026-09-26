@@ -63,25 +63,26 @@ GO
       (keyword_go)))
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            value: (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            database: (identifier)
-            schema: (identifier)
-            name: (identifier))))
-      (where
-        (keyword_where)
-        predicate: (binary_expression
-          left: (field
-            name: (identifier))
-          right: (field
-            name: (identifier)))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              value: (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              database: (identifier)
+              schema: (identifier)
+              name: (identifier))))
+        (where
+          (keyword_where)
+          predicate: (binary_expression
+            left: (field
+              name: (identifier))
+            right: (field
+              name: (identifier))))))
     (go_statement
       (keyword_go))))
 
@@ -102,16 +103,17 @@ SELECT * FROM $(TableName);
         (identifier)
         (identifier)))
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))))
 
 ================================================================================
 setvar with no value removes the scripting variable (ARCH-14)
@@ -127,8 +129,9 @@ SELECT 1;
     (sqlcmd_setvar
       (identifier))
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (literal)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (literal))))))))

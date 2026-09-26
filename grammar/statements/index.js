@@ -612,11 +612,13 @@ export default {
   ...merge_rules,
   ...dml_shared_rules,
 
-  _dml_read: ($) =>
-    seq(
-      optional(optional_parenthesis($._cte)),
-      optional_parenthesis(choice($._select_statement, $.set_operation)),
-    ),
+  // A query with no leading CTE. Subqueries and CTE bodies use this.
+  // `_dml_read` adds the CTE, which is legal for a statement, a view, an
+  // inline table-valued function's RETURN, and a cursor declaration, and
+  // not inside a derived table or another CTE.
+  _query_expression: ($) => optional_parenthesis(choice($._select_statement, $.set_operation)),
+
+  _dml_read: ($) => seq(optional(optional_parenthesis($._cte)), $._query_expression),
 
   ...select_rules,
   ...set_rules,

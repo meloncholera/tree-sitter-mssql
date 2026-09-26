@@ -24,28 +24,29 @@ DEALLOCATE item_cursor
         (identifier)
         (keyword_cursor)
         (keyword_for)
-        (select
-          (keyword_select)
-          (select_expression
-            (term
+        (query_specification
+          (select
+            (keyword_select)
+            (select_expression
+              (term
+                (field
+                  (identifier)))
+              (term
+                (field
+                  (identifier)))))
+          (from
+            (keyword_from)
+            (relation
+              (object_reference
+                (identifier)
+                (identifier))))
+          (where
+            (keyword_where)
+            (binary_expression
               (field
-                (identifier)))
-            (term
+                (identifier))
               (field
-                (identifier)))))
-        (from
-          (keyword_from)
-          (relation
-            (object_reference
-              (identifier)
-              (identifier))))
-        (where
-          (keyword_where)
-          (binary_expression
-            (field
-              (identifier))
-            (field
-              (identifier))))))
+                (identifier)))))))
     (statement
       (open_cursor_statement
         (keyword_open)
@@ -120,17 +121,18 @@ DECLARE c3 CURSOR FOR SELECT id FROM t FOR READ ONLY;
         (identifier)
         (identifier)
         (keyword_for)
-        (select
-          (keyword_select)
-          (select_expression
-            (term
-              (field
-                (identifier)))))
-        (from
-          (keyword_from)
-          (relation
-            (object_reference
-              (identifier))))))
+        (query_specification
+          (select
+            (keyword_select)
+            (select_expression
+              (term
+                (field
+                  (identifier)))))
+          (from
+            (keyword_from)
+            (relation
+              (object_reference
+                (identifier)))))))
     (statement
       (declare_cursor_statement
         (keyword_declare)
@@ -140,17 +142,18 @@ DECLARE c3 CURSOR FOR SELECT id FROM t FOR READ ONLY;
         (identifier)
         (identifier)
         (keyword_for)
-        (select
-          (keyword_select)
-          (select_expression
-            (term
-              (field
+        (query_specification
+          (select
+            (keyword_select)
+            (select_expression
+              (term
+                (field
+                  (identifier)))))
+          (from
+            (keyword_from)
+            (relation
+              (object_reference
                 (identifier)))))
-        (from
-          (keyword_from)
-          (relation
-            (object_reference
-              (identifier))))
         (for_clause
           (keyword_for)
           (keyword_update)
@@ -162,17 +165,18 @@ DECLARE c3 CURSOR FOR SELECT id FROM t FOR READ ONLY;
         (identifier)
         (keyword_cursor)
         (keyword_for)
-        (select
-          (keyword_select)
-          (select_expression
-            (term
-              (field
+        (query_specification
+          (select
+            (keyword_select)
+            (select_expression
+              (term
+                (field
+                  (identifier)))))
+          (from
+            (keyword_from)
+            (relation
+              (object_reference
                 (identifier)))))
-        (from
-          (keyword_from)
-          (relation
-            (object_reference
-              (identifier))))
         (for_clause
           (keyword_for)
           (keyword_read)
@@ -287,18 +291,19 @@ DEALLOCATE cur;
         (identifier)
         (keyword_cursor)
         (keyword_for)
-        (select
-          (keyword_select)
-          (select_expression
-            (term
-              (field
+        (query_specification
+          (select
+            (keyword_select)
+            (select_expression
+              (term
+                (field
+                  (identifier)))))
+          (from
+            (keyword_from)
+            (relation
+              (object_reference
+                (identifier)
                 (identifier)))))
-        (from
-          (keyword_from)
-          (relation
-            (object_reference
-              (identifier)
-              (identifier))))
         (for_clause
           (keyword_for)
           (keyword_update))))

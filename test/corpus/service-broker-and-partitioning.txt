@@ -779,22 +779,23 @@ SELECT $PARTITION.pf(a) FROM t;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (invocation
-              (object_reference
-                (identifier)
-                (identifier))
-              (term
-                (field
-                  (identifier)))))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (invocation
+                (object_reference
+                  (identifier)
+                  (identifier))
+                (term
+                  (field
+                    (identifier)))))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))))
 
 ================================================================================
 CREATE QUEUE clauses are optional and once each, WITH then ON
@@ -841,24 +842,26 @@ WITH cte AS (SELECT 1 AS a) SELECT a FROM cte;
         (identifier)
         (keyword_as)
         (statement
-          (select
-            (keyword_select)
-            (select_expression
-              (term
-                value: (literal)
-                (keyword_as)
-                alias: (identifier))))))
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            value: (field
-              name: (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            name: (identifier)))))))
+          (query_specification
+            (select
+              (keyword_select)
+              (select_expression
+                (term
+                  value: (literal)
+                  (keyword_as)
+                  alias: (identifier)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              value: (field
+                name: (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              name: (identifier))))))))
 
 ================================================================================
 CREATE PARTITION FUNCTION boundary values may be expressions

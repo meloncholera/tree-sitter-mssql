@@ -2355,18 +2355,6 @@
           "named": true
         },
         {
-          "type": "from",
-          "named": true
-        },
-        {
-          "type": "group_by",
-          "named": true
-        },
-        {
-          "type": "having",
-          "named": true
-        },
-        {
           "type": "identifier",
           "named": true
         },
@@ -2383,10 +2371,6 @@
           "named": true
         },
         {
-          "type": "keyword_into",
-          "named": true
-        },
-        {
           "type": "keyword_option",
           "named": true
         },
@@ -2396,10 +2380,6 @@
         },
         {
           "type": "keyword_with",
-          "named": true
-        },
-        {
-          "type": "object_reference",
           "named": true
         },
         {
@@ -2415,7 +2395,7 @@
           "named": true
         },
         {
-          "type": "select",
+          "type": "query_specification",
           "named": true
         },
         {
@@ -2424,14 +2404,6 @@
         },
         {
           "type": "view_option",
-          "named": true
-        },
-        {
-          "type": "where",
-          "named": true
-        },
-        {
-          "type": "window_clause",
           "named": true
         },
         {
@@ -7746,18 +7718,6 @@
           "named": true
         },
         {
-          "type": "from",
-          "named": true
-        },
-        {
-          "type": "group_by",
-          "named": true
-        },
-        {
-          "type": "having",
-          "named": true
-        },
-        {
           "type": "identifier",
           "named": true
         },
@@ -7778,10 +7738,6 @@
           "named": true
         },
         {
-          "type": "keyword_into",
-          "named": true
-        },
-        {
           "type": "keyword_option",
           "named": true
         },
@@ -7798,10 +7754,6 @@
           "named": true
         },
         {
-          "type": "object_reference",
-          "named": true
-        },
-        {
           "type": "offset_fetch",
           "named": true
         },
@@ -7814,7 +7766,7 @@
           "named": true
         },
         {
-          "type": "select",
+          "type": "query_specification",
           "named": true
         },
         {
@@ -7823,14 +7775,6 @@
         },
         {
           "type": "view_option",
-          "named": true
-        },
-        {
-          "type": "where",
-          "named": true
-        },
-        {
-          "type": "window_clause",
           "named": true
         },
         {
@@ -8389,18 +8333,6 @@
           "named": true
         },
         {
-          "type": "from",
-          "named": true
-        },
-        {
-          "type": "group_by",
-          "named": true
-        },
-        {
-          "type": "having",
-          "named": true
-        },
-        {
           "type": "identifier",
           "named": true
         },
@@ -8417,15 +8349,7 @@
           "named": true
         },
         {
-          "type": "keyword_into",
-          "named": true
-        },
-        {
           "type": "keyword_with",
-          "named": true
-        },
-        {
-          "type": "object_reference",
           "named": true
         },
         {
@@ -8441,19 +8365,11 @@
           "named": true
         },
         {
-          "type": "select",
+          "type": "query_specification",
           "named": true
         },
         {
           "type": "set_operation",
-          "named": true
-        },
-        {
-          "type": "where",
-          "named": true
-        },
-        {
-          "type": "window_clause",
           "named": true
         },
         {
@@ -10983,18 +10899,6 @@
           "named": true
         },
         {
-          "type": "from",
-          "named": true
-        },
-        {
-          "type": "group_by",
-          "named": true
-        },
-        {
-          "type": "having",
-          "named": true
-        },
-        {
           "type": "keyword_as",
           "named": true
         },
@@ -11007,19 +10911,11 @@
           "named": true
         },
         {
-          "type": "keyword_into",
-          "named": true
-        },
-        {
           "type": "keyword_return",
           "named": true
         },
         {
           "type": "keyword_with",
-          "named": true
-        },
-        {
-          "type": "object_reference",
           "named": true
         },
         {
@@ -11035,7 +10931,7 @@
           "named": true
         },
         {
-          "type": "select",
+          "type": "query_specification",
           "named": true
         },
         {
@@ -11044,14 +10940,6 @@
         },
         {
           "type": "statement",
-          "named": true
-        },
-        {
-          "type": "where",
-          "named": true
-        },
-        {
-          "type": "window_clause",
           "named": true
         },
         {
@@ -11854,18 +11742,6 @@
           "named": true
         },
         {
-          "type": "from",
-          "named": true
-        },
-        {
-          "type": "group_by",
-          "named": true
-        },
-        {
-          "type": "having",
-          "named": true
-        },
-        {
           "type": "keyword_default",
           "named": true
         },
@@ -11906,7 +11782,7 @@
           "named": true
         },
         {
-          "type": "select",
+          "type": "query_specification",
           "named": true
         },
         {
@@ -11919,14 +11795,6 @@
         },
         {
           "type": "top_clause",
-          "named": true
-        },
-        {
-          "type": "where",
-          "named": true
-        },
-        {
-          "type": "window_clause",
           "named": true
         }
       ]
@@ -17145,10 +17013,6 @@
           "named": true
         },
         {
-          "type": "from",
-          "named": true
-        },
-        {
           "type": "get_conversation_group_statement",
           "named": true
         },
@@ -17161,23 +17025,11 @@
           "named": true
         },
         {
-          "type": "group_by",
-          "named": true
-        },
-        {
-          "type": "having",
-          "named": true
-        },
-        {
           "type": "if_statement",
           "named": true
         },
         {
           "type": "insert",
-          "named": true
-        },
-        {
-          "type": "keyword_into",
           "named": true
         },
         {
@@ -17198,10 +17050,6 @@
         },
         {
           "type": "move_conversation_statement",
-          "named": true
-        },
-        {
-          "type": "object_reference",
           "named": true
         },
         {
@@ -17226,6 +17074,10 @@
         },
         {
           "type": "print_statement",
+          "named": true
+        },
+        {
+          "type": "query_specification",
           "named": true
         },
         {
@@ -17258,10 +17110,6 @@
         },
         {
           "type": "save_transaction_statement",
-          "named": true
-        },
-        {
-          "type": "select",
           "named": true
         },
         {
@@ -17317,15 +17165,7 @@
           "named": true
         },
         {
-          "type": "where",
-          "named": true
-        },
-        {
           "type": "while_statement",
-          "named": true
-        },
-        {
-          "type": "window_clause",
           "named": true
         },
         {
@@ -17348,35 +17188,7 @@
       "required": true,
       "types": [
         {
-          "type": "cte",
-          "named": true
-        },
-        {
           "type": "for_clause",
-          "named": true
-        },
-        {
-          "type": "from",
-          "named": true
-        },
-        {
-          "type": "group_by",
-          "named": true
-        },
-        {
-          "type": "having",
-          "named": true
-        },
-        {
-          "type": "keyword_into",
-          "named": true
-        },
-        {
-          "type": "keyword_with",
-          "named": true
-        },
-        {
-          "type": "object_reference",
           "named": true
         },
         {
@@ -17392,23 +17204,11 @@
           "named": true
         },
         {
-          "type": "select",
+          "type": "query_specification",
           "named": true
         },
         {
           "type": "set_operation",
-          "named": true
-        },
-        {
-          "type": "where",
-          "named": true
-        },
-        {
-          "type": "window_clause",
-          "named": true
-        },
-        {
-          "type": "xmlnamespaces",
           "named": true
         }
       ]

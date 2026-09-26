@@ -66,20 +66,21 @@ INSERT my_table (id, name) SELECT id, name FROM inserted;
             (identifier))
           (column
             (identifier)))
-        (select
-          (keyword_select)
-          (select_expression
-            (term
-              (field
-                (identifier)))
-            (term
-              (field
-                (identifier)))))
-        (from
-          (keyword_from)
-          (relation
-            (object_reference
-              (identifier))))))))
+        (query_specification
+          (select
+            (keyword_select)
+            (select_expression
+              (term
+                (field
+                  (identifier)))
+              (term
+                (field
+                  (identifier)))))
+          (from
+            (keyword_from)
+            (relation
+              (object_reference
+                (identifier)))))))))
 
 ================================================================================
 Insert select
@@ -110,29 +111,30 @@ INSERT INTO some_table (field)
             (identifier))
           (column
             (identifier)))
-        (select
-          (keyword_select)
-          (select_expression
-            (term
+        (query_specification
+          (select
+            (keyword_select)
+            (select_expression
+              (term
+                (field
+                  (identifier)))
+              (term
+                (field
+                  (identifier)))
+              (term
+                (field
+                  (identifier)))))
+          (from
+            (keyword_from)
+            (relation
+              (object_reference
+                (identifier))))
+          (where
+            (keyword_where)
+            (binary_expression
               (field
-                (identifier)))
-            (term
-              (field
-                (identifier)))
-            (term
-              (field
-                (identifier)))))
-        (from
-          (keyword_from)
-          (relation
-            (object_reference
-              (identifier))))
-        (where
-          (keyword_where)
-          (binary_expression
-            (field
-              (identifier))
-            (literal)))))
+                (identifier))
+              (literal))))))
     (statement
       (insert
         (keyword_insert)
@@ -175,21 +177,22 @@ INSERT @t VALUES (1);
         (keyword_into)
         (object_reference
           (identifier))
-        (select
-          (keyword_select)
-          (select_expression
-            (term
-              (field
-                (identifier)))))
-        (from
-          (keyword_from)
-          (relation
-            (object_reference
-              (identifier)))
-          (table_hint
-            (keyword_with)
-            (table_hint_item
-              (identifier))))))
+        (query_specification
+          (select
+            (keyword_select)
+            (select_expression
+              (term
+                (field
+                  (identifier)))))
+          (from
+            (keyword_from)
+            (relation
+              (object_reference
+                (identifier)))
+            (table_hint
+              (keyword_with)
+              (table_hint_item
+                (identifier)))))))
     (statement
       (insert
         (keyword_insert)
@@ -237,17 +240,18 @@ INSERT TOP (10) INTO my_table WITH (TABLOCK) (a) SELECT a FROM src;
         (list
           (column
             (identifier)))
-        (select
-          (keyword_select)
-          (select_expression
-            (term
-              (field
-                (identifier)))))
-        (from
-          (keyword_from)
-          (relation
-            (object_reference
-              (identifier))))))))
+        (query_specification
+          (select
+            (keyword_select)
+            (select_expression
+              (term
+                (field
+                  (identifier)))))
+          (from
+            (keyword_from)
+            (relation
+              (object_reference
+                (identifier)))))))))
 
 ================================================================================
 Insert with OUTPUT
@@ -307,17 +311,18 @@ INSERT INTO my_table (a) OUTPUT inserted.* SELECT a FROM src;
             (all_fields
               (object_reference
                 (identifier)))))
-        (select
-          (keyword_select)
-          (select_expression
-            (term
-              (field
-                (identifier)))))
-        (from
-          (keyword_from)
-          (relation
-            (object_reference
-              (identifier))))))))
+        (query_specification
+          (select
+            (keyword_select)
+            (select_expression
+              (term
+                (field
+                  (identifier)))))
+          (from
+            (keyword_from)
+            (relation
+              (object_reference
+                (identifier)))))))))
 
 ================================================================================
 Insert from EXEC and DEFAULT VALUES

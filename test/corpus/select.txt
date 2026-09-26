@@ -9,11 +9,12 @@ SELECT 1;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (literal)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (literal))))))))
 
 ================================================================================
 Select aliased literals
@@ -28,21 +29,22 @@ SELECT 1 AS one,
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (literal)
-            (keyword_as)
-            (identifier))
-          (term
-            (literal)
-            (identifier))
-          (term
-            (literal
-              (keyword_null))
-            (keyword_as)
-            (identifier)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (literal)
+              (keyword_as)
+              (identifier))
+            (term
+              (literal)
+              (identifier))
+            (term
+              (literal
+                (keyword_null))
+              (keyword_as)
+              (identifier))))))))
 
 ================================================================================
 A single-quoted string literal is a valid column alias (ARCH-11)
@@ -55,31 +57,32 @@ SELECT SUM(x) 'TotalX', SUM(y) AS 'TotalY' FROM t;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (invocation
-              (object_reference
-                (identifier))
-              (term
-                (field
-                  (identifier))))
-            (literal))
-          (term
-            (invocation
-              (object_reference
-                (identifier))
-              (term
-                (field
-                  (identifier))))
-            (keyword_as)
-            (literal))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (invocation
+                (object_reference
+                  (identifier))
+                (term
+                  (field
+                    (identifier))))
+              (literal))
+            (term
+              (invocation
+                (object_reference
+                  (identifier))
+                (term
+                  (field
+                    (identifier))))
+              (keyword_as)
+              (literal))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))))
 
 ================================================================================
 Select star and qualified star
@@ -94,44 +97,47 @@ SELECT t.* FROM my_table AS t;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields
-              (object_reference
-                (identifier))))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields
+                (object_reference
+                  (identifier))))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields
-              (object_reference
-                (identifier))))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))
-          (keyword_as)
-          (identifier))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields
+                (object_reference
+                  (identifier))))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))
+            (keyword_as)
+            (identifier)))))))
 
 ================================================================================
 Select variables and system functions
@@ -144,23 +150,24 @@ SELECT @id, @@VERSION, @@ROWCOUNT FROM my_table;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (identifier)))
-          (term
-            (field
-              (identifier)))
-          (term
-            (field
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))
+            (term
+              (field
+                (identifier)))
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))))
 
 ================================================================================
 Select with fields that look like keywords
@@ -174,66 +181,67 @@ FROM join_something_on AS where_this_like_that;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (object_reference
-                (identifier))
-              (identifier)))
-          (term
-            (field
-              (object_reference
-                (identifier))
-              (identifier)))
-          (term
-            (field
-              (object_reference
-                (identifier))
-              (identifier)))
-          (term
-            (field
-              (object_reference
-                (identifier))
-              (identifier)))
-          (term
-            (field
-              (object_reference
-                (identifier))
-              (identifier)))
-          (term
-            (field
-              (object_reference
-                (identifier))
-              (identifier)))
-          (term
-            (field
-              (object_reference
-                (identifier))
-              (identifier)))
-          (term
-            (field
-              (object_reference
-                (identifier))
-              (identifier)))
-          (term
-            (field
-              (object_reference
-                (identifier))
-              (identifier)))
-          (term
-            (field
-              (object_reference
-                (identifier))
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))
-          (keyword_as)
-          (identifier))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))
+            (term
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))
+            (term
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))
+            (term
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))
+            (term
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))
+            (term
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))
+            (term
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))
+            (term
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))
+            (term
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))
+            (term
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))
+            (keyword_as)
+            (identifier)))))))
 
 ================================================================================
 Select with bracketed and quoted identifiers
@@ -247,31 +255,32 @@ FROM [dbo].[my table] [My Table], "quoted";
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (object_reference
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (object_reference
+                  (identifier))
                 (identifier))
+              (keyword_as)
               (identifier))
-            (keyword_as)
+            (term
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier)
+              (identifier))
             (identifier))
-          (term
-            (field
-              (object_reference
-                (identifier))
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)
-            (identifier))
-          (identifier))
-        (relation
-          (object_reference
-            (identifier)))))))
+          (relation
+            (object_reference
+              (identifier))))))))
 
 ================================================================================
 Select with where, IN and NOT IN
@@ -286,52 +295,54 @@ WHERE id = 4 AND id IN (1, 2) AND id NOT IN (SELECT id FROM other_table);
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
-      (where
-        (keyword_where)
-        (binary_expression
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))
+        (where
+          (keyword_where)
           (binary_expression
             (binary_expression
-              (field
-                (identifier))
-              (literal))
+              (binary_expression
+                (field
+                  (identifier))
+                (literal))
+              (keyword_and)
+              (binary_expression
+                (field
+                  (identifier))
+                (keyword_in)
+                (list
+                  (literal)
+                  (literal))))
             (keyword_and)
             (binary_expression
               (field
                 (identifier))
-              (keyword_in)
-              (list
-                (literal)
-                (literal))))
-          (keyword_and)
-          (binary_expression
-            (field
-              (identifier))
-            (not_in
-              (keyword_not)
-              (keyword_in))
-            (subquery
-              (select
-                (keyword_select)
-                (select_expression
-                  (term
-                    (field
-                      (identifier)))))
-              (from
-                (keyword_from)
-                (relation
-                  (object_reference
-                    (identifier)))))))))))
+              (not_in
+                (keyword_not)
+                (keyword_in))
+              (subquery
+                (query_specification
+                  (select
+                    (keyword_select)
+                    (select_expression
+                      (term
+                        (field
+                          (identifier)))))
+                  (from
+                    (keyword_from)
+                    (relation
+                      (object_reference
+                        (identifier)))))))))))))
 
 ================================================================================
 Select with DISTINCT and COUNT
@@ -345,43 +356,45 @@ SELECT COUNT(DISTINCT id) AS count, COUNT(*) FROM my_table;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (keyword_distinct)
-        (select_expression
-          (term
-            (field
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))
+      (query_specification
+        (select
+          (keyword_select)
+          (keyword_distinct)
+          (select_expression
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (invocation
-              (object_reference
-                (identifier))
-              (keyword_distinct)
-              (term
-                (field
-                  (identifier))))
-            (keyword_as)
-            (identifier))
-          (term
-            (invocation
-              (object_reference
-                (identifier))
-              (term
-                (all_fields))))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (invocation
+                (object_reference
+                  (identifier))
+                (keyword_distinct)
+                (term
+                  (field
+                    (identifier))))
+              (keyword_as)
+              (identifier))
+            (term
+              (invocation
+                (object_reference
+                  (identifier))
+                (term
+                  (all_fields))))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))))
 
 ================================================================================
 Select with order by
@@ -397,35 +410,36 @@ ORDER BY m.title, id ASC, 3 DESC;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (identifier)))
-          (term
-            (field
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))
-          (identifier)))
-      (where
-        (keyword_where)
-        (binary_expression
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))
+            (identifier)))
+        (where
+          (keyword_where)
           (binary_expression
-            (field
-              (object_reference
+            (binary_expression
+              (field
+                (object_reference
+                  (identifier))
                 (identifier))
-              (identifier))
-            (literal))
-          (keyword_and)
-          (binary_expression
-            (field
-              (identifier))
-            (literal))))
+              (literal))
+            (keyword_and)
+            (binary_expression
+              (field
+                (identifier))
+              (literal)))))
       (order_by
         (keyword_order)
         (keyword_by)
@@ -455,31 +469,32 @@ SELECT * FROM mydb..mytable, srv.db..t, srv..schema.t, lnksrv...t2;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            value: (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            database: (identifier)
-            name: (identifier)))
-        (relation
-          (object_reference
-            server: (identifier)
-            database: (identifier)
-            name: (identifier)))
-        (relation
-          (object_reference
-            server: (identifier)
-            schema: (identifier)
-            name: (identifier)))
-        (relation
-          (object_reference
-            server: (identifier)
-            name: (identifier)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              value: (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              database: (identifier)
+              name: (identifier)))
+          (relation
+            (object_reference
+              server: (identifier)
+              database: (identifier)
+              name: (identifier)))
+          (relation
+            (object_reference
+              server: (identifier)
+              schema: (identifier)
+              name: (identifier)))
+          (relation
+            (object_reference
+              server: (identifier)
+              name: (identifier))))))))
 
 ================================================================================
 Select with three-part and four-part names
@@ -494,43 +509,44 @@ JOIN linked_server.other_db.dbo.other_table AS o ON o.id = my_table.id;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (object_reference
-                (identifier)
-                (identifier)
-                (identifier))
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)
-            (identifier)
-            (identifier)))
-        (join
-          (keyword_join)
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (object_reference
+                  (identifier)
+                  (identifier)
+                  (identifier))
+                (identifier)))))
+        (from
+          (keyword_from)
           (relation
             (object_reference
               (identifier)
               (identifier)
-              (identifier)
-              (identifier))
-            (keyword_as)
-            (identifier))
-          (keyword_on)
-          (binary_expression
-            (field
+              (identifier)))
+          (join
+            (keyword_join)
+            (relation
               (object_reference
+                (identifier)
+                (identifier)
+                (identifier)
                 (identifier))
+              (keyword_as)
               (identifier))
-            (field
-              (object_reference
+            (keyword_on)
+            (binary_expression
+              (field
+                (object_reference
+                  (identifier))
                 (identifier))
-              (identifier))))))))
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))))))))
 
 ================================================================================
 Select TOP
@@ -546,66 +562,70 @@ SELECT TOP 5 WITH TIES * FROM tbl ORDER BY score DESC;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (top_clause
-          (keyword_top)
-          (literal))
-        (select_expression
-          (term
+      (query_specification
+        (select
+          (keyword_select)
+          (top_clause
+            (keyword_top)
+            (literal))
+          (select_expression
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))
+    (statement
+      (query_specification
+        (select
+          (keyword_select)
+          (top_clause
+            (keyword_top)
+            (literal))
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))
+    (statement
+      (query_specification
+        (select
+          (keyword_select)
+          (top_clause
+            (keyword_top)
             (field
+              (identifier))
+            (keyword_percent))
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))
+    (statement
+      (query_specification
+        (select
+          (keyword_select)
+          (top_clause
+            (keyword_top)
+            (literal)
+            (keyword_with)
+            (keyword_ties))
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
               (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))
-    (statement
-      (select
-        (keyword_select)
-        (top_clause
-          (keyword_top)
-          (literal))
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))
-    (statement
-      (select
-        (keyword_select)
-        (top_clause
-          (keyword_top)
-          (field
-            (identifier))
-          (keyword_percent))
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))
-    (statement
-      (select
-        (keyword_select)
-        (top_clause
-          (keyword_top)
-          (literal)
-          (keyword_with)
-          (keyword_ties))
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
       (order_by
         (keyword_order)
         (keyword_by)
@@ -626,29 +646,30 @@ SELECT col1, col2 INTO #results FROM my_table WHERE col1 > 0;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))
+            (term
+              (field
+                (identifier)))))
+        (keyword_into)
+        (object_reference
+          (identifier))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))
+        (where
+          (keyword_where)
+          (binary_expression
             (field
-              (identifier)))
-          (term
-            (field
-              (identifier)))))
-      (keyword_into)
-      (object_reference
-        (identifier))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
-      (where
-        (keyword_where)
-        (binary_expression
-          (field
-            (identifier))
-          (literal))))))
+              (identifier))
+            (literal)))))))
 
 ================================================================================
 Joins
@@ -672,238 +693,22 @@ WHERE b.c_id = 4;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (object_reference
-                (identifier))
-              (identifier)))
-          (term
-            (field
-              (object_reference
-                (identifier))
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))
-          (identifier))
-        (join
-          (keyword_join)
-          (relation
-            (object_reference
-              (identifier))
-            (identifier))
-          (keyword_on)
-          (binary_expression
-            (field
-              (object_reference
-                (identifier))
-              (identifier))
-            (field
-              (object_reference
-                (identifier))
-              (identifier))))
-        (join
-          (keyword_left)
-          (keyword_join)
-          (relation
-            (object_reference
-              (identifier))
-            (identifier))
-          (keyword_on)
-          (binary_expression
-            (field
-              (object_reference
-                (identifier))
-              (identifier))
-            (field
-              (object_reference
-                (identifier))
-              (identifier))))
-        (join
-          (keyword_left)
-          (keyword_outer)
-          (keyword_join)
-          (relation
-            (object_reference
-              (identifier))
-            (identifier))
-          (keyword_on)
-          (binary_expression
-            (field
-              (object_reference
-                (identifier))
-              (identifier))
-            (field
-              (object_reference
-                (identifier))
-              (identifier))))
-        (join
-          (keyword_right)
-          (keyword_join)
-          (relation
-            (object_reference
-              (identifier))
-            (identifier))
-          (keyword_on)
-          (binary_expression
-            (field
-              (object_reference
-                (identifier))
-              (identifier))
-            (field
-              (object_reference
-                (identifier))
-              (identifier))))
-        (join
-          (keyword_right)
-          (keyword_outer)
-          (keyword_join)
-          (relation
-            (object_reference
-              (identifier))
-            (identifier))
-          (keyword_on)
-          (binary_expression
-            (field
-              (object_reference
-                (identifier))
-              (identifier))
-            (field
-              (object_reference
-                (identifier))
-              (identifier))))
-        (join
-          (keyword_inner)
-          (keyword_join)
-          (relation
-            (object_reference
-              (identifier))
-            (identifier))
-          (keyword_on)
-          (binary_expression
-            (field
-              (object_reference
-                (identifier))
-              (identifier))
-            (field
-              (object_reference
-                (identifier))
-              (identifier))))
-        (join
-          (keyword_full)
-          (keyword_outer)
-          (keyword_join)
-          (relation
-            (object_reference
-              (identifier))
-            (identifier))
-          (keyword_on)
-          (binary_expression
-            (field
-              (object_reference
-                (identifier))
-              (identifier))
-            (field
-              (object_reference
-                (identifier))
-              (identifier))))
-        (join
-          (keyword_full)
-          (keyword_join)
-          (relation
-            (object_reference
-              (identifier))
-            (identifier))
-          (keyword_on)
-          (binary_expression
-            (field
-              (object_reference
-                (identifier))
-              (identifier))
-            (field
-              (object_reference
-                (identifier))
-              (identifier))))
-        (cross_join
-          (keyword_cross)
-          (keyword_join)
-          (relation
-            (object_reference
-              (identifier))
-            (identifier))))
-      (where
-        (keyword_where)
-        (binary_expression
-          (field
-            (object_reference
-              (identifier))
-            (identifier))
-          (literal))))))
-
-================================================================================
-Nested joins
-================================================================================
-
-SELECT a.id, b.id, c.id
-FROM my_table a
-JOIN my_other_table b ON a.id = b.a_id
-LEFT JOIN table_four d
-JOIN table_five e ON d.e_id = e.id
-ON a.id = d.c_id;
-
---------------------------------------------------------------------------------
-
-(program
-  (batch
-    (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (object_reference
-                (identifier))
-              (identifier)))
-          (term
-            (field
-              (object_reference
-                (identifier))
-              (identifier)))
-          (term
-            (field
-              (object_reference
-                (identifier))
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))
-          (identifier))
-        (join
-          (keyword_join)
-          (relation
-            (object_reference
-              (identifier))
-            (identifier))
-          (keyword_on)
-          (binary_expression
-            (field
-              (object_reference
-                (identifier))
-              (identifier))
-            (field
-              (object_reference
-                (identifier))
-              (identifier))))
-        (join
-          (keyword_left)
-          (keyword_join)
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))
+            (term
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))))
+        (from
+          (keyword_from)
           (relation
             (object_reference
               (identifier))
@@ -924,16 +729,234 @@ ON a.id = d.c_id;
                 (object_reference
                   (identifier))
                 (identifier))))
-          (keyword_on)
+          (join
+            (keyword_left)
+            (keyword_join)
+            (relation
+              (object_reference
+                (identifier))
+              (identifier))
+            (keyword_on)
+            (binary_expression
+              (field
+                (object_reference
+                  (identifier))
+                (identifier))
+              (field
+                (object_reference
+                  (identifier))
+                (identifier))))
+          (join
+            (keyword_left)
+            (keyword_outer)
+            (keyword_join)
+            (relation
+              (object_reference
+                (identifier))
+              (identifier))
+            (keyword_on)
+            (binary_expression
+              (field
+                (object_reference
+                  (identifier))
+                (identifier))
+              (field
+                (object_reference
+                  (identifier))
+                (identifier))))
+          (join
+            (keyword_right)
+            (keyword_join)
+            (relation
+              (object_reference
+                (identifier))
+              (identifier))
+            (keyword_on)
+            (binary_expression
+              (field
+                (object_reference
+                  (identifier))
+                (identifier))
+              (field
+                (object_reference
+                  (identifier))
+                (identifier))))
+          (join
+            (keyword_right)
+            (keyword_outer)
+            (keyword_join)
+            (relation
+              (object_reference
+                (identifier))
+              (identifier))
+            (keyword_on)
+            (binary_expression
+              (field
+                (object_reference
+                  (identifier))
+                (identifier))
+              (field
+                (object_reference
+                  (identifier))
+                (identifier))))
+          (join
+            (keyword_inner)
+            (keyword_join)
+            (relation
+              (object_reference
+                (identifier))
+              (identifier))
+            (keyword_on)
+            (binary_expression
+              (field
+                (object_reference
+                  (identifier))
+                (identifier))
+              (field
+                (object_reference
+                  (identifier))
+                (identifier))))
+          (join
+            (keyword_full)
+            (keyword_outer)
+            (keyword_join)
+            (relation
+              (object_reference
+                (identifier))
+              (identifier))
+            (keyword_on)
+            (binary_expression
+              (field
+                (object_reference
+                  (identifier))
+                (identifier))
+              (field
+                (object_reference
+                  (identifier))
+                (identifier))))
+          (join
+            (keyword_full)
+            (keyword_join)
+            (relation
+              (object_reference
+                (identifier))
+              (identifier))
+            (keyword_on)
+            (binary_expression
+              (field
+                (object_reference
+                  (identifier))
+                (identifier))
+              (field
+                (object_reference
+                  (identifier))
+                (identifier))))
+          (cross_join
+            (keyword_cross)
+            (keyword_join)
+            (relation
+              (object_reference
+                (identifier))
+              (identifier))))
+        (where
+          (keyword_where)
           (binary_expression
             (field
               (object_reference
                 (identifier))
               (identifier))
-            (field
+            (literal)))))))
+
+================================================================================
+Nested joins
+================================================================================
+
+SELECT a.id, b.id, c.id
+FROM my_table a
+JOIN my_other_table b ON a.id = b.a_id
+LEFT JOIN table_four d
+JOIN table_five e ON d.e_id = e.id
+ON a.id = d.c_id;
+
+--------------------------------------------------------------------------------
+
+(program
+  (batch
+    (statement
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))
+            (term
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))
+            (term
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))
+            (identifier))
+          (join
+            (keyword_join)
+            (relation
               (object_reference
                 (identifier))
-              (identifier))))))))
+              (identifier))
+            (keyword_on)
+            (binary_expression
+              (field
+                (object_reference
+                  (identifier))
+                (identifier))
+              (field
+                (object_reference
+                  (identifier))
+                (identifier))))
+          (join
+            (keyword_left)
+            (keyword_join)
+            (relation
+              (object_reference
+                (identifier))
+              (identifier))
+            (join
+              (keyword_join)
+              (relation
+                (object_reference
+                  (identifier))
+                (identifier))
+              (keyword_on)
+              (binary_expression
+                (field
+                  (object_reference
+                    (identifier))
+                  (identifier))
+                (field
+                  (object_reference
+                    (identifier))
+                  (identifier))))
+            (keyword_on)
+            (binary_expression
+              (field
+                (object_reference
+                  (identifier))
+                (identifier))
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))))))))
 
 ================================================================================
 Join a VALUES derived table
@@ -948,44 +971,45 @@ JOIN (VALUES (1, 2), (3, 4)) AS v (col1, col2) ON v.col1 = my_table.id;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))
-        (join
-          (keyword_join)
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
           (relation
-            (values
-              (keyword_values)
+            (object_reference
+              (identifier)))
+          (join
+            (keyword_join)
+            (relation
+              (values
+                (keyword_values)
+                (list
+                  (literal)
+                  (literal))
+                (list
+                  (literal)
+                  (literal)))
+              (keyword_as)
+              (identifier)
               (list
-                (literal)
-                (literal))
-              (list
-                (literal)
-                (literal)))
-            (keyword_as)
-            (identifier)
-            (list
-              (column
+                (column
+                  (identifier))
+                (column
+                  (identifier))))
+            (keyword_on)
+            (binary_expression
+              (field
+                (object_reference
+                  (identifier))
                 (identifier))
-              (column
-                (identifier))))
-          (keyword_on)
-          (binary_expression
-            (field
-              (object_reference
-                (identifier))
-              (identifier))
-            (field
-              (object_reference
-                (identifier))
-              (identifier))))))))
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))))))))
 
 ================================================================================
 Table hints
@@ -1002,56 +1026,26 @@ WHERE c.s_id = 1239;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (object_reference
-                (identifier))
-              (identifier)))
-          (term
-            (field
-              (object_reference
-                (identifier))
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))
-          (identifier))
-        (table_hint
-          (keyword_with)
-          (table_hint_item
-            (keyword_index)
-            (identifier))
-          (table_hint_item
-            (identifier)))
-        (join
-          (keyword_join)
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))
+            (term
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))))
+        (from
+          (keyword_from)
           (relation
             (object_reference
-              (identifier)))
-          (table_hint
-            (keyword_with)
-            (table_hint_item
-              (identifier)))
-          (keyword_on)
-          (binary_expression
-            (field
-              (object_reference
-                (identifier))
               (identifier))
-            (field
-              (object_reference
-                (identifier))
-              (identifier))))
-        (join
-          (keyword_join)
-          (relation
-            (object_reference
-              (identifier)))
+            (identifier))
           (table_hint
             (keyword_with)
             (table_hint_item
@@ -1059,24 +1053,55 @@ WHERE c.s_id = 1239;
               (identifier))
             (table_hint_item
               (identifier)))
-          (keyword_on)
+          (join
+            (keyword_join)
+            (relation
+              (object_reference
+                (identifier)))
+            (table_hint
+              (keyword_with)
+              (table_hint_item
+                (identifier)))
+            (keyword_on)
+            (binary_expression
+              (field
+                (object_reference
+                  (identifier))
+                (identifier))
+              (field
+                (object_reference
+                  (identifier))
+                (identifier))))
+          (join
+            (keyword_join)
+            (relation
+              (object_reference
+                (identifier)))
+            (table_hint
+              (keyword_with)
+              (table_hint_item
+                (keyword_index)
+                (identifier))
+              (table_hint_item
+                (identifier)))
+            (keyword_on)
+            (binary_expression
+              (field
+                (object_reference
+                  (identifier))
+                (identifier))
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))))
+        (where
+          (keyword_where)
           (binary_expression
             (field
               (object_reference
                 (identifier))
               (identifier))
-            (field
-              (object_reference
-                (identifier))
-              (identifier)))))
-      (where
-        (keyword_where)
-        (binary_expression
-          (field
-            (object_reference
-              (identifier))
-            (identifier))
-          (literal))))))
+            (literal)))))))
 
 ================================================================================
 Multiple tables in the from list
@@ -1091,47 +1116,48 @@ WHERE a.id = b.id AND b.id = c.id;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))
-          (identifier))
-        (relation
-          (object_reference
-            (identifier))
-          (identifier))
-        (relation
-          (object_reference
-            (identifier))
-          (identifier)))
-      (where
-        (keyword_where)
-        (binary_expression
-          (binary_expression
-            (field
-              (object_reference
-                (identifier))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
               (identifier))
-            (field
-              (object_reference
-                (identifier))
-              (identifier)))
-          (keyword_and)
-          (binary_expression
-            (field
-              (object_reference
-                (identifier))
+            (identifier))
+          (relation
+            (object_reference
               (identifier))
-            (field
-              (object_reference
+            (identifier))
+          (relation
+            (object_reference
+              (identifier))
+            (identifier)))
+        (where
+          (keyword_where)
+          (binary_expression
+            (binary_expression
+              (field
+                (object_reference
+                  (identifier))
                 (identifier))
-              (identifier))))))))
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))
+            (keyword_and)
+            (binary_expression
+              (field
+                (object_reference
+                  (identifier))
+                (identifier))
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))))))))
 
 ================================================================================
 Subquery in from
@@ -1152,66 +1178,69 @@ FROM (
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (subquery
-            (select
-              (keyword_select)
-              (select_expression
-                (term
-                  (all_fields))))
-            (from
-              (keyword_from)
-              (relation
-                (object_reference
-                  (identifier)))))
-          (keyword_as)
-          (identifier))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (subquery
+              (query_specification
+                (select
+                  (keyword_select)
+                  (select_expression
+                    (term
+                      (all_fields))))
+                (from
+                  (keyword_from)
+                  (relation
+                    (object_reference
+                      (identifier))))))
+            (keyword_as)
+            (identifier)))))
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields
-              (object_reference
-                (identifier))))))
-      (from
-        (keyword_from)
-        (relation
-          (subquery
-            (set_operation
-              (query_specification
-                (select
-                  (keyword_select)
-                  (select_expression
-                    (term
-                      (all_fields))))
-                (from
-                  (keyword_from)
-                  (relation
-                    (object_reference
-                      (identifier)))))
-              (keyword_union)
-              (keyword_all)
-              (query_specification
-                (select
-                  (keyword_select)
-                  (select_expression
-                    (term
-                      (all_fields))))
-                (from
-                  (keyword_from)
-                  (relation
-                    (object_reference
-                      (identifier)))))))
-          (identifier))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields
+                (object_reference
+                  (identifier))))))
+        (from
+          (keyword_from)
+          (relation
+            (subquery
+              (set_operation
+                (query_specification
+                  (select
+                    (keyword_select)
+                    (select_expression
+                      (term
+                        (all_fields))))
+                  (from
+                    (keyword_from)
+                    (relation
+                      (object_reference
+                        (identifier)))))
+                (keyword_union)
+                (keyword_all)
+                (query_specification
+                  (select
+                    (keyword_select)
+                    (select_expression
+                      (term
+                        (all_fields))))
+                  (from
+                    (keyword_from)
+                    (relation
+                      (object_reference
+                        (identifier)))))))
+            (identifier)))))))
 
 ================================================================================
 Set operations
@@ -1377,13 +1406,14 @@ SELECT 1 OPTION (RECOMPILE);
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (literal)
-            (keyword_as)
-            (identifier))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (literal)
+              (keyword_as)
+              (identifier)))))
       (order_by
         (keyword_order)
         (keyword_by)
@@ -1391,11 +1421,12 @@ SELECT 1 OPTION (RECOMPILE);
           (field
             (identifier)))))
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (literal))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (literal)))))
       (option_clause
         (keyword_option)
         (query_hint
@@ -1415,38 +1446,39 @@ HAVING COUNT(*) = 2;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (identifier)))
-          (term
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))
+            (term
+              (invocation
+                (object_reference
+                  (identifier))
+                (term
+                  (field
+                    (identifier)))))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))
+        (group_by
+          (keyword_group)
+          (keyword_by)
+          (field
+            (identifier)))
+        (having
+          (keyword_having)
+          (binary_expression
             (invocation
               (object_reference
                 (identifier))
               (term
-                (field
-                  (identifier)))))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
-      (group_by
-        (keyword_group)
-        (keyword_by)
-        (field
-          (identifier)))
-      (having
-        (keyword_having)
-        (binary_expression
-          (invocation
-            (object_reference
-              (identifier))
-            (term
-              (all_fields)))
-          (literal))))))
+                (all_fields)))
+            (literal)))))))
 
 ================================================================================
 Group by ROLLUP, CUBE and GROUPING SETS
@@ -1465,76 +1497,78 @@ GROUP BY GROUPING SETS ((a, b), (a), ());
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (identifier)))
-          (term
-            (field
-              (identifier)))
-          (term
-            (invocation
-              (object_reference
-                (identifier))
-              (term
-                (field
-                  (identifier)))))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
-      (group_by
-        (keyword_group)
-        (keyword_by)
-        (invocation
-          (object_reference
-            (identifier))
-          (term
-            (field
-              (identifier)))
-          (term
-            (field
-              (identifier))))))
-    (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (identifier)))
-          (term
-            (field
-              (identifier)))
-          (term
-            (invocation
-              (object_reference
-                (identifier))
-              (term
-                (field
-                  (identifier)))))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
-      (group_by
-        (keyword_group)
-        (keyword_by)
-        (grouping_sets
-          (keyword_grouping)
-          (keyword_sets)
-          (list
-            (field
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))
+            (term
+              (field
+                (identifier)))
+            (term
+              (invocation
+                (object_reference
+                  (identifier))
+                (term
+                  (field
+                    (identifier)))))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))
+        (group_by
+          (keyword_group)
+          (keyword_by)
+          (invocation
+            (object_reference
               (identifier))
-            (field
-              (identifier)))
-          (parenthesized_expression
-            (field
-              (identifier)))
-          (list))))))
+            (term
+              (field
+                (identifier)))
+            (term
+              (field
+                (identifier)))))))
+    (statement
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))
+            (term
+              (field
+                (identifier)))
+            (term
+              (invocation
+                (object_reference
+                  (identifier))
+                (term
+                  (field
+                    (identifier)))))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))
+        (group_by
+          (keyword_group)
+          (keyword_by)
+          (grouping_sets
+            (keyword_grouping)
+            (keyword_sets)
+            (list
+              (field
+                (identifier))
+              (field
+                (identifier)))
+            (parenthesized_expression
+              (field
+                (identifier)))
+            (list)))))))
 
 ================================================================================
 OFFSET and FETCH
@@ -1553,17 +1587,18 @@ SELECT id FROM my_table ORDER BY id OFFSET @skip ROWS;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
               (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
       (order_by
         (keyword_order)
         (keyword_by)
@@ -1580,17 +1615,18 @@ SELECT id FROM my_table ORDER BY id OFFSET @skip ROWS;
         (keyword_rows)
         (keyword_only)))
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
               (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
       (order_by
         (keyword_order)
         (keyword_by)
@@ -1623,82 +1659,85 @@ SELECT id, name FROM t FOR JSON PATH, INCLUDE_NULL_VALUES;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (invocation
-              (object_reference
-                (identifier))
-              (term
-                (method_call
-                  (subquery
-                    (select
-                      (keyword_select)
-                      (select_expression
-                        (term
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (invocation
+                (object_reference
+                  (identifier))
+                (term
+                  (method_call
+                    (subquery
+                      (query_specification
+                        (select
+                          (keyword_select)
+                          (select_expression
+                            (term
+                              (binary_expression
+                                (literal)
+                                (field
+                                  (identifier))))))
+                        (from
+                          (keyword_from)
+                          (relation
+                            (object_reference
+                              (identifier))))
+                        (where
+                          (keyword_where)
                           (binary_expression
-                            (literal)
                             (field
-                              (identifier))))))
-                    (from
-                      (keyword_from)
-                      (relation
-                        (object_reference
+                              (object_reference
+                                (identifier))
+                              (identifier))
+                            (field
+                              (object_reference
+                                (identifier))
+                              (identifier)))))
+                      (for_clause
+                        (keyword_for)
+                        (keyword_xml)
+                        (for_option
+                          (identifier)
+                          (literal))
+                        (for_option
                           (identifier))))
-                    (where
-                      (keyword_where)
-                      (binary_expression
-                        (field
-                          (object_reference
-                            (identifier))
-                          (identifier))
-                        (field
-                          (object_reference
-                            (identifier))
-                          (identifier))))
-                    (for_clause
-                      (keyword_for)
-                      (keyword_xml)
-                      (for_option
-                        (identifier)
-                        (literal))
-                      (for_option
-                        (identifier))))
-                  (identifier)
-                  (term
-                    (literal))
-                  (term
-                    (literal))))
-              (term
-                (literal))
-              (term
-                (literal))
-              (term
-                (literal)))
-            (keyword_as)
-            (identifier))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))
-          (identifier))))
+                    (identifier)
+                    (term
+                      (literal))
+                    (term
+                      (literal))))
+                (term
+                  (literal))
+                (term
+                  (literal))
+                (term
+                  (literal)))
+              (keyword_as)
+              (identifier))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))
+            (identifier)))))
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (identifier)))
-          (term
-            (field
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
               (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
       (for_clause
         (keyword_for)
         (keyword_xml)
@@ -1710,20 +1749,21 @@ SELECT id, name FROM t FOR JSON PATH, INCLUDE_NULL_VALUES;
           (identifier)
           (literal))))
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (identifier)))
-          (term
-            (field
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
               (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
       (for_clause
         (keyword_for)
         (keyword_json)
@@ -1749,85 +1789,88 @@ UNPIVOT (qty FOR yr IN ([2024], [2025])) AS unpvt;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (identifier)))
-          (term
-            (field
-              (identifier)))
-          (term
-            (field
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (subquery
-            (select
-              (keyword_select)
-              (select_expression
-                (term
-                  (field
-                    (identifier)))
-                (term
-                  (field
-                    (identifier)))
-                (term
-                  (field
-                    (identifier)))))
-            (from
-              (keyword_from)
-              (relation
-                (object_reference
-                  (identifier)))))
-          (keyword_as)
-          (identifier))
-        (pivot_clause
-          (keyword_pivot)
-          (invocation
-            (object_reference
-              (identifier))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
             (term
               (field
-                (identifier))))
-          (keyword_for)
-          (field
+                (identifier)))
+            (term
+              (field
+                (identifier)))
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (subquery
+              (query_specification
+                (select
+                  (keyword_select)
+                  (select_expression
+                    (term
+                      (field
+                        (identifier)))
+                    (term
+                      (field
+                        (identifier)))
+                    (term
+                      (field
+                        (identifier)))))
+                (from
+                  (keyword_from)
+                  (relation
+                    (object_reference
+                      (identifier))))))
+            (keyword_as)
             (identifier))
-          (keyword_in)
-          (identifier)
-          (identifier)
-          (keyword_as)
-          (identifier))))
+          (pivot_clause
+            (keyword_pivot)
+            (invocation
+              (object_reference
+                (identifier))
+              (term
+                (field
+                  (identifier))))
+            (keyword_for)
+            (field
+              (identifier))
+            (keyword_in)
+            (identifier)
+            (identifier)
+            (keyword_as)
+            (identifier)))))
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))
+            (term
+              (field
+                (identifier)))
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
               (identifier)))
-          (term
-            (field
-              (identifier)))
-          (term
-            (field
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))
-        (unpivot_clause
-          (keyword_unpivot)
-          (identifier)
-          (keyword_for)
-          (identifier)
-          (keyword_in)
-          (identifier)
-          (identifier)
-          (keyword_as)
-          (identifier))))))
+          (unpivot_clause
+            (keyword_unpivot)
+            (identifier)
+            (keyword_for)
+            (identifier)
+            (keyword_in)
+            (identifier)
+            (identifier)
+            (keyword_as)
+            (identifier)))))))
 
 ================================================================================
 Bare table hints
@@ -1842,79 +1885,82 @@ SELECT 1 FROM dbo.f(col) AS y (a, b);
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (literal))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))
-          (table_hint
-            (table_hint_item
-              (identifier))))))
-    (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (literal))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))
-          (identifier)
-          (table_hint
-            (table_hint_item
-              (identifier))
-            (table_hint_item
-              (keyword_index)
-              (identifier))))
-        (join
-          (keyword_inner)
-          (keyword_join)
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (literal))))
+        (from
+          (keyword_from)
           (relation
             (object_reference
               (identifier))
             (table_hint
               (table_hint_item
-                (identifier))))
-          (keyword_on)
-          (binary_expression
-            (field
-              (object_reference
-                (identifier))
-              (identifier))
-            (field
-              (object_reference
-                (identifier))
-              (identifier))))))
+                (identifier)))))))
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (literal))))
-      (from
-        (keyword_from)
-        (relation
-          (invocation
-            (object_reference
-              (identifier)
-              (identifier))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
             (term
-              (field
-                (identifier))))
-          (keyword_as)
-          (identifier)
-          (list
-            (column
+              (literal))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
               (identifier))
-            (column
-              (identifier))))))))
+            (identifier)
+            (table_hint
+              (table_hint_item
+                (identifier))
+              (table_hint_item
+                (keyword_index)
+                (identifier))))
+          (join
+            (keyword_inner)
+            (keyword_join)
+            (relation
+              (object_reference
+                (identifier))
+              (table_hint
+                (table_hint_item
+                  (identifier))))
+            (keyword_on)
+            (binary_expression
+              (field
+                (object_reference
+                  (identifier))
+                (identifier))
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))))))
+    (statement
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (literal))))
+        (from
+          (keyword_from)
+          (relation
+            (invocation
+              (object_reference
+                (identifier)
+                (identifier))
+              (term
+                (field
+                  (identifier))))
+            (keyword_as)
+            (identifier)
+            (list
+              (column
+                (identifier))
+              (column
+                (identifier)))))))))
 
 ================================================================================
 Query hints
@@ -1929,17 +1975,18 @@ SELECT a FROM t OPTION (OPTIMIZE FOR UNKNOWN, USE HINT ('FORCE_LEGACY_CARDINALIT
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
               (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
       (option_clause
         (keyword_option)
         (query_hint
@@ -1949,17 +1996,18 @@ SELECT a FROM t OPTION (OPTIMIZE FOR UNKNOWN, USE HINT ('FORCE_LEGACY_CARDINALIT
           (identifier)
           (literal))))
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
               (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
       (option_clause
         (keyword_option)
         (query_hint
@@ -1977,17 +2025,18 @@ SELECT a FROM t OPTION (OPTIMIZE FOR UNKNOWN, USE HINT ('FORCE_LEGACY_CARDINALIT
             (identifier)
             (keyword_unknown)))))
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
               (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
       (option_clause
         (keyword_option)
         (query_hint
@@ -2011,58 +2060,60 @@ SELECT TOP 1 @name = name FROM tbl ORDER BY id DESC;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (binary_expression
-              (field
-                (identifier))
-              (invocation
-                (object_reference
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (binary_expression
+                (field
                   (identifier))
-                (term
-                  (all_fields)))))
-          (term
-            (binary_expression
-              (field
-                (identifier))
-              (invocation
-                (object_reference
+                (invocation
+                  (object_reference
+                    (identifier))
+                  (term
+                    (all_fields)))))
+            (term
+              (binary_expression
+                (field
                   (identifier))
-                (term
-                  (field
-                    (identifier))))))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
-      (where
-        (keyword_where)
-        (binary_expression
-          (field
-            (identifier))
-          (field
-            (identifier)))))
+                (invocation
+                  (object_reference
+                    (identifier))
+                  (term
+                    (field
+                      (identifier))))))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))
+        (where
+          (keyword_where)
+          (binary_expression
+            (field
+              (identifier))
+            (field
+              (identifier))))))
     (statement
-      (select
-        (keyword_select)
-        (top_clause
-          (keyword_top)
-          (literal))
-        (select_expression
-          (term
-            (binary_expression
-              (field
-                (identifier))
-              (field
-                (identifier))))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
+      (query_specification
+        (select
+          (keyword_select)
+          (top_clause
+            (keyword_top)
+            (literal))
+          (select_expression
+            (term
+              (binary_expression
+                (field
+                  (identifier))
+                (field
+                  (identifier))))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier)))))
       (order_by
         (keyword_order)
         (keyword_by)
@@ -2086,23 +2137,25 @@ FROM some_table s;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))
-          (identifier))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))
+            (identifier)))))
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (literal)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (literal))))))))
 
 ================================================================================
 Aliases with comments
@@ -2124,58 +2177,59 @@ WHERE
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (object_reference
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))
+            (term
+              (field
+                (object_reference
+                  (identifier))
                 (identifier))
-              (identifier)))
-          (term
-            (field
-              (object_reference
-                (identifier))
+              (keyword_as)
               (identifier))
-            (keyword_as)
-            (identifier))
-          (comment)
-          (term
-            (field
-              (object_reference
-                (identifier))
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))
-          (identifier))
-        (join
-          (keyword_left)
-          (keyword_join)
+            (comment)
+            (term
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))))
+        (from
+          (keyword_from)
           (relation
             (object_reference
               (identifier))
             (identifier))
-          (keyword_on)
+          (join
+            (keyword_left)
+            (keyword_join)
+            (relation
+              (object_reference
+                (identifier))
+              (identifier))
+            (keyword_on)
+            (binary_expression
+              (field
+                (object_reference
+                  (identifier))
+                (identifier))
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))))
+        (where
+          (keyword_where)
           (binary_expression
             (field
               (object_reference
                 (identifier))
               (identifier))
-            (field
-              (object_reference
-                (identifier))
-              (identifier)))))
-      (where
-        (keyword_where)
-        (binary_expression
-          (field
-            (object_reference
-              (identifier))
-            (identifier))
-          (literal))))))
+            (literal)))))))
 
 ================================================================================
 Physical join hints: HASH, LOOP, MERGE and REMOTE
@@ -2193,107 +2247,108 @@ SELECT a.Id
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (object_reference
-                (identifier))
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)
-            (identifier))
-          (keyword_as)
-          (identifier))
-        (join
-          (keyword_inner)
-          (join_hint
-            (keyword_hash))
-          (keyword_join)
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))))
+        (from
+          (keyword_from)
           (relation
             (object_reference
               (identifier)
               (identifier))
             (keyword_as)
             (identifier))
-          (keyword_on)
-          (binary_expression
-            (field
+          (join
+            (keyword_inner)
+            (join_hint
+              (keyword_hash))
+            (keyword_join)
+            (relation
               (object_reference
+                (identifier)
                 (identifier))
+              (keyword_as)
               (identifier))
-            (field
-              (object_reference
+            (keyword_on)
+            (binary_expression
+              (field
+                (object_reference
+                  (identifier))
                 (identifier))
-              (identifier))))
-        (join
-          (keyword_left)
-          (keyword_outer)
-          (join_hint
-            (keyword_loop))
-          (keyword_join)
-          (relation
-            (object_reference
-              (identifier)
+              (field
+                (object_reference
+                  (identifier))
+                (identifier))))
+          (join
+            (keyword_left)
+            (keyword_outer)
+            (join_hint
+              (keyword_loop))
+            (keyword_join)
+            (relation
+              (object_reference
+                (identifier)
+                (identifier))
+              (keyword_as)
               (identifier))
-            (keyword_as)
-            (identifier))
-          (keyword_on)
-          (binary_expression
-            (field
-              (object_reference
+            (keyword_on)
+            (binary_expression
+              (field
+                (object_reference
+                  (identifier))
                 (identifier))
+              (field
+                (object_reference
+                  (identifier))
+                (identifier))))
+          (join
+            (keyword_inner)
+            (join_hint
+              (keyword_merge))
+            (keyword_join)
+            (relation
+              (object_reference
+                (identifier)
+                (identifier))
+              (keyword_as)
               (identifier))
-            (field
-              (object_reference
+            (keyword_on)
+            (binary_expression
+              (field
+                (object_reference
+                  (identifier))
                 (identifier))
-              (identifier))))
-        (join
-          (keyword_inner)
-          (join_hint
-            (keyword_merge))
-          (keyword_join)
-          (relation
-            (object_reference
-              (identifier)
+              (field
+                (object_reference
+                  (identifier))
+                (identifier))))
+          (join
+            (keyword_inner)
+            (join_hint
+              (keyword_remote))
+            (keyword_join)
+            (relation
+              (object_reference
+                (identifier)
+                (identifier))
+              (keyword_as)
               (identifier))
-            (keyword_as)
-            (identifier))
-          (keyword_on)
-          (binary_expression
-            (field
-              (object_reference
+            (keyword_on)
+            (binary_expression
+              (field
+                (object_reference
+                  (identifier))
                 (identifier))
-              (identifier))
-            (field
-              (object_reference
-                (identifier))
-              (identifier))))
-        (join
-          (keyword_inner)
-          (join_hint
-            (keyword_remote))
-          (keyword_join)
-          (relation
-            (object_reference
-              (identifier)
-              (identifier))
-            (keyword_as)
-            (identifier))
-          (keyword_on)
-          (binary_expression
-            (field
-              (object_reference
-                (identifier))
-              (identifier))
-            (field
-              (object_reference
-                (identifier))
-              (identifier))))))))
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))))))))
 
 ================================================================================
 A SELECT with an unterminated FROM followed by a MERGE statement
@@ -2307,16 +2362,17 @@ MERGE INTO x USING y ON x.i = y.i WHEN MATCHED THEN DELETE;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (literal))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (literal))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))
     (statement
       (merge
         (keyword_merge)
@@ -2356,94 +2412,98 @@ SELECT * FROM dbo.f(1) WITH (INDEX = ix);
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)
-            (identifier))
-          (identifier)))
-      (where
-        (keyword_where)
-        (binary_expression
-          (field
-            (object_reference
-              (identifier))
-            (identifier))
-          (literal))))
-    (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)
-            (identifier))
-          (identifier))
-        (join
-          (keyword_join)
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
           (relation
             (object_reference
               (identifier)
-              (identifier)))
-          (keyword_on)
+              (identifier))
+            (identifier)))
+        (where
+          (keyword_where)
           (binary_expression
             (field
               (object_reference
                 (identifier))
               (identifier))
-            (field
+            (literal)))))
+    (statement
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier)
+              (identifier))
+            (identifier))
+          (join
+            (keyword_join)
+            (relation
               (object_reference
+                (identifier)
+                (identifier)))
+            (keyword_on)
+            (binary_expression
+              (field
+                (object_reference
+                  (identifier))
                 (identifier))
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))))))
+    (statement
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (invocation
+              (object_reference
+                (identifier)
+                (identifier))
+              (term
+                (literal))))
+          (table_hint
+            (keyword_with)
+            (table_hint_item
               (identifier))))))
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (invocation
-            (object_reference
-              (identifier)
-              (identifier))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
             (term
-              (literal))))
-        (table_hint
-          (keyword_with)
-          (table_hint_item
-            (identifier)))))
-    (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (invocation
-            (object_reference
-              (identifier)
-              (identifier))
-            (term
-              (literal))))
-        (table_hint
-          (keyword_with)
-          (table_hint_item
-            (keyword_index)
-            (identifier)))))))
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (invocation
+              (object_reference
+                (identifier)
+                (identifier))
+              (term
+                (literal))))
+          (table_hint
+            (keyword_with)
+            (table_hint_item
+              (keyword_index)
+              (identifier))))))))
 
 ================================================================================
 WINDOWS and COLUMNSTORE are free everywhere except right after CREATE LOGIN/the index-kind slot (ARCH-12)
@@ -2458,46 +2518,49 @@ SELECT * FROM dbo.t columnstore;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (identifier)))
-          (term
-            (field
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))
+    (statement
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier)
+              (identifier))
             (identifier)))))
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)
-            (identifier))
-          (identifier))))
-    (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)
-            (identifier))
-          (identifier))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier)
+              (identifier))
+            (identifier)))))))
 
 ================================================================================
 FOR SYSTEM_TIME AS OF
@@ -2510,22 +2573,23 @@ SELECT * FROM t FOR SYSTEM_TIME AS OF '2020-01-01';
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))
-          (for_system_time_clause
-            (keyword_for_system_time)
-            (system_time_qualifier
-              (keyword_as)
-              (keyword_of)
-              (literal))))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))
+            (for_system_time_clause
+              (keyword_for_system_time)
+              (system_time_qualifier
+                (keyword_as)
+                (keyword_of)
+                (literal)))))))))
 
 ================================================================================
 FOR SYSTEM_TIME FROM ... TO, aliased
@@ -2538,25 +2602,26 @@ SELECT * FROM t FOR SYSTEM_TIME FROM '2020-01-01' TO '2021-01-01' AS t1;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))
-          (for_system_time_clause
-            (keyword_for_system_time)
-            (system_time_qualifier
-              (keyword_from)
-              (literal)
-              (keyword_to)
-              (literal)))
-          (keyword_as)
-          (identifier))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))
+            (for_system_time_clause
+              (keyword_for_system_time)
+              (system_time_qualifier
+                (keyword_from)
+                (literal)
+                (keyword_to)
+                (literal)))
+            (keyword_as)
+            (identifier)))))))
 
 ================================================================================
 FOR SYSTEM_TIME BETWEEN ... AND
@@ -2569,23 +2634,24 @@ SELECT * FROM t FOR SYSTEM_TIME BETWEEN '2020-01-01' AND '2021-01-01';
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))
-          (for_system_time_clause
-            (keyword_for_system_time)
-            (system_time_qualifier
-              (keyword_between)
-              (literal)
-              (keyword_and)
-              (literal))))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))
+            (for_system_time_clause
+              (keyword_for_system_time)
+              (system_time_qualifier
+                (keyword_between)
+                (literal)
+                (keyword_and)
+                (literal)))))))))
 
 ================================================================================
 FOR SYSTEM_TIME CONTAINED IN
@@ -2598,23 +2664,24 @@ SELECT * FROM t FOR SYSTEM_TIME CONTAINED IN ('2020-01-01', '2021-01-01');
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))
-          (for_system_time_clause
-            (keyword_for_system_time)
-            (system_time_qualifier
-              (keyword_contained)
-              (keyword_in)
-              (literal)
-              (literal))))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))
+            (for_system_time_clause
+              (keyword_for_system_time)
+              (system_time_qualifier
+                (keyword_contained)
+                (keyword_in)
+                (literal)
+                (literal)))))))))
 
 ================================================================================
 FOR SYSTEM_TIME ALL
@@ -2627,20 +2694,21 @@ SELECT * FROM t FOR SYSTEM_TIME ALL;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))
-          (for_system_time_clause
-            (keyword_for_system_time)
-            (system_time_qualifier
-              (keyword_all))))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))
+            (for_system_time_clause
+              (keyword_for_system_time)
+              (system_time_qualifier
+                (keyword_all)))))))))
 
 ================================================================================
 SELECT ... FOR JSON still parses after FOR SYSTEM_TIME is added
@@ -2653,20 +2721,21 @@ SELECT a, b FROM t FOR JSON AUTO;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (identifier)))
-          (term
-            (field
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
               (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
       (for_clause
         (keyword_for)
         (keyword_json)
@@ -2684,20 +2753,21 @@ SELECT * FROM t TABLESAMPLE (10 PERCENT);
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))
-        (tablesample_clause
-          (keyword_tablesample)
-          (literal)
-          (keyword_percent))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier)))
+          (tablesample_clause
+            (keyword_tablesample)
+            (literal)
+            (keyword_percent)))))))
 
 ================================================================================
 TABLESAMPLE SYSTEM with REPEATABLE
@@ -2710,23 +2780,24 @@ SELECT * FROM t TABLESAMPLE SYSTEM (10 PERCENT) REPEATABLE (100);
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))
-        (tablesample_clause
-          (keyword_tablesample)
-          (keyword_system)
-          (literal)
-          (keyword_percent)
-          (keyword_repeatable)
-          (literal))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier)))
+          (tablesample_clause
+            (keyword_tablesample)
+            (keyword_system)
+            (literal)
+            (keyword_percent)
+            (keyword_repeatable)
+            (literal)))))))
 
 ================================================================================
 OPENDATASOURCE with a dotted object suffix
@@ -2739,21 +2810,22 @@ SELECT * FROM OPENDATASOURCE('SQLNCLI', 'x').db.dbo.t;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (opendatasource_reference
-            (keyword_opendatasource)
-            (literal)
-            (literal)
-            (identifier)
-            (identifier)
-            (identifier)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (opendatasource_reference
+              (keyword_opendatasource)
+              (literal)
+              (literal)
+              (identifier)
+              (identifier)
+              (identifier))))))))
 
 ================================================================================
 CHANGETABLE CHANGES
@@ -2766,23 +2838,24 @@ SELECT * FROM CHANGETABLE(CHANGES dbo.t, 0) AS c;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (changetable
-            (keyword_changetable)
-            (keyword_changes)
-            (object_reference
-              (identifier)
-              (identifier))
-            (literal))
-          (keyword_as)
-          (identifier))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (changetable
+              (keyword_changetable)
+              (keyword_changes)
+              (object_reference
+                (identifier)
+                (identifier))
+              (literal))
+            (keyword_as)
+            (identifier)))))))
 
 ================================================================================
 CHANGETABLE VERSION
@@ -2795,36 +2868,37 @@ SELECT * FROM CHANGETABLE(VERSION dbo.t, (a, b), (col.a, col.b)) AS c;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (changetable
-            (keyword_changetable)
-            (keyword_version)
-            (object_reference
-              (identifier)
-              (identifier))
-            (list
-              (field
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (changetable
+              (keyword_changetable)
+              (keyword_version)
+              (object_reference
+                (identifier)
                 (identifier))
-              (field
-                (identifier)))
-            (list
-              (field
-                (object_reference
+              (list
+                (field
                   (identifier))
-                (identifier))
-              (field
-                (object_reference
+                (field
+                  (identifier)))
+              (list
+                (field
+                  (object_reference
+                    (identifier))
                   (identifier))
-                (identifier))))
-          (keyword_as)
-          (identifier))))))
+                (field
+                  (object_reference
+                    (identifier))
+                  (identifier))))
+            (keyword_as)
+            (identifier)))))))
 
 ================================================================================
 TABLESAMPLE combined with a table hint
@@ -2837,24 +2911,25 @@ SELECT * FROM t TABLESAMPLE (10 PERCENT) WITH (NOLOCK);
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))
-        (tablesample_clause
-          (keyword_tablesample)
-          (literal)
-          (keyword_percent))
-        (table_hint
-          (keyword_with)
-          (table_hint_item
-            (identifier)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier)))
+          (tablesample_clause
+            (keyword_tablesample)
+            (literal)
+            (keyword_percent))
+          (table_hint
+            (keyword_with)
+            (table_hint_item
+              (identifier))))))))
 
 ================================================================================
 Graph table MATCH predicate
@@ -2870,117 +2945,162 @@ SELECT * FROM Person p, likes l, Person p2 WHERE MATCH(p-(led_by|reports_to)->p2
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))
             (identifier))
-          (identifier))
-        (relation
-          (object_reference
+          (relation
+            (object_reference
+              (identifier))
             (identifier))
-          (identifier))
-        (relation
-          (object_reference
-            (identifier))
-          (identifier)))
-      (where
-        (keyword_where)
-        (graph_match_predicate
-          (keyword_match)
-          (graph_match_expr
-            (graph_path
-              (identifier)
-              (graph_hop
-                (identifier)
-                (identifier)))))))
-    (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))
-          (identifier))
-        (relation
-          (object_reference
-            (identifier))
-          (identifier))
-        (relation
-          (object_reference
-            (identifier))
-          (identifier)))
-      (where
-        (keyword_where)
-        (graph_match_predicate
-          (keyword_match)
-          (graph_match_expr
-            (graph_path
-              (identifier)
-              (graph_hop
-                (identifier)
-                (identifier)))))))
-    (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))
-          (identifier)))
-      (where
-        (keyword_where)
-        (graph_match_predicate
-          (keyword_match)
-          (graph_match_expr
-            (graph_shortest_path
-              (keyword_shortest_path)
+          (relation
+            (object_reference
+              (identifier))
+            (identifier)))
+        (where
+          (keyword_where)
+          (graph_match_predicate
+            (keyword_match)
+            (graph_match_expr
               (graph_path
                 (identifier)
                 (graph_hop
                   (identifier)
                   (identifier))))))))
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))
             (identifier))
-          (identifier))
-        (relation
-          (object_reference
+          (relation
+            (object_reference
+              (identifier))
             (identifier))
-          (identifier))
-        (relation
-          (object_reference
-            (identifier))
-          (identifier)))
-      (where
-        (keyword_where)
-        (graph_match_predicate
-          (keyword_match)
-          (graph_match_expr
-            (graph_path
-              (identifier)
-              (graph_hop
+          (relation
+            (object_reference
+              (identifier))
+            (identifier)))
+        (where
+          (keyword_where)
+          (graph_match_predicate
+            (keyword_match)
+            (graph_match_expr
+              (graph_path
                 (identifier)
+                (graph_hop
+                  (identifier)
+                  (identifier))))))))
+    (statement
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))
+            (identifier)))
+        (where
+          (keyword_where)
+          (graph_match_predicate
+            (keyword_match)
+            (graph_match_expr
+              (graph_shortest_path
+                (keyword_shortest_path)
+                (graph_path
+                  (identifier)
+                  (graph_hop
+                    (identifier)
+                    (identifier)))))))))
+    (statement
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))
+            (identifier))
+          (relation
+            (object_reference
+              (identifier))
+            (identifier))
+          (relation
+            (object_reference
+              (identifier))
+            (identifier)))
+        (where
+          (keyword_where)
+          (graph_match_predicate
+            (keyword_match)
+            (graph_match_expr
+              (graph_path
                 (identifier)
+                (graph_hop
+                  (identifier)
+                  (identifier)
+                  (identifier))))))))))
+
+================================================================================
+SELECT INTO is only on the first branch of a set operation
+================================================================================
+
+SELECT a INTO #x FROM t UNION SELECT b FROM u;
+
+--------------------------------------------------------------------------------
+
+(program
+  (batch
+    (statement
+      (set_operation
+        (query_specification
+          (select
+            (keyword_select)
+            (select_expression
+              (term
+                (field
+                  (identifier)))))
+          (keyword_into)
+          (object_reference
+            (identifier))
+          (from
+            (keyword_from)
+            (relation
+              (object_reference
+                (identifier)))))
+        (keyword_union)
+        (query_specification
+          (select
+            (keyword_select)
+            (select_expression
+              (term
+                (field
+                  (identifier)))))
+          (from
+            (keyword_from)
+            (relation
+              (object_reference
                 (identifier)))))))))

@@ -351,11 +351,12 @@ mylabel: SELECT 1;
       (label_statement
         (identifier)))
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            value: (literal)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              value: (literal))))))))
 
 ================================================================================
 Full-text catalog, route, audit and assembly

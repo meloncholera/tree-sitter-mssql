@@ -11,39 +11,40 @@ CROSS APPLY dbo.GetValues(o.id) AS v
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (object_reference
-                (identifier))
-              (identifier)))
-          (term
-            (field
-              (object_reference
-                (identifier))
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))
-          (identifier))
-        (apply_join
-          (keyword_cross)
-          (keyword_apply)
-          (invocation
-            (object_reference
-              (identifier)
-              (identifier))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
             (term
               (field
                 (object_reference
                   (identifier))
-                (identifier))))
-          (keyword_as)
-          (identifier))))))
+                (identifier)))
+            (term
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))
+            (identifier))
+          (apply_join
+            (keyword_cross)
+            (keyword_apply)
+            (invocation
+              (object_reference
+                (identifier)
+                (identifier))
+              (term
+                (field
+                  (object_reference
+                    (identifier))
+                  (identifier))))
+            (keyword_as)
+            (identifier)))))))
 
 ================================================================================
 OUTER APPLY with subquery
@@ -58,56 +59,58 @@ OUTER APPLY (SELECT TOP 1 detail FROM logs WHERE logs.emp_id = e.id) AS d
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (object_reference
-                (identifier))
-              (identifier)))
-          (term
-            (field
-              (object_reference
-                (identifier))
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))
-          (identifier))
-        (apply_join
-          (keyword_outer)
-          (keyword_apply)
-          (subquery
-            (select
-              (keyword_select)
-              (top_clause
-                (keyword_top)
-                (literal))
-              (select_expression
-                (term
-                  (field
-                    (identifier)))))
-            (from
-              (keyword_from)
-              (relation
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
                 (object_reference
-                  (identifier))))
-            (where
-              (keyword_where)
-              (binary_expression
-                (field
-                  (object_reference
-                    (identifier))
                   (identifier))
-                (field
-                  (object_reference
-                    (identifier))
-                  (identifier)))))
-          (keyword_as)
-          (identifier))))))
+                (identifier)))
+            (term
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))
+            (identifier))
+          (apply_join
+            (keyword_outer)
+            (keyword_apply)
+            (subquery
+              (query_specification
+                (select
+                  (keyword_select)
+                  (top_clause
+                    (keyword_top)
+                    (literal))
+                  (select_expression
+                    (term
+                      (field
+                        (identifier)))))
+                (from
+                  (keyword_from)
+                  (relation
+                    (object_reference
+                      (identifier))))
+                (where
+                  (keyword_where)
+                  (binary_expression
+                    (field
+                      (object_reference
+                        (identifier))
+                      (identifier))
+                    (field
+                      (object_reference
+                        (identifier))
+                      (identifier))))))
+            (keyword_as)
+            (identifier)))))))
 
 ================================================================================
 APPLY without an alias and with a column list
@@ -123,48 +126,49 @@ OUTER APPLY dbo.fn(t.id) AS f (a, b)
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))
-        (apply_join
-          (keyword_cross)
-          (keyword_apply)
-          (invocation
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
             (object_reference
-              (identifier))
-            (term
-              (field
-                (object_reference
-                  (identifier))
-                (identifier)))
-            (term
-              (literal))))
-        (apply_join
-          (keyword_outer)
-          (keyword_apply)
-          (invocation
-            (object_reference
-              (identifier)
-              (identifier))
-            (term
-              (field
-                (object_reference
-                  (identifier))
-                (identifier))))
-          (keyword_as)
-          (identifier)
-          (list
-            (column
-              (identifier))
-            (column
-              (identifier))))))))
+              (identifier)))
+          (apply_join
+            (keyword_cross)
+            (keyword_apply)
+            (invocation
+              (object_reference
+                (identifier))
+              (term
+                (field
+                  (object_reference
+                    (identifier))
+                  (identifier)))
+              (term
+                (literal))))
+          (apply_join
+            (keyword_outer)
+            (keyword_apply)
+            (invocation
+              (object_reference
+                (identifier)
+                (identifier))
+              (term
+                (field
+                  (object_reference
+                    (identifier))
+                  (identifier))))
+            (keyword_as)
+            (identifier)
+            (list
+              (column
+                (identifier))
+              (column
+                (identifier)))))))))
 
 ================================================================================
 APPLY with a bare alias, no AS
@@ -179,26 +183,27 @@ OUTER APPLY dbo.fn(t.id) f
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))
-        (apply_join
-          (keyword_outer)
-          (keyword_apply)
-          (invocation
-            (object_reference
-              (identifier)
-              (identifier))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
             (term
-              (field
-                (object_reference
-                  (identifier))
-                (identifier))))
-          (identifier))))))
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier)))
+          (apply_join
+            (keyword_outer)
+            (keyword_apply)
+            (invocation
+              (object_reference
+                (identifier)
+                (identifier))
+              (term
+                (field
+                  (object_reference
+                    (identifier))
+                  (identifier))))
+            (identifier)))))))
