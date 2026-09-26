@@ -64,10 +64,12 @@ const` named exports (`tree_sitter_mssql::HIGHLIGHTS_QUERY`), the Node
 binding as properties of its default export (`SQL.HIGHLIGHTS_QUERY`, not a
 named import).
 
-The npm package ships prebuilt native addons for Linux, macOS and Windows, so
-`npm install tree-sitter-mssql` needs no C toolchain on those platforms — it
-falls back to compiling from the committed generated parser only when no
-matching prebuild is present. A `tree-sitter-mssql.wasm` build is attached to
+The npm package ships prebuilt native addons for linux-x64, darwin-arm64
+(Apple Silicon) and win32-x64, so `npm install tree-sitter-mssql` needs no C
+toolchain on those platforms — it falls back to compiling from the committed
+generated parser on any other platform/arch (Intel Mac, ARM Linux, ARM
+Windows), the same as before this existed. A `tree-sitter-mssql.wasm` build
+is attached to
 every [GitHub Release](https://github.com/meloncholic/tree-sitter-mssql/releases)
 for `web-tree-sitter` consumers (browsers, sandboxed runtimes):
 

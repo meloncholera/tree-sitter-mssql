@@ -149,6 +149,15 @@ jobs:
         with:
           node-version: '24.x'
 
+      - name: Install dependencies
+        # node-addon-api is a runtime dependency binding.gyp resolves at gyp
+        # configure time (`require('node-addon-api').targets`); prebuildify
+        # only installs itself into npx's own ephemeral cache, which that
+        # require can't see. --ignore-scripts skips this package's own
+        # "install": "node-gyp-build" script, which would otherwise try (and
+        # fail, since there's nothing built yet) to load the addon.
+        run: npm install --ignore-scripts
+
       - name: Build the native Node addon prebuild
         run: npx --yes prebuildify@${{ env.PREBUILDIFY_VERSION }} --napi --strip
 
@@ -229,6 +238,13 @@ jobs:
   publish-npm:
     name: Publish to npm
     needs: [verify, prebuild]
+    # A prebuild failure on one platform isn't fatal — node-gyp-build already
+    # falls back to a source build for whichever platform has no matching
+    # prebuild, the same as before this job existed. Waiting for `prebuild`
+    # to finish (rather than skipping ahead of it) without hard-requiring
+    # every leg to succeed keeps that fallback available instead of blocking
+    # the whole npm publish on one platform's toolchain hiccup.
+    if: ${{ !cancelled() && needs.verify.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -286,6 +302,10 @@ jobs:
   publish-github-packages:
     name: Publish to GitHub Packages
     needs: [verify, prebuild]
+    # See publish-npm's own comment on this same `if:` — a prebuild failure
+    # on one platform falls back to a source build rather than blocking
+    # this publish entirely.
+    if: ${{ !cancelled() && needs.verify.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -338,6 +358,11 @@ jobs:
   github-release:
     name: Create GitHub Release
     needs: [publish-crate, publish-npm, publish-github-packages, build-wasm]
+    # The release itself, and the node-kind stability files, don't depend on
+    # the WASM build succeeding — a WASI-SDK download hiccup in build-wasm
+    # shouldn't block release creation once every registry is already
+    # live. Only the three publish jobs are hard-required.
+    if: ${{ !cancelled() && needs.publish-crate.result == 'success' && needs.publish-npm.result == 'success' && needs.publish-github-packages.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -351,6 +376,7 @@ jobs:
           ref: ${{ env.TAG }}
 
       - name: Download the WASM build
+        if: needs.build-wasm.result == 'success'
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: wasm-build
@@ -365,6 +391,7 @@ jobs:
           fi
 
       - name: Attach the WASM build
+        if: needs.build-wasm.result == 'success'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

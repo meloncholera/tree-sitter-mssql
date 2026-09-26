@@ -2,7 +2,7 @@
 #  tree-sitter-mssql · GitHub Actions
 # -----------------------------------------------------------------------------
 #  File                fuzz.yml
-#  Workflow name        Fuzz
+#  Workflow name       Fuzz
 #  Type                Entrypoint (runs in this repo only)
 #  Triggers            schedule (weekly)
 #                      workflow_dispatch
@@ -12,9 +12,12 @@
 #                      test/fixtures/*.sql, and fails if libFuzzer finds a
 #                      panic, crash, or hang. Runs on a schedule rather than
 #                      per-PR, since fuzzing has no fixed completion time
-#                      and a PR gate needs one; a bug it finds is filed or
-#                      fixed like any other, not blocked on a specific PR.
+#                      and a PR gate needs one. A failed run files (or
+#                      reuses) a tracking issue in this repo, since a
+#                      schedule has no PR author to notify.
 # =============================================================================
+# policy:allow schedule-ungated reason="fuzzing explores input space over time, not code changes — an unchanged scanner can still have an undiscovered bug days later, the same reasoning that exempts audit/security sweeps"
+# policy:allow schedule-untriaged reason="this repo's CI is fully self-contained (no org reusable-workflow calls, per AGENTS.md) — the triage-failure job below opens or reuses a tracking issue directly via gh issue create instead of calling the org's triage-scheduled-failure.yml"
 
 name: Fuzz
 
@@ -23,6 +26,9 @@ on:
     - cron: '17 6 * * 1' # Mondays, 06:17 UTC — an off-peak, arbitrary minute
   workflow_dispatch:
 
+env:
+  CARGO_FUZZ_VERSION: '0.13.2'
+
 permissions:
   contents: read
 
@@ -30,7 +36,7 @@ jobs:
   fuzz:
     name: Fuzz src/scanner.c and the parser
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -45,8 +51,16 @@ jobs:
         with:
           workspaces: fuzz -> target
 
+      - name: Cache the cargo-fuzz binary
+        id: cargo-fuzz-cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cargo/bin/cargo-fuzz
+          key: cargo-fuzz-${{ env.CARGO_FUZZ_VERSION }}-${{ runner.os }}
+
       - name: Install cargo-fuzz
-        run: cargo install cargo-fuzz --locked
+        if: steps.cargo-fuzz-cache.outputs.cache-hit != 'true'
+        run: cargo install cargo-fuzz --version "${{ env.CARGO_FUZZ_VERSION }}" --locked
 
       - name: Seed the corpus from the fixtures
         run: |
@@ -55,7 +69,17 @@ jobs:
           cp test/fixtures/*.sql fuzz/corpus/parse/
 
       - name: Fuzz
-        run: cargo fuzz run parse -- -max_total_time=300
+        env:
+          # cargo-fuzz instruments the Rust side through RUSTFLAGS on its own;
+          # src/parser.c and src/scanner.c are compiled by the `cc` crate
+          # (bindings/rust/build.rs), which needs these set explicitly so
+          # libFuzzer's coverage feedback and ASan also cover the one
+          # hand-written C file this workflow exists to fuzz.
+          CC: clang
+          CXX: clang++
+          CFLAGS: -fsanitize=address,fuzzer-no-link
+          CXXFLAGS: -fsanitize=address,fuzzer-no-link
+        run: cargo fuzz run parse -- -max_total_time=300 -timeout=10
 
       - name: Upload a crashing input on failure
         if: failure()
@@ -64,3 +88,27 @@ jobs:
           name: fuzz-crash-artifacts
           path: fuzz/artifacts/parse/
           if-no-files-found: ignore
+
+  triage-failure:
+    name: File a tracking issue for a failed run
+    needs: fuzz
+    if: failure()
+    runs-on: ubuntu-slim # only runs gh; no toolchain, Docker, or browser needed
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - name: Open or reuse a tracking issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          existing=$(gh issue list --state open --search '"Scheduled Fuzz run failed" in:title' --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "Failed again: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          else
+            gh issue create --title "Scheduled Fuzz run failed" \
+              --body "The scheduled Fuzz workflow failed. See ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} for the run, and the fuzz-crash-artifacts artifact for a reproducing input if libFuzzer found one." \
+              --label bug --label ci
+          fi
