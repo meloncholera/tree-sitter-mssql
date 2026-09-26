@@ -32,7 +32,7 @@ The T-SQL-specific surface is added on top, and the upstream's other-dialect sur
 ## Using it
 
 ```sh
-cargo add tree-sitter-mssql
+cargo add tree-sitter tree-sitter-mssql
 ```
 
 ```rust
@@ -56,10 +56,13 @@ parser.setLanguage(SQL);
 ```
 
 A GitHub Packages copy of the npm package is also published as
-`@meloncholic/tree-sitter-mssql`. Both bindings export every query file as a
-named constant — `HIGHLIGHTS_QUERY`, `INDENTS_QUERY`, `INJECTIONS_QUERY`,
-`LOCALS_QUERY`, `TAGS_QUERY` — so a consumer can load `queries/highlights.scm`
-without resolving the package's install path by hand.
+`@meloncholic/tree-sitter-mssql`. Both bindings expose every query file —
+`HIGHLIGHTS_QUERY`, `INDENTS_QUERY`, `INJECTIONS_QUERY`, `LOCALS_QUERY`,
+`TAGS_QUERY` — so a consumer can load `queries/highlights.scm` without
+resolving the package's install path by hand: the Rust crate as real `pub
+const` named exports (`tree_sitter_mssql::HIGHLIGHTS_QUERY`), the Node
+binding as properties of its default export (`SQL.HIGHLIGHTS_QUERY`, not a
+named import).
 
 ## Consuming this grammar
 
@@ -84,7 +87,7 @@ does not yet cover.
 ## Building
 
 ```sh
-npx --package=tree-sitter-cli@0.27.0 -- tree-sitter generate
+npx --yes --package=tree-sitter-cli@0.27.0 -- tree-sitter generate
 cargo build
 ```
 
@@ -104,20 +107,20 @@ leaves the previous parser in place.
 ## Testing
 
 ```sh
-npx --package=tree-sitter-cli@0.27.0 -- tree-sitter test
+npx --yes --package=tree-sitter-cli@0.27.0 -- tree-sitter test
 ```
 
 On a machine without MSVC, point the CLI at another C compiler:
 
 ```sh
-CC=gcc CXX=g++ npx --package=tree-sitter-cli@0.27.0 -- tree-sitter test
+CC=gcc CXX=g++ npx --yes --package=tree-sitter-cli@0.27.0 -- tree-sitter test
 ```
 
 `test/corpus/` holds the per-construct tree assertions. Every file under `test/fixtures/*.sql`
 should also parse with zero `ERROR`/`MISSING`/zero-width nodes:
 
 ```sh
-for f in test/fixtures/*.sql; do printf "%s: " "$f"; CC=gcc CXX=g++ npx --package=tree-sitter-cli@0.27.0 -- tree-sitter parse "$f" 2>/dev/null | grep -c "ERROR\|MISSING"; done
+for f in test/fixtures/*.sql; do printf "%s: " "$f"; CC=gcc CXX=g++ npx --yes --package=tree-sitter-cli@0.27.0 -- tree-sitter parse "$f" 2>/dev/null | grep -c "ERROR\|MISSING"; done
 ```
 
 `test/node-kinds.txt` is regenerated with:

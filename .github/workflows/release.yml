@@ -8,8 +8,12 @@
 #                      workflow_dispatch (tag input)
 #  Purpose             Publishes the crate to crates.io and the npm package
 #                      to the public npm registry and to GitHub Packages for
-#                      the given tag, and creates the corresponding GitHub
-#                      Release. GitHub Packages requires an npm package name
+#                      the given tag, creates the corresponding GitHub
+#                      Release, and attaches test/node-kinds.txt and
+#                      versions.json to it as the node-kind stability
+#                      surface (only when the checkout has them — an older
+#                      tag re-dispatched by hand predates both files).
+#                      GitHub Packages requires an npm package name
 #                      scoped to the repository owner, so that job publishes
 #                      under @meloncholic/tree-sitter-mssql in its own
 #                      ephemeral checkout only — the public npm package stays
@@ -280,4 +284,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          gh release upload "$TAG" test/node-kinds.txt versions.json --clobber
+          # A manual re-dispatch can target a tag cut before versions.json
+          # existed; only upload what the checkout actually has, so a
+          # recovery run against an old tag doesn't fail the whole job.
+          assets=()
+          for f in test/node-kinds.txt versions.json; do
+            [ -f "$f" ] && assets+=("$f")
+          done
+          gh release upload "$TAG" "${assets[@]}" --clobber

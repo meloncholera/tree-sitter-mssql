@@ -3,7 +3,7 @@
 ## Build
 
 ```sh
-npx --package=tree-sitter-cli@0.27.0 -- tree-sitter generate
+npx --yes --package=tree-sitter-cli@0.27.0 -- tree-sitter generate
 cargo build
 ```
 
@@ -17,7 +17,7 @@ compiler even on a machine without MSVC.
 ## Test
 
 ```sh
-CC=gcc CXX=g++ npx --package=tree-sitter-cli@0.27.0 -- tree-sitter test
+CC=gcc CXX=g++ npx --yes --package=tree-sitter-cli@0.27.0 -- tree-sitter test
 cargo test
 ```
 
@@ -29,7 +29,7 @@ touch it.
 Check every fixture for `ERROR`/`MISSING` nodes:
 
 ```sh
-for f in test/fixtures/*.sql; do printf "%s: " "$f"; CC=gcc CXX=g++ npx --package=tree-sitter-cli@0.27.0 -- tree-sitter parse "$f" 2>/dev/null | grep -c "ERROR\|MISSING"; done
+for f in test/fixtures/*.sql; do printf "%s: " "$f"; CC=gcc CXX=g++ npx --yes --package=tree-sitter-cli@0.27.0 -- tree-sitter parse "$f" 2>/dev/null | grep -c "ERROR\|MISSING"; done
 ```
 
 Regenerate `test/node-kinds.txt` after any change to a node kind or field name:

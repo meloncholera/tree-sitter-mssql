@@ -51,7 +51,7 @@
     "table_hint": {
       "reason": "The bare table-hint form (FROM t (NOLOCK), with no WITH keyword) is deprecated in favor of FROM t WITH (NOLOCK); still executes.",
       "note": "This node kind also represents the current WITH (...) form. This entry applies only when the table_hint node has no keyword_with child.",
-      "corpusCase": "AGENTS.md documents the bare form (_bare_table_hint) at length; see the relation/table_hint corpus cases"
+      "corpusCase": "test/corpus/select.txt — \"Bare table hints\""
     }
   }
 }

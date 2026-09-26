@@ -1,33 +1,41 @@
 # Accepted gaps
 
-This consolidates the deliberate, known places where the grammar's tree does not exactly match
-what SQL Server itself accepts or rejects — one row per gap, whether the grammar over- or
-under-accepts, and the corpus case (or fixture) that pins the current behavior so a future change
-is a reviewable diff instead of a silent regression. It replaces three separate prose sources:
-`test/fixtures/README.md`'s "Not parsed on purpose" section, the accepted-gap notes previously
-scattered across grammar comments, and this file's own predecessor discussions.
+This is the ledger of genuine mismatches between what SQL Server itself accepts or rejects and
+what this grammar's tree does — one row per gap, whether the grammar over- or under-accepts, and
+the corpus case (or fixture) that pins the current behavior so a future change is a reviewable
+diff instead of a silent regression. It consolidates the over- and under-acceptance notes that
+were previously scattered across grammar comments with the subset of
+`test/fixtures/README.md`'s "Not parsed on purpose" table that is an actual mismatch rather than a
+construct the grammar correctly rejects because SQL Server rejects it too — see that file for the
+complete list of constructs deliberately left unmodeled, matched or not.
 
 An entry with no corpus case listed is a known gap in the pinning itself, not a claim that the
 behavior is untested in general — see the note on each such row.
 
 ## Under-acceptance — constructs SQL Server accepts that this grammar rejects
 
+`test/fixtures/README.md`'s "Not parsed on purpose" table already pins three of these: the
+physical join hint with no join type (`HASH JOIN`/`LOOP JOIN`/`MERGE JOIN`/`REMOTE JOIN`), the rare
+sub-forms of deprecated or console statements (`WRITETEXT BULK ...`, `BACKUP ... MIRROR TO`,
+`KILL STATS JOB`/`KILL QUERY NOTIFICATION`), and the parenthesized union branch with its own
+`ORDER BY` alongside `TOP`/`OFFSET`/`FETCH`. See that file rather than duplicating the rows here.
+That same table also lists `COMPUTE`, the `*=`/`=*` outer-join operators, and
+`EXEC p 1 + 2`/`EXEC p @a = 1, 2` — those three are not gaps at all, since SQL Server itself
+rejects them too (the first two are removed constructs; the third violates Msg 119's
+argument-ordering rule), so the grammar's rejection already matches SQL Server's.
+
+One further under-acceptance surfaced while consolidating this ledger, not yet in either source:
+
 | Construct | Why | Pinned by |
 | --- | --- | --- |
-| `COMPUTE`, the `*=`/`=*` outer-join operators | Removed from SQL Server; out of scope (see README's "Scope" section) | Not modeled at all — no corpus case |
-| `FROM a HASH JOIN b`, `LOOP JOIN`, `MERGE JOIN`, `REMOTE JOIN` — a physical join hint with no join type | With no join type the hint word sits where an AS-less alias goes (`FROM dbo.t hash` would stop parsing) or collides with the `MERGE` statement itself, a fork that tripled `generate` time. Typed forms (`INNER HASH JOIN`, ...) parse. | `test/fixtures/README.md`'s "Not parsed on purpose" table |
-| `WRITETEXT BULK ...`, `BACKUP ... MIRROR TO`, `KILL STATS JOB`/`KILL QUERY NOTIFICATION` | Rare sub-forms of deprecated or console statements, not modeled | `test/fixtures/README.md`'s "Not parsed on purpose" table |
-| `EXEC p 1 + 2`, `EXEC p @a = 1, 2` | Rejected here because SQL Server rejects them (Msg 119): a procedure argument is a constant, a variable, or `DEFAULT`, and a positional argument cannot follow a named one | `test/corpus/errors.txt` |
-| A parenthesized union branch with its own `ORDER BY` alongside `TOP`/`OFFSET`/`FETCH` | Not modeled either way; predates the `query_specification` split | `test/fixtures/README.md`'s "Not parsed on purpose" table |
-| `ALTER MESSAGE TYPE` | Service Broker message types have no `ALTER` in real SQL Server — only `CREATE`/`DROP` | `test/fixtures/README.md`'s "Not parsed on purpose" table |
+| `ALTER MESSAGE TYPE name VALIDATION = ...` | Valid, documented T-SQL (unlike its six sibling Service Broker object kinds, which each gained an `ALTER` form, message types were assumed immutable and given none) — this is a genuine missing rule, not a deliberate decision | Not modeled at all — no corpus case |
 
 ## Over-acceptance — constructs this grammar accepts that SQL Server rejects
 
 | Construct | Why | Pinned by |
 | --- | --- | --- |
-| A body-less `CREATE PROCEDURE`/`CREATE TRIGGER ... AS` with no statements after `AS` | The procedure and trigger bodies share one rule; SQL Server rejects a body-less trigger specifically, but modeling that as a second rule was judged not worth the duplication for one invalid combination | `test/corpus/procedures.txt` — "An empty procedure body and a numbered procedure" |
+| A body-less `CREATE TRIGGER ... AS` with no statements after `AS` | The procedure and trigger bodies share one rule; a body-less procedure is legitimate SSMS-scripted syntax, but SQL Server rejects a body-less trigger specifically, and modeling that as a second rule was judged not worth the duplication for one invalid combination | No corpus case exercises a body-less trigger yet — the existing "An empty procedure body and a numbered procedure" case in `test/corpus/procedures.txt` only pins the (correct) procedure form |
 | `CREATE CERTIFICATE ... FROM PROVIDER name` | `CREATE CERTIFICATE` and `CREATE ASYMMETRIC KEY` share the same `_key_source` rule, but only `ASYMMETRIC KEY` accepts `PROVIDER` in real SQL Server | No corpus case exercises this combination yet — adding one needs a `tree-sitter generate` + `test --update` cycle; tracked here as a known gap in the pinning rather than fixed in this pass |
-| `:setvar MyVar` with no value | Satisfies `sqlcmd_setvar`'s required `value` field with a zero-width `object_reference` rather than an `ERROR` node — an under-acceptance would look identical to a plain `ERROR` count, which is why this one is worth naming explicitly | `test/corpus/sqlcmd.txt` — "setvar with no value removes the scripting variable (ARCH-14)" |
 
 ## Adding an entry
 
