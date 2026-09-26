@@ -58,20 +58,21 @@ RETURN;
                   (identifier))
                 (column
                   (identifier)))
-              (select
-                (keyword_select)
-                (select_expression
-                  (term
-                    (field
-                      (identifier)))
-                  (term
-                    (field
-                      (identifier)))))
-              (from
-                (keyword_from)
-                (relation
-                  (object_reference
-                    (identifier))))))
+              (query_specification
+                (select
+                  (keyword_select)
+                  (select_expression
+                    (term
+                      (field
+                        (identifier)))
+                    (term
+                      (field
+                        (identifier)))))
+                (from
+                  (keyword_from)
+                  (relation
+                    (object_reference
+                      (identifier)))))))
           (statement
             (return_statement
               (keyword_return))))))))
@@ -135,17 +136,18 @@ END
                 (list
                   (column
                     (identifier)))
-                (select
-                  (keyword_select)
-                  (select_expression
-                    (term
-                      (field
-                        (identifier)))))
-                (from
-                  (keyword_from)
-                  (relation
-                    (object_reference
-                      (identifier))))))
+                (query_specification
+                  (select
+                    (keyword_select)
+                    (select_expression
+                      (term
+                        (field
+                          (identifier)))))
+                  (from
+                    (keyword_from)
+                    (relation
+                      (object_reference
+                        (identifier)))))))
             (keyword_end)))))))
 
 ================================================================================
@@ -690,8 +692,9 @@ CREATE TRIGGER trg_append ON dbo.t FOR INSERT WITH APPEND AS SELECT 1;
         (procedure_body
           (keyword_as)
           (statement
-            (select
-              (keyword_select)
-              (select_expression
-                (term
-                  (literal))))))))))
+            (query_specification
+              (select
+                (keyword_select)
+                (select_expression
+                  (term
+                    (literal)))))))))))

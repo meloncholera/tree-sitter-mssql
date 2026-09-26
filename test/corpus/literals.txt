@@ -9,17 +9,18 @@ SELECT 0xAA, 0x4D5A9000, 0x, 42;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (literal))
-          (term
-            (literal))
-          (term
-            (literal))
-          (term
-            (literal)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (literal))
+            (term
+              (literal))
+            (term
+              (literal))
+            (term
+              (literal))))))))
 
 ================================================================================
 Decimals and floats
@@ -32,19 +33,20 @@ SELECT 3.1415, .5, 12e10, 1.5e-3, 100.;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (literal))
-          (term
-            (literal))
-          (term
-            (literal))
-          (term
-            (literal))
-          (term
-            (literal)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (literal))
+            (term
+              (literal))
+            (term
+              (literal))
+            (term
+              (literal))
+            (term
+              (literal))))))))
 
 ================================================================================
 Strings
@@ -57,21 +59,22 @@ SELECT 'foo''bar', '''foo''', 'foo''''''bar', N'the table''s name is my_tablé',
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (literal))
-          (term
-            (literal))
-          (term
-            (literal))
-          (term
-            (literal))
-          (term
-            (literal))
-          (term
-            (literal)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (literal))
+            (term
+              (literal))
+            (term
+              (literal))
+            (term
+              (literal))
+            (term
+              (literal))
+            (term
+              (literal))))))))
 
 ================================================================================
 Backslash inside a string is not an escape
@@ -84,13 +87,14 @@ SELECT N'C:\audit\', 'a\';
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (literal))
-          (term
-            (literal)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (literal))
+            (term
+              (literal))))))))
 
 ================================================================================
 Comment markers inside strings
@@ -103,18 +107,19 @@ SELECT '-- foo', '/* foo */' FROM bar;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (literal))
-          (term
-            (literal))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (literal))
+            (term
+              (literal))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))))
 
 ================================================================================
 Identifiers with #, $ and non-ASCII letters
@@ -127,23 +132,24 @@ SELECT addr##1, cost$usd, äöüÄÖÜøæØÆ FROM t;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (identifier)))
-          (term
-            (field
-              (identifier)))
-          (term
-            (field
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))
+            (term
+              (field
+                (identifier)))
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))))
 
 ================================================================================
 Temporary tables and variables
@@ -156,26 +162,27 @@ SELECT * FROM #temp, ##global WHERE @var = @@SPID;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))
-        (relation
-          (object_reference
-            (identifier))))
-      (where
-        (keyword_where)
-        (binary_expression
-          (field
-            (identifier))
-          (field
-            (identifier)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier)))
+          (relation
+            (object_reference
+              (identifier))))
+        (where
+          (keyword_where)
+          (binary_expression
+            (field
+              (identifier))
+            (field
+              (identifier))))))))
 
 ================================================================================
 Bracketed identifiers with special characters
@@ -188,26 +195,27 @@ SELECT [CORP\user], [a]]b], [db_name], [2024] FROM [my table];
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (identifier)))
-          (term
-            (field
-              (identifier)))
-          (term
-            (field
-              (identifier)))
-          (term
-            (field
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))
+            (term
+              (field
+                (identifier)))
+            (term
+              (field
+                (identifier)))
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))))
 
 ================================================================================
 Double-quoted identifiers with an escaped quote
@@ -220,17 +228,18 @@ SELECT "a""b", "plain" FROM "t";
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (identifier)))
-          (term
-            (field
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))))

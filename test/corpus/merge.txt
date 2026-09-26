@@ -277,20 +277,21 @@ OPTION (MAXDOP 1);
         (identifier)
         (keyword_using)
         (subquery
-          (select
-            (keyword_select)
-            (select_expression
-              (term
-                (field
-                  (identifier)))
-              (term
-                (field
-                  (identifier)))))
-          (from
-            (keyword_from)
-            (relation
-              (object_reference
-                (identifier)))))
+          (query_specification
+            (select
+              (keyword_select)
+              (select_expression
+                (term
+                  (field
+                    (identifier)))
+                (term
+                  (field
+                    (identifier)))))
+            (from
+              (keyword_from)
+              (relation
+                (object_reference
+                  (identifier))))))
         (keyword_as)
         (identifier)
         (list
@@ -442,91 +443,92 @@ SELECT ProductID, NewQty
         (object_reference
           (identifier)
           (identifier))
-        (select
-          (keyword_select)
-          (select_expression
-            (term
-              (field
-                (identifier)))
-            (term
-              (field
-                (identifier)))))
-        (from
-          (keyword_from)
-          (relation
-            (merge
-              (keyword_merge)
-              (object_reference
-                (identifier)
-                (identifier))
-              (keyword_as)
-              (identifier)
-              (keyword_using)
-              (object_reference
-                (identifier)
-                (identifier))
-              (keyword_as)
-              (identifier)
-              (keyword_on)
-              (binary_expression
+        (query_specification
+          (select
+            (keyword_select)
+            (select_expression
+              (term
                 (field
-                  (object_reference
-                    (identifier))
-                  (identifier))
-                (field
-                  (object_reference
-                    (identifier))
                   (identifier)))
-              (merge_when_clause
-                (keyword_when)
-                (keyword_matched)
-                (keyword_then)
-                (keyword_update)
-                (keyword_set)
-                (assignment
+              (term
+                (field
+                  (identifier)))))
+          (from
+            (keyword_from)
+            (relation
+              (merge
+                (keyword_merge)
+                (object_reference
+                  (identifier)
+                  (identifier))
+                (keyword_as)
+                (identifier)
+                (keyword_using)
+                (object_reference
+                  (identifier)
+                  (identifier))
+                (keyword_as)
+                (identifier)
+                (keyword_on)
+                (binary_expression
                   (field
                     (object_reference
                       (identifier))
                     (identifier))
-                  (assignment_operator)
-                  (binary_expression
-                    (field
-                      (object_reference
-                        (identifier))
-                      (identifier))
-                    (field
-                      (object_reference
-                        (identifier))
-                      (identifier)))))
-              (output_clause
-                (keyword_output)
-                (term
-                  (field
-                    (identifier)))
-                (term
                   (field
                     (object_reference
                       (identifier))
                     (identifier)))
-                (term
-                  (field
-                    (object_reference
+                (merge_when_clause
+                  (keyword_when)
+                  (keyword_matched)
+                  (keyword_then)
+                  (keyword_update)
+                  (keyword_set)
+                  (assignment
+                    (field
+                      (object_reference
+                        (identifier))
                       (identifier))
-                    (identifier))
-                  (keyword_as)
-                  (identifier))))
-            (keyword_as)
-            (identifier)
-            (list
-              (column
+                    (assignment_operator)
+                    (binary_expression
+                      (field
+                        (object_reference
+                          (identifier))
+                        (identifier))
+                      (field
+                        (object_reference
+                          (identifier))
+                        (identifier)))))
+                (output_clause
+                  (keyword_output)
+                  (term
+                    (field
+                      (identifier)))
+                  (term
+                    (field
+                      (object_reference
+                        (identifier))
+                      (identifier)))
+                  (term
+                    (field
+                      (object_reference
+                        (identifier))
+                      (identifier))
+                    (keyword_as)
+                    (identifier))))
+              (keyword_as)
+              (identifier)
+              (list
+                (column
+                  (identifier))
+                (column
+                  (identifier))
+                (column
+                  (identifier)))))
+          (where
+            (keyword_where)
+            (binary_expression
+              (field
                 (identifier))
-              (column
-                (identifier))
-              (column
-                (identifier)))))
-        (where
-          (keyword_where)
-          (binary_expression
-            (field
-              (identifier))
-            (literal)))))))
+              (literal))))))))

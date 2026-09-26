@@ -129,18 +129,19 @@ SELECT dbo.f(1 WITH nonsense words);
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (invocation
-              (object_reference
-                (identifier)
-                (identifier))
-              (term
-                (literal))
-              (ERROR
-                (keyword_with)))))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (invocation
+                (object_reference
+                  (identifier)
+                  (identifier))
+                (term
+                  (literal))
+                (ERROR
+                  (keyword_with))))))))))
 
 ==================
 CREATE CERTIFICATE cannot both load a source and generate a subject
@@ -209,15 +210,16 @@ SELECT "" FROM t;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (ERROR
-          (UNEXPECTED ' ')
-          (keyword_from))
-        (select_expression
-          (term
-            (field
-              (identifier))))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (ERROR
+            (UNEXPECTED ' ')
+            (keyword_from))
+          (select_expression
+            (term
+              (field
+                (identifier)))))))))
 
 ==================
 WHERE without FROM is not legal T-SQL, even though WHERE lexes as a bare alias here
@@ -230,12 +232,13 @@ SELECT 1 WHERE 1=1;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (literal)
-            (identifier)))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (literal)
+              (identifier))))))
     (ERROR
       (literal)
       (literal))))
@@ -251,12 +254,13 @@ SELECT 1 GROUP BY 1;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (literal)
-            (identifier))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (literal)
+              (identifier)))))))
   (ERROR
     (identifier)
     (literal)))
@@ -272,17 +276,18 @@ SELECT * FROM dbo.t 'x';
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)
-            (identifier)))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier)
+              (identifier))))))
     (ERROR)))
 
 ==================
@@ -296,17 +301,18 @@ SELECT * FROM dbo.t AS 'x';
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)
-            (identifier)))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier)
+              (identifier))))))
     (ERROR
       (keyword_as))))
 
@@ -321,15 +327,16 @@ SELECT × FROM t;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (ERROR
-          (UNEXPECTED 215)
-          (keyword_from))
-        (select_expression
-          (term
-            (field
-              (identifier))))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (ERROR
+            (UNEXPECTED 215)
+            (keyword_from))
+          (select_expression
+            (term
+              (field
+                (identifier)))))))))
 
 ==================
 The head element of a CREATE SYMMETRIC KEY encryptor list requires ENCRYPTION BY (ARCH-13)
@@ -423,17 +430,18 @@ SELECT a FROM t ORDER BY 1 UNION SELECT b FROM u;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
               (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
       (order_by
         (keyword_order)
         (keyword_by)
@@ -444,17 +452,18 @@ SELECT a FROM t ORDER BY 1 UNION SELECT b FROM u;
         (identifier)
         (MISSING ":")))
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))))
 
 ==================
 INSERT does not accept a CTE (ARCH-10)
@@ -482,17 +491,18 @@ INSERT INTO dbo.t WITH cte AS (SELECT 1 AS a) SELECT a FROM cte;
           (ERROR
             (literal)
             (keyword_as)))
-        (select
-          (keyword_select)
-          (select_expression
-            (term
-              value: (field
-                name: (identifier)))))
-        (from
-          (keyword_from)
-          (relation
-            (object_reference
-              name: (identifier))))))))
+        (query_specification
+          (select
+            (keyword_select)
+            (select_expression
+              (term
+                value: (field
+                  name: (identifier)))))
+          (from
+            (keyword_from)
+            (relation
+              (object_reference
+                name: (identifier)))))))))
 
 ==================
 MERGE only accepts INSERT under NOT MATCHED [BY TARGET] (ARCH-5)
@@ -588,16 +598,17 @@ SELECT * FROM t bulk;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier)))))))
   (ERROR
     (keyword_bulk)))
 
@@ -612,16 +623,17 @@ SELECT * FROM t tablesample;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))
     (ERROR
       (keyword_tablesample))))
 
@@ -636,16 +648,17 @@ SELECT * FROM t window;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))
     (ERROR
       (keyword_window))))
 
@@ -660,15 +673,16 @@ SELECT match FROM t;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (ERROR
-          (keyword_match))
-        (select_expression
-          (term
-            value: (field
-              name: (identifier))
-            alias: (identifier)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (ERROR
+            (keyword_match))
+          (select_expression
+            (term
+              value: (field
+                name: (identifier))
+              alias: (identifier))))))))
 
 ==================
 ALTER PARTITION SCHEME's optional trailing filegroup swallows a following label
@@ -691,11 +705,12 @@ ALTER PARTITION SCHEME ps NEXT USED mylabel: SELECT 1;
         (identifier)))
     (ERROR)
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            value: (literal)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              value: (literal))))))))
 
 ================================================================================
 CREATE QUEUE rejects ON before WITH
@@ -749,3 +764,158 @@ CREATE QUEUE q WITH STATUS = ON ON fg2 WITH STATUS = OFF;
     (keyword_with)
     (identifier)
     (keyword_off)))
+
+================================================================================
+A CTE body cannot contain another CTE
+================================================================================
+
+WITH top_cte AS (
+  WITH nested_cte AS (
+    SELECT 1 as one, 2 as two
+  )
+  SELECT one, two
+  FROM nested_cte
+)
+SELECT *
+FROM top_cte;
+
+---
+
+(program
+  (batch
+    (statement
+      (keyword_with)
+      (cte
+        (identifier)
+        (keyword_as)
+        (ERROR
+          (keyword_as)
+          (query_specification
+            (select
+              (keyword_select)
+              (select_expression
+                (term
+                  (literal)
+                  (keyword_as)
+                  (identifier))
+                (term
+                  (literal)
+                  (keyword_as)
+                  (identifier))))))
+        (statement
+          (query_specification
+            (select
+              (keyword_select)
+              (select_expression
+                (term
+                  (field
+                    (identifier)))
+                (term
+                  (field
+                    (identifier)))))
+            (from
+              (keyword_from)
+              (relation
+                (object_reference
+                  (identifier)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))))
+
+================================================================================
+A derived table cannot start with a CTE
+================================================================================
+
+SELECT * FROM (WITH c AS (SELECT 1 AS a) SELECT a FROM c) d;
+
+---
+
+(program
+  (batch
+    (statement
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (ERROR)
+          (relation
+            (object_reference
+              (identifier))
+            (identifier)))))
+    (statement
+      (label_statement
+        (identifier)
+        (MISSING ":")))
+    (statement
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (literal)
+              (keyword_as)
+              (identifier))))))
+    (statement
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))
+            (ERROR)
+            (identifier)))))))
+
+================================================================================
+SELECT INTO is not legal on a later set-operation branch
+================================================================================
+
+SELECT a FROM t UNION SELECT b INTO #y FROM u;
+
+---
+
+(program
+  (batch
+    (statement
+      (set_operation
+        (query_specification
+          (select
+            (keyword_select)
+            (select_expression
+              (term
+                (field
+                  (identifier)))))
+          (from
+            (keyword_from)
+            (relation
+              (object_reference
+                (identifier)))))
+        (keyword_union)
+        (query_specification
+          (select
+            (keyword_select)
+            (select_expression
+              (term
+                (field
+                  (identifier))
+                (identifier))))))))
+  (ERROR
+    (identifier)
+    (keyword_from)))

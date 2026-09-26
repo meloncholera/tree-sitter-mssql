@@ -281,40 +281,41 @@ INNER JOIN #prod_info ON #prod_info.product_cat = a.product_cat;
           (keyword_from)
           (relation
             (subquery
-              (select
-                (keyword_select)
-                (select_expression
-                  (term
-                    (field
-                      (identifier)))
-                  (term
-                    (invocation
-                      (object_reference
-                        (identifier))
-                      (term
-                        (field
-                          (identifier))))
-                    (keyword_as)
-                    (identifier))
-                  (term
-                    (invocation
-                      (object_reference
-                        (identifier))
-                      (term
-                        (field
-                          (identifier))))
-                    (keyword_as)
-                    (identifier))))
-              (from
-                (keyword_from)
-                (relation
-                  (object_reference
-                    (identifier))))
-              (group_by
-                (keyword_group)
-                (keyword_by)
-                (field
-                  (identifier))))
+              (query_specification
+                (select
+                  (keyword_select)
+                  (select_expression
+                    (term
+                      (field
+                        (identifier)))
+                    (term
+                      (invocation
+                        (object_reference
+                          (identifier))
+                        (term
+                          (field
+                            (identifier))))
+                      (keyword_as)
+                      (identifier))
+                    (term
+                      (invocation
+                        (object_reference
+                          (identifier))
+                        (term
+                          (field
+                            (identifier))))
+                      (keyword_as)
+                      (identifier))))
+                (from
+                  (keyword_from)
+                  (relation
+                    (object_reference
+                      (identifier))))
+                (group_by
+                  (keyword_group)
+                  (keyword_by)
+                  (field
+                    (identifier)))))
             (keyword_as)
             (identifier))
           (join

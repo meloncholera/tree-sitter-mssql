@@ -44,11 +44,12 @@ GO
         (procedure_body
           (keyword_as)
           (statement
-            (select
-              (keyword_select)
-              (select_expression
-                (term
-                  (literal))))))))
+            (query_specification
+              (select
+                (keyword_select)
+                (select_expression
+                  (term
+                    (literal)))))))))
     (go_statement
       (keyword_go)))
   (batch
@@ -57,11 +58,12 @@ GO
       (literal)))
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (literal)))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (literal))))))
     (go_statement
       (keyword_go))))
 
@@ -115,35 +117,36 @@ ALTER TABLE [dbo].[t] CHECK CONSTRAINT [CK_t]
           (exists
             (keyword_exists)
             (subquery
-              (select
-                (keyword_select)
-                (select_expression
-                  (term
-                    (all_fields))))
-              (from
-                (keyword_from)
-                (relation
-                  (object_reference
-                    (identifier)
-                    (identifier))))
-              (where
-                (keyword_where)
-                (binary_expression
+              (query_specification
+                (select
+                  (keyword_select)
+                  (select_expression
+                    (term
+                      (all_fields))))
+                (from
+                  (keyword_from)
+                  (relation
+                    (object_reference
+                      (identifier)
+                      (identifier))))
+                (where
+                  (keyword_where)
                   (binary_expression
-                    (field
-                      (identifier))
-                    (invocation
-                      (object_reference
+                    (binary_expression
+                      (field
                         (identifier))
-                      (term
-                        (literal))))
-                  (keyword_and)
-                  (binary_expression
-                    (field
-                      (identifier))
-                    (keyword_in)
-                    (list
-                      (literal))))))))
+                      (invocation
+                        (object_reference
+                          (identifier))
+                        (term
+                          (literal))))
+                    (keyword_and)
+                    (binary_expression
+                      (field
+                        (identifier))
+                      (keyword_in)
+                      (list
+                        (literal)))))))))
         (block
           (keyword_begin)
           (statement
@@ -179,33 +182,34 @@ ALTER TABLE [dbo].[t] CHECK CONSTRAINT [CK_t]
           (exists
             (keyword_exists)
             (subquery
-              (select
-                (keyword_select)
-                (select_expression
-                  (term
-                    (all_fields))))
-              (from
-                (keyword_from)
-                (relation
-                  (object_reference
-                    (identifier)
-                    (identifier))))
-              (where
-                (keyword_where)
-                (binary_expression
+              (query_specification
+                (select
+                  (keyword_select)
+                  (select_expression
+                    (term
+                      (all_fields))))
+                (from
+                  (keyword_from)
+                  (relation
+                    (object_reference
+                      (identifier)
+                      (identifier))))
+                (where
+                  (keyword_where)
                   (binary_expression
-                    (field
-                      (identifier))
-                    (invocation
-                      (object_reference
+                    (binary_expression
+                      (field
                         (identifier))
-                      (term
-                        (literal))))
-                  (keyword_and)
-                  (binary_expression
-                    (field
-                      (identifier))
-                    (literal)))))))
+                      (invocation
+                        (object_reference
+                          (identifier))
+                        (term
+                          (literal))))
+                    (keyword_and)
+                    (binary_expression
+                      (field
+                        (identifier))
+                      (literal))))))))
         (statement
           (create_index
             (keyword_create)
@@ -237,33 +241,34 @@ ALTER TABLE [dbo].[t] CHECK CONSTRAINT [CK_t]
           (exists
             (keyword_exists)
             (subquery
-              (select
-                (keyword_select)
-                (select_expression
-                  (term
-                    (all_fields))))
-              (from
-                (keyword_from)
-                (relation
-                  (object_reference
-                    (identifier)
-                    (identifier))))
-              (where
-                (keyword_where)
-                (binary_expression
+              (query_specification
+                (select
+                  (keyword_select)
+                  (select_expression
+                    (term
+                      (all_fields))))
+                (from
+                  (keyword_from)
+                  (relation
+                    (object_reference
+                      (identifier)
+                      (identifier))))
+                (where
+                  (keyword_where)
                   (binary_expression
-                    (field
-                      (identifier))
-                    (invocation
-                      (object_reference
+                    (binary_expression
+                      (field
                         (identifier))
-                      (term
-                        (literal))))
-                  (keyword_and)
-                  (binary_expression
-                    (field
-                      (identifier))
-                    (literal)))))))
+                      (invocation
+                        (object_reference
+                          (identifier))
+                        (term
+                          (literal))))
+                    (keyword_and)
+                    (binary_expression
+                      (field
+                        (identifier))
+                      (literal))))))))
         (block
           (keyword_begin)
           (statement
@@ -290,27 +295,28 @@ ALTER TABLE [dbo].[t] CHECK CONSTRAINT [CK_t]
         (exists
           (keyword_exists)
           (subquery
-            (select
-              (keyword_select)
-              (select_expression
-                (term
-                  (all_fields))))
-            (from
-              (keyword_from)
-              (relation
-                (object_reference
-                  (identifier)
-                  (identifier))))
-            (where
-              (keyword_where)
-              (binary_expression
-                (field
-                  (identifier))
-                (invocation
-                  (object_reference
-                    (identifier))
+            (query_specification
+              (select
+                (keyword_select)
+                (select_expression
                   (term
-                    (literal)))))))
+                    (all_fields))))
+              (from
+                (keyword_from)
+                (relation
+                  (object_reference
+                    (identifier)
+                    (identifier))))
+              (where
+                (keyword_where)
+                (binary_expression
+                  (field
+                    (identifier))
+                  (invocation
+                    (object_reference
+                      (identifier))
+                    (term
+                      (literal))))))))
         (statement
           (alter_table
             (keyword_alter)
@@ -367,36 +373,37 @@ RETURN 0
           (exists
             (keyword_exists)
             (subquery
-              (select
-                (keyword_select)
-                (select_expression
-                  (term
-                    (all_fields))))
-              (from
-                (keyword_from)
-                (relation
-                  (object_reference
-                    (identifier)
-                    (identifier))))
-              (where
-                (keyword_where)
-                (binary_expression
+              (query_specification
+                (select
+                  (keyword_select)
+                  (select_expression
+                    (term
+                      (all_fields))))
+                (from
+                  (keyword_from)
+                  (relation
+                    (object_reference
+                      (identifier)
+                      (identifier))))
+                (where
+                  (keyword_where)
                   (binary_expression
-                    (field
-                      (identifier))
-                    (invocation
-                      (object_reference
+                    (binary_expression
+                      (field
                         (identifier))
-                      (term
-                        (literal))))
-                  (keyword_and)
-                  (binary_expression
-                    (field
-                      (identifier))
-                    (keyword_in)
-                    (list
-                      (literal)
-                      (literal))))))))
+                      (invocation
+                        (object_reference
+                          (identifier))
+                        (term
+                          (literal))))
+                    (keyword_and)
+                    (binary_expression
+                      (field
+                        (identifier))
+                      (keyword_in)
+                      (list
+                        (literal)
+                        (literal)))))))))
         (block
           (keyword_begin)
           (statement
@@ -486,64 +493,65 @@ RETURN 0
                 (identifier))
               (assignment_operator)
               (subquery
-                (select
-                  (keyword_select)
-                  (select_expression
-                    (term
-                      (binary_expression
-                        (field
-                          (identifier))
-                        (case
-                          (keyword_case)
+                (query_specification
+                  (select
+                    (keyword_select)
+                    (select_expression
+                      (term
+                        (binary_expression
                           (field
                             (identifier))
-                          (when_clause
-                            (keyword_when)
-                            (literal)
-                            (keyword_then)
-                            (invocation
-                              (object_reference
-                                (identifier))
-                              (term
-                                (field
-                                  (identifier)))
-                              (term
-                                (binary_expression
-                                  (literal)
-                                  (cast
-                                    (keyword_cast)
-                                    (field
-                                      (identifier))
-                                    (keyword_as)
-                                    (varchar
-                                      (keyword_varchar)
-                                      (literal)))))
-                              (term
-                                (literal))))
-                          (when_clause
-                            (keyword_when)
-                            (literal)
-                            (keyword_then)
-                            (invocation
-                              (object_reference
-                                (identifier))
-                              (term
-                                (field
-                                  (identifier)))
-                              (term
-                                (binary_expression
-                                  (literal)
-                                  (cast
-                                    (keyword_cast)
-                                    (field
-                                      (identifier))
-                                    (keyword_as)
-                                    (varchar
-                                      (keyword_varchar)
-                                      (literal)))))
-                              (term
-                                (literal))))
-                          (keyword_end)))))))))
+                          (case
+                            (keyword_case)
+                            (field
+                              (identifier))
+                            (when_clause
+                              (keyword_when)
+                              (literal)
+                              (keyword_then)
+                              (invocation
+                                (object_reference
+                                  (identifier))
+                                (term
+                                  (field
+                                    (identifier)))
+                                (term
+                                  (binary_expression
+                                    (literal)
+                                    (cast
+                                      (keyword_cast)
+                                      (field
+                                        (identifier))
+                                      (keyword_as)
+                                      (varchar
+                                        (keyword_varchar)
+                                        (literal)))))
+                                (term
+                                  (literal))))
+                            (when_clause
+                              (keyword_when)
+                              (literal)
+                              (keyword_then)
+                              (invocation
+                                (object_reference
+                                  (identifier))
+                                (term
+                                  (field
+                                    (identifier)))
+                                (term
+                                  (binary_expression
+                                    (literal)
+                                    (cast
+                                      (keyword_cast)
+                                      (field
+                                        (identifier))
+                                      (keyword_as)
+                                      (varchar
+                                        (keyword_varchar)
+                                        (literal)))))
+                                (term
+                                  (literal))))
+                            (keyword_end))))))))))
           (statement
             (commit_statement
               (keyword_commit)
@@ -587,28 +595,31 @@ END
               (keyword_int)))))
       (keyword_end))
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (literal)))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (literal))))))
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (literal)))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (literal))))))
     (go_statement
       (keyword_go)))
   (batch
     (block
       (keyword_begin)
       (statement
-        (select
-          (keyword_select)
-          (select_expression
-            (term
-              (literal)))))
+        (query_specification
+          (select
+            (keyword_select)
+            (select_expression
+              (term
+                (literal))))))
       (keyword_end))))
 
 ================================================================================
@@ -651,27 +662,28 @@ EXEC sp_settriggerorder @triggername=N'[dbo].[trg]', @order=N'First', @stmttype=
           (exists
             (keyword_exists)
             (subquery
-              (select
-                (keyword_select)
-                (select_expression
-                  (term
-                    (all_fields))))
-              (from
-                (keyword_from)
-                (relation
-                  (object_reference
-                    (identifier)
-                    (identifier))))
-              (where
-                (keyword_where)
-                (binary_expression
-                  (field
-                    (identifier))
-                  (invocation
-                    (object_reference
-                      (identifier))
+              (query_specification
+                (select
+                  (keyword_select)
+                  (select_expression
                     (term
-                      (literal))))))))
+                      (all_fields))))
+                (from
+                  (keyword_from)
+                  (relation
+                    (object_reference
+                      (identifier)
+                      (identifier))))
+                (where
+                  (keyword_where)
+                  (binary_expression
+                    (field
+                      (identifier))
+                    (invocation
+                      (object_reference
+                        (identifier))
+                      (term
+                        (literal)))))))))
         (statement
           (execute_statement
             (keyword_exec)

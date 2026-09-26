@@ -395,7 +395,9 @@ export default {
 
   not_in: ($) => seq($.keyword_not, $.keyword_in),
 
-  subquery: ($) => wrapped_in_parenthesis($._dml_read),
+  // No leading CTE: `FROM (WITH c AS (SELECT 1) SELECT 1) d` and
+  // `WHERE id IN (WITH c AS (SELECT 1) SELECT 1)` are not legal T-SQL.
+  subquery: ($) => wrapped_in_parenthesis($._query_expression),
 
   list: ($) => paren_list($._expression),
 

@@ -1171,11 +1171,12 @@ DEALLOCATE master;
         (identifier)
         (keyword_cursor)
         (keyword_for)
-        (select
-          (keyword_select)
-          (select_expression
-            (term
-              (literal))))))
+        (query_specification
+          (select
+            (keyword_select)
+            (select_expression
+              (term
+                (literal)))))))
     (statement
       (open_cursor_statement
         (keyword_open)

@@ -23,16 +23,17 @@ select
         (object_reference
           (identifier))
         (keyword_as)
-        (select
-          (keyword_select)
-          (select_expression
-            (term
-              (all_fields))))
-        (from
-          (keyword_from)
-          (relation
-            (object_reference
-              (identifier))))))
+        (query_specification
+          (select
+            (keyword_select)
+            (select_expression
+              (term
+                (all_fields))))
+          (from
+            (keyword_from)
+            (relation
+              (object_reference
+                (identifier)))))))
     (statement
       (create_view
         (keyword_create)
@@ -41,21 +42,22 @@ select
           (identifier)
           (identifier))
         (keyword_as)
-        (select
-          (keyword_select)
-          (select_expression
-            (term
-              (field
-                (identifier)))
-            (term
-              (field
-                (identifier)))))
-        (from
-          (keyword_from)
-          (relation
-            (object_reference
-              (identifier)
-              (identifier))))))))
+        (query_specification
+          (select
+            (keyword_select)
+            (select_expression
+              (term
+                (field
+                  (identifier)))
+              (term
+                (field
+                  (identifier)))))
+          (from
+            (keyword_from)
+            (relation
+              (object_reference
+                (identifier)
+                (identifier)))))))))
 
 ================================================================================
 Create or alter view with columns, options and check option
@@ -87,21 +89,22 @@ WITH CHECK OPTION;
         (view_option
           (identifier))
         (keyword_as)
-        (select
-          (keyword_select)
-          (select_expression
-            (term
-              (literal)
-              (identifier))
-            (term
-              (literal)
-              (identifier))))
-        (from
-          (keyword_from)
-          (relation
-            (object_reference
-              (identifier)
-              (identifier))))
+        (query_specification
+          (select
+            (keyword_select)
+            (select_expression
+              (term
+                (literal)
+                (identifier))
+              (term
+                (literal)
+                (identifier))))
+          (from
+            (keyword_from)
+            (relation
+              (object_reference
+                (identifier)
+                (identifier)))))
         (keyword_with)
         (keyword_check)
         (keyword_option)))))
@@ -131,27 +134,29 @@ SELECT * FROM _cte
           (identifier)
           (keyword_as)
           (statement
-            (select
-              (keyword_select)
-              (select_expression
-                (term
-                  (field
-                    (identifier)))))
-            (from
-              (keyword_from)
-              (relation
-                (object_reference
-                  (identifier))))))
-        (select
-          (keyword_select)
-          (select_expression
-            (term
-              (all_fields))))
-        (from
-          (keyword_from)
-          (relation
-            (object_reference
-              (identifier))))))))
+            (query_specification
+              (select
+                (keyword_select)
+                (select_expression
+                  (term
+                    (field
+                      (identifier)))))
+              (from
+                (keyword_from)
+                (relation
+                  (object_reference
+                    (identifier)))))))
+        (query_specification
+          (select
+            (keyword_select)
+            (select_expression
+              (term
+                (all_fields))))
+          (from
+            (keyword_from)
+            (relation
+              (object_reference
+                (identifier)))))))))
 
 ================================================================================
 Alter view and drop view
@@ -173,35 +178,36 @@ DROP VIEW IF EXISTS my_database.my_schema.my_view, dbo.other_view;
           (identifier)
           (identifier))
         (keyword_as)
-        (select
-          (keyword_select)
-          (select_expression
-            (term
-              (field
-                (identifier)))
-            (term
-              (field
-                (identifier)))))
-        (from
-          (keyword_from)
-          (relation
-            (object_reference
-              (identifier)
-              (identifier))))
-        (where
-          (keyword_where)
-          (binary_expression
-            (field
-              (identifier))
-            (cast
-              (keyword_cast)
-              (invocation
-                (object_reference
+        (query_specification
+          (select
+            (keyword_select)
+            (select_expression
+              (term
+                (field
                   (identifier)))
-              (keyword_as)
-              (nvarchar
-                (keyword_nvarchar)
-                (literal)))))))
+              (term
+                (field
+                  (identifier)))))
+          (from
+            (keyword_from)
+            (relation
+              (object_reference
+                (identifier)
+                (identifier))))
+          (where
+            (keyword_where)
+            (binary_expression
+              (field
+                (identifier))
+              (cast
+                (keyword_cast)
+                (invocation
+                  (object_reference
+                    (identifier)))
+                (keyword_as)
+                (nvarchar
+                  (keyword_nvarchar)
+                  (literal))))))))
     (statement
       (drop_view
         (keyword_drop)
