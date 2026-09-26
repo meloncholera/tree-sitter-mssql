@@ -1,25 +1,20 @@
 export function make_keyword(word) {
-  let str = "";
+  let str = '';
   for (var i = 0; i < word.length; i++) {
-    str = str + "[" + word.charAt(i).toLowerCase() + word.charAt(i).toUpperCase() + "]";
+    str = str + '[' + word.charAt(i).toLowerCase() + word.charAt(i).toUpperCase() + ']';
   }
   return new RegExp(str);
 }
 
 export function optional_parenthesis(node) {
-  return prec.right(
-    choice(
-      node,
-      wrapped_in_parenthesis(node),
-    ),
-  )
+  return prec.right(choice(node, wrapped_in_parenthesis(node)));
 }
 
 export function wrapped_in_parenthesis(node) {
   if (node) {
-    return seq("(", node, ")");
+    return seq('(', node, ')');
   }
-  return seq("(", ")");
+  return seq('(', ')');
 }
 
 export function comma_list(field, requireFirst) {
@@ -33,9 +28,7 @@ export function comma_list(field, requireFirst) {
 }
 
 export function paren_list(field, requireFirst) {
-  return wrapped_in_parenthesis(
-    comma_list(field, requireFirst),
-  )
+  return wrapped_in_parenthesis(comma_list(field, requireFirst));
 }
 
 // A parenthesized two-item pair, e.g. `(start, end)` or `('provider', 'init
@@ -48,12 +41,7 @@ export function paren_pair(first, second) {
 // A table source's optional `[AS] alias [(col, ...)]` tail, shared by
 // `relation`, `_relation_with_hint`'s OPENJSON branch, and `apply_join`.
 export function aliased_with_columns($) {
-  return optional(
-    seq(
-      $._alias,
-      optional(alias($._column_list, $.list)),
-    ),
-  );
+  return optional(seq($._alias, optional(alias($._column_list, $.list))));
 }
 
 // The shared write-target preamble for INSERT, UPDATE, DELETE and MERGE:
@@ -92,9 +80,9 @@ export function write_target($, { allowBareHint = true, allowRowsetFunction = fa
     allowRowsetFunction
       ? choice($.object_reference, $.invocation, $.opendatasource_reference)
       : $.object_reference,
-    optional(allowBareHint
-      ? choice($.table_hint, alias($._bare_table_hint, $.table_hint))
-      : $.table_hint),
+    optional(
+      allowBareHint ? choice($.table_hint, alias($._bare_table_hint, $.table_hint)) : $.table_hint,
+    ),
   );
 }
 
@@ -103,5 +91,5 @@ export function write_target($, { allowBareHint = true, allowRowsetFunction = fa
 // future change to the class only has to be made once. Deliberately
 // excludes U+00D7 `×` and U+00F7 `÷` — both fall inside a naive `À-ſ` span
 // but are Unicode `Sm` (math symbol), not letters.
-export const IDENTIFIER_START = "A-Za-z_À-ÖØ-öø-ſ";
-export const IDENTIFIER_CONTINUE = "0-9A-Za-z_#$À-ÖØ-öø-ſ";
+export const IDENTIFIER_START = 'A-Za-z_À-ÖØ-öø-ſ';
+export const IDENTIFIER_CONTINUE = '0-9A-Za-z_#$À-ÖØ-öø-ſ';

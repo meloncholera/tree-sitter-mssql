@@ -12,7 +12,7 @@ CREATE QUEUE dbo.OrderQueue WITH STATUS = ON, RETENTION = OFF ON [PRIMARY];
       (create_queue
         (keyword_create)
         (keyword_queue)
-        (object_reference
+        name: (object_reference
           schema: (identifier)
           name: (identifier))
         (with_clause

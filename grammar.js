@@ -1,29 +1,23 @@
-import keyword_rules from "./grammar/keywords.js";
-import type_rules from "./grammar/types.js";
-import column_list_rules from "./grammar/column-lists.js";
-import expression_rules from "./grammar/expressions.js";
-import transaction_rules from "./grammar/transactions.js";
-import statement_rules from "./grammar/statements/index.js";
+import keyword_rules from './grammar/keywords.js';
+import type_rules from './grammar/types.js';
+import column_list_rules from './grammar/column-lists.js';
+import expression_rules from './grammar/expressions.js';
+import transaction_rules from './grammar/transactions.js';
+import statement_rules from './grammar/statements/index.js';
 
 export default grammar({
   name: 'mssql',
 
-  extras: $ => [
-    /\s/,
-    $.comment,
-    $.marginalia,
-  ],
+  extras: ($) => [/\s/, $.comment, $.marginalia],
 
   // The block comment is lexed by src/scanner.c rather than a regex because
   // T-SQL block comments nest, and a regex cannot match balanced nesting.
-  externals: $ => [
-    $.marginalia,
-  ],
+  externals: ($) => [$.marginalia],
 
   // Every entry arbitrates a real fork the parser must carry a few tokens
   // before it can settle; tree-sitter reports any that stop being needed
   // as "unnecessary conflicts" on generate, and those are removed.
-  conflicts: $ => [
+  conflicts: ($) => [
     // `a.b` — the prefix of a qualified column vs. an object reference.
     [$.object_reference, $._qualified_field],
     // `a.b.c.d` — how many parts belong to the reference.
@@ -58,16 +52,14 @@ export default grammar({
     [$.if_statement],
   ],
 
-  precedences: $ => [
+  precedences: (_) => [
     [
       'binary_is',
       'unary_not',
       'unary_sign',
       'binary_times',
       'binary_plus',
-      'unary_other',
       'binary_in',
-      'binary_compare',
       'binary_relation',
       'pattern_matching',
       'between',
@@ -77,7 +69,7 @@ export default grammar({
     ],
   ],
 
-  word: $ => $._identifier,
+  word: ($) => $._identifier,
 
   rules: {
     // A script is a sequence of batches — real T-SQL semantics, since `GO`
@@ -87,7 +79,7 @@ export default grammar({
     // sibling of `statement`, is what lets a consumer iterate a script's
     // batches directly instead of re-deriving them by scanning for
     // `go_statement` and slicing.
-    program: $ => repeat($.batch),
+    program: ($) => repeat($.batch),
 
     // Each statement/block may be terminated by `;`; only the batch's last
     // one may instead (or additionally) be closed by `GO`, which is why the
@@ -96,25 +88,28 @@ export default grammar({
     // `GO` with nothing before it (consecutive `GO`s, or a script that
     // opens with one) is the second alternative, since `repeat1` cannot
     // itself be empty.
-    batch: $ => choice(
-      prec.right(seq(
-        repeat1(
-          choice(
-            seq(choice($.statement, $.block), optional(';')),
-            $.sqlcmd_setvar,
-            $.sqlcmd_include,
+    batch: ($) =>
+      choice(
+        prec.right(
+          seq(
+            repeat1(
+              choice(
+                seq(choice($.statement, $.block), optional(';')),
+                $.sqlcmd_setvar,
+                $.sqlcmd_include,
+              ),
+            ),
+            optional($.go_statement),
           ),
         ),
-        optional($.go_statement),
-      )),
-      $.go_statement,
-    ),
+        $.go_statement,
+      ),
 
     // T-SQL batch separator. Not a T-SQL keyword at all — it's a command
     // recognized by client tools (sqlcmd, SSMS) that splits a script into
     // separate batches sent to the server one at a time. It takes an
     // optional repeat count (`GO 5`) and must otherwise stand alone.
-    go_statement: $ => seq($.keyword_go, optional(alias($._natural_number, $.literal))),
+    go_statement: ($) => seq($.keyword_go, optional(alias($._natural_number, $.literal))),
 
     // SQLCMD scripting variables — `:setvar name value` and `:r path` — are
     // interpreted by the sqlcmd/SSMS client, never sent to the server, the
@@ -126,21 +121,24 @@ export default grammar({
     // schema-qualified name (`:setvar TableName sys.objects`) is one value.
     // The value is optional: `:setvar MyVar` with no value is sqlcmd's
     // documented way to remove a scripting variable.
-    sqlcmd_setvar: $ => prec.right(seq(
-      ':setvar',
-      field('name', $.identifier),
-      optional(field('value', choice($.object_reference, $.literal))),
-    )),
+    sqlcmd_setvar: ($) =>
+      prec.right(
+        seq(
+          ':setvar',
+          field('name', $.identifier),
+          optional(field('value', choice($.object_reference, $.literal))),
+        ),
+      ),
 
     // :r path/to/script.sql — inlines another script file. The path can
     // contain characters (`.`, `/`, `\`) that are not valid identifier
     // characters, so it is a single raw token rather than composed from
     // identifiers, aliased to `identifier` since consumers need to see that
     // something is referenced here, not decompose the path.
-    sqlcmd_include: $ => seq(':r', alias($._sqlcmd_path, $.identifier)),
-    _sqlcmd_path: _ => /[^\s][^\r\n]*/,
+    sqlcmd_include: ($) => seq(':r', alias($._sqlcmd_path, $.identifier)),
+    _sqlcmd_path: (_) => /[^\s][^\r\n]*/,
 
-    comment: _ => /--.*/,
+    comment: (_) => /--.*/,
     // The block comment (`marginalia`) is an external token: see src/scanner.c.
 
     ...keyword_rules,
@@ -149,5 +147,5 @@ export default grammar({
     ...expression_rules,
     ...transaction_rules,
     ...statement_rules,
-  }
+  },
 });

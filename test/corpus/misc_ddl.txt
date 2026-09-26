@@ -166,12 +166,12 @@ DROP DATABASE IF EXISTS hollywood;
       (create_database
         (keyword_create)
         (keyword_database)
-        (identifier)))
+        name: (identifier)))
     (statement
       (create_database
         (keyword_create)
         (keyword_database)
-        (identifier)
+        name: (identifier)
         (keyword_collate)
         (identifier)))
     (statement
@@ -297,7 +297,7 @@ DROP DATABASE IF EXISTS hollywood;
         (keyword_database)
         (keyword_if)
         (keyword_exists)
-        (identifier)))))
+        name: (identifier)))))
 
 ================================================================================
 Full-text catalog, route, audit and assembly

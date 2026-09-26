@@ -8,9 +8,11 @@
 #                      push (dev, main)
 #  Purpose             Regenerate the parser from grammar.js, fail on any
 #                      drift in the generated parser or the committed
-#                      node-kind snapshot, run the tree-sitter corpus and
-#                      highlight tests, parse every fixture and fail on any
-#                      ERROR/MISSING/zero-width node, build and test the
+#                      node-kind snapshot, fail if a create/alter/drop rule
+#                      is defined but not registered, lint and format-check
+#                      the grammar JavaScript, run the tree-sitter corpus
+#                      and highlight tests, parse every fixture and fail on
+#                      any ERROR/MISSING/zero-width node, build and test the
 #                      Rust binding, build and test the Node binding,
 #                      validate the PR title, scan for secrets, and lint
 #                      workflow/YAML files. A final aggregate job rolls
@@ -151,6 +153,26 @@ jobs:
           git ls-files --error-unmatch test/node-kinds.txt
           node test/generate-node-kinds.mjs
           git diff --exit-code -- test/node-kinds.txt
+
+      - name: Fail if a create/alter/drop rule is defined but not registered
+        run: node test/check-registries.mjs
+
+      - name: Install lint/format devDependencies
+        # A bare `npm install` here would also run this package's own
+        # "install": "node-gyp-build" lifecycle script and fail without
+        # MSVC; --ignore-scripts installs the declared devDependencies
+        # (eslint, @eslint/js, prettier) without running any of them.
+        # ESLint's flat config resolves its own imports (@eslint/js) from
+        # this checkout's node_modules, so this step is required — an
+        # npx --package= invocation installs into a separate ephemeral
+        # cache the config file's own import can't see.
+        run: npm install --ignore-scripts
+
+      - name: Lint the grammar JS
+        run: npm run lint
+
+      - name: Check formatting of the grammar JS
+        run: npm run format:check
 
       - name: Verify publishable package contents
         run: |
