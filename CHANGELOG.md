@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0](https://github.com/meloncholic/tree-sitter-mssql/compare/v0.1.6...v0.2.0) - 2026-09-26
+
+### Added
+
+- publish prebuilt native addons and WASM, add fuzzing and a perf summary ([#39](https://github.com/meloncholic/tree-sitter-mssql/pull/39))
+- [**breaking**] group GO-separated statements into a batch node, add query files ([#33](https://github.com/meloncholic/tree-sitter-mssql/pull/33))
+
+### Fixed
+
+- *(grammar)* add missing DDL statements and fix trailing-clause bugs ([#32](https://github.com/meloncholic/tree-sitter-mssql/pull/32))
+- *(grammar)* give union branches a visible boundary and fix two DML gaps ([#29](https://github.com/meloncholic/tree-sitter-mssql/pull/29))
+- *(grammar)* unify DML write-target modeling and fix two DDL gaps ([#25](https://github.com/meloncholic/tree-sitter-mssql/pull/25))
+- *(grammar)* correct operator precedence and identifier/alias typing ([#22](https://github.com/meloncholic/tree-sitter-mssql/pull/22))
+
+### Other
+
+- drop macOS from the release prebuild matrix ([#40](https://github.com/meloncholic/tree-sitter-mssql/pull/40))
+- clean up grammar structure, field tagging, and JS tooling ([#38](https://github.com/meloncholic/tree-sitter-mssql/pull/38))
+- add consumer-facing usage docs and node-kind stability metadata ([#37](https://github.com/meloncholic/tree-sitter-mssql/pull/37))
+- remove .npmrc from the tree ([#36](https://github.com/meloncholic/tree-sitter-mssql/pull/36))
+- scope gitattributes and editorconfig to tracked file types ([#35](https://github.com/meloncholic/tree-sitter-mssql/pull/35))
+- sync .gitattributes and .editorconfig with org template ([#34](https://github.com/meloncholic/tree-sitter-mssql/pull/34))
+
 ## [0.1.6](https://github.com/meloncholic/tree-sitter-mssql/compare/v0.1.5...v0.1.6) - 2026-09-12
 
 ### Added
