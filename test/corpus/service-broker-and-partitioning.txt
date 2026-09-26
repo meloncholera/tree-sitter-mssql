@@ -795,3 +795,96 @@ SELECT $PARTITION.pf(a) FROM t;
         (relation
           (object_reference
             (identifier)))))))
+
+================================================================================
+CREATE QUEUE clauses are optional and once each, WITH then ON
+================================================================================
+
+CREATE QUEUE q;
+CREATE QUEUE q ON fg;
+CREATE QUEUE q WITH STATUS = ON
+WITH cte AS (SELECT 1 AS a) SELECT a FROM cte;
+
+--------------------------------------------------------------------------------
+
+(program
+  (batch
+    (statement
+      (create_queue
+        (keyword_create)
+        (keyword_queue)
+        name: (object_reference
+          name: (identifier))))
+    (statement
+      (create_queue
+        (keyword_create)
+        (keyword_queue)
+        name: (object_reference
+          name: (identifier))
+        (on_filegroup
+          (keyword_on)
+          (identifier))))
+    (statement
+      (create_queue
+        (keyword_create)
+        (keyword_queue)
+        name: (object_reference
+          name: (identifier))
+        (with_clause
+          (keyword_with)
+          (option
+            name: (identifier)
+            value: (keyword_on)))))
+    (statement
+      (keyword_with)
+      (cte
+        (identifier)
+        (keyword_as)
+        (statement
+          (select
+            (keyword_select)
+            (select_expression
+              (term
+                value: (literal)
+                (keyword_as)
+                alias: (identifier))))))
+      (select
+        (keyword_select)
+        (select_expression
+          (term
+            value: (field
+              name: (identifier)))))
+      (from
+        (keyword_from)
+        (relation
+          (object_reference
+            name: (identifier)))))))
+
+================================================================================
+CREATE PARTITION FUNCTION boundary values may be expressions
+================================================================================
+
+CREATE PARTITION FUNCTION PF_Win (int) AS RANGE RIGHT FOR VALUES (@start, @start + 10);
+
+--------------------------------------------------------------------------------
+
+(program
+  (batch
+    (statement
+      (create_partition_function
+        (keyword_create)
+        (keyword_partition)
+        (keyword_function)
+        name: (identifier)
+        (keyword_int)
+        (keyword_as)
+        (keyword_range)
+        (keyword_right)
+        (keyword_for)
+        (keyword_values)
+        (field
+          name: (identifier))
+        (binary_expression
+          left: (field
+            name: (identifier))
+          right: (literal))))))
