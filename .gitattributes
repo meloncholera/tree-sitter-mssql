@@ -16,6 +16,8 @@
 *.gyp                    text eol=lf
 *.scm                    text eol=lf
 src/parser.c             linguist-generated=true
+src/grammar.json         linguist-generated=true
+src/node-types.json      linguist-generated=true
 
 # JavaScript / TypeScript (node bindings and test scripts)
 *.js                     text eol=lf linguist-detectable=true linguist-language=JavaScript
@@ -48,6 +50,7 @@ SECURITY.md              text eol=lf linguist-documentation=true
 
 # Generated / lock files (excluded from language stats and diffs)
 Cargo.lock               linguist-generated=true export-ignore -diff
+package-lock.json        linguist-generated=true export-ignore -diff
 
 # Native build artifacts (not tracked, but produced by this repo's own build)
 *.node                   binary
