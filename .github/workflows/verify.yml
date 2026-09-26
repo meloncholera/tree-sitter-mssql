@@ -237,6 +237,17 @@ jobs:
           done
           exit "$fail"
 
+      - name: Report fixture parse performance
+        run: |
+          set -euo pipefail
+          stats=$(npx --yes --package=tree-sitter-cli@${{ env.TREE_SITTER_CLI_VERSION }} -- tree-sitter parse --quiet --time --stat test/fixtures/*.sql 2>&1 | grep '^Total parses:')
+          parser_bytes=$(wc -c < src/parser.c)
+          {
+            echo "### Fixture parse performance"
+            echo "- ${stats}"
+            echo "- \`src/parser.c\`: ${parser_bytes} bytes"
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Format check
         run: cargo fmt --check
 
