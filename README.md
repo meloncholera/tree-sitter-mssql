@@ -64,6 +64,21 @@ const` named exports (`tree_sitter_mssql::HIGHLIGHTS_QUERY`), the Node
 binding as properties of its default export (`SQL.HIGHLIGHTS_QUERY`, not a
 named import).
 
+The npm package ships prebuilt native addons for Linux, macOS and Windows, so
+`npm install tree-sitter-mssql` needs no C toolchain on those platforms — it
+falls back to compiling from the committed generated parser only when no
+matching prebuild is present. A `tree-sitter-mssql.wasm` build is attached to
+every [GitHub Release](https://github.com/meloncholic/tree-sitter-mssql/releases)
+for `web-tree-sitter` consumers (browsers, sandboxed runtimes):
+
+```js
+import { Parser, Language } from "web-tree-sitter";
+await Parser.init();
+const language = await Language.load("tree-sitter-mssql.wasm");
+const parser = new Parser();
+parser.setLanguage(language);
+```
+
 ## Consuming this grammar
 
 The exported C symbol is `tree_sitter_mssql` (not `tree_sitter_sql`), so linking this grammar
@@ -128,6 +143,11 @@ for f in test/fixtures/*.sql; do printf "%s: " "$f"; CC=gcc CXX=g++ npx --yes --
 ```sh
 node test/generate-node-kinds.mjs
 ```
+
+Every `verify` CI run's job summary reports the fixture set's parse throughput (bytes/ms) and the
+current `src/parser.c` size, so a change's effect on either is visible without a separate
+benchmark step. A scheduled workflow (`.github/workflows/fuzz.yml`) also fuzzes the parser and
+`src/scanner.c` against arbitrary input weekly.
 
 ## License
 

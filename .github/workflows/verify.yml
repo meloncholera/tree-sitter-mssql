@@ -206,6 +206,8 @@ jobs:
       - name: Parse every fixture and fail on ERROR/MISSING or zero-width nodes
         run: |
           set -euo pipefail
+          fixture_bytes=$(cat test/fixtures/*.sql | wc -c)
+          start_ns=$(date +%s%N)
           if ! combined=$(npx --yes --package=tree-sitter-cli@${{ env.TREE_SITTER_CLI_VERSION }} -- tree-sitter parse test/fixtures/*.sql 2>&1); then
             combined_failed=1
           else
@@ -213,6 +215,18 @@ jobs:
           fi
           combined_zero_width_count=$(printf '%s\n' "$combined" | grep -cE '\[([0-9]+), ([0-9]+)\] - \[\1, \2\]' || true)
           if [ "$combined_failed" -eq 0 ] && [ "$combined_zero_width_count" -eq 0 ]; then
+            elapsed_ms=$(( ($(date +%s%N) - start_ns) / 1000000 ))
+            if [ "$elapsed_ms" -gt 0 ]; then
+              bytes_per_ms=$(( fixture_bytes / elapsed_ms ))
+            else
+              bytes_per_ms="$fixture_bytes"
+            fi
+            parser_bytes=$(wc -c < src/parser.c)
+            {
+              echo "### Fixture parse performance"
+              echo "- ${fixture_bytes} bytes across every fixture, parsed in ${elapsed_ms} ms (~${bytes_per_ms} bytes/ms)"
+              echo "- \`src/parser.c\`: ${parser_bytes} bytes"
+            } >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
 
