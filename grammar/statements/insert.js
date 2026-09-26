@@ -38,6 +38,7 @@ export default {
     ),
 
   // output_clause, assignment and _set_values moved to dml-shared.js —
-  // update.js and merge.js use them too and neither is reachable from
-  // `insert`.
+  // update.js and merge.js use them too, and _set_values (used by
+  // assignment) isn't reachable from `insert` at all, unlike output_clause
+  // above, which insert uses directly.
 };

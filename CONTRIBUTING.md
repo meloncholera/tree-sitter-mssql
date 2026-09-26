@@ -46,6 +46,18 @@ node test/check-registries.mjs
 
 ## Lint and format
 
+`eslint` and `prettier` are devDependencies, not one-off CLI tools, since ESLint's flat config
+(`eslint.config.js`) imports `@eslint/js` and resolves it from this checkout's own `node_modules` —
+unlike `tree-sitter-cli`, they can't be run through a one-off `npx --package=...` invocation.
+Install them once (this skips the package's own `node-gyp-build` lifecycle script, which needs
+MSVC and isn't relevant to linting):
+
+```sh
+npm install --ignore-scripts
+```
+
+Then:
+
 ```sh
 npm run lint
 npm run format:check
