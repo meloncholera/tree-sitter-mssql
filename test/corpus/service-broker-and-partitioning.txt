@@ -7,24 +7,25 @@ CREATE QUEUE dbo.OrderQueue WITH STATUS = ON, RETENTION = OFF ON [PRIMARY];
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (create_queue
-      (keyword_create)
-      (keyword_queue)
-      (object_reference
-        schema: (identifier)
-        name: (identifier))
-      (with_clause
-        (keyword_with)
-        (option
-          name: (identifier)
-          value: (keyword_on))
-        (option
-          name: (identifier)
-          value: (keyword_off)))
-      (on_filegroup
-        (keyword_on)
-        (identifier)))))
+  (batch
+    (statement
+      (create_queue
+        (keyword_create)
+        (keyword_queue)
+        name: (object_reference
+          schema: (identifier)
+          name: (identifier))
+        (with_clause
+          (keyword_with)
+          (option
+            name: (identifier)
+            value: (keyword_on))
+          (option
+            name: (identifier)
+            value: (keyword_off)))
+        (on_filegroup
+          (keyword_on)
+          (identifier))))))
 
 ================================================================================
 Service Broker contract
@@ -39,21 +40,22 @@ CREATE CONTRACT [//Contoso/OrderContract]
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (create_contract
-      (keyword_create)
-      (keyword_contract)
-      (identifier)
-      (contract_message
+  (batch
+    (statement
+      (create_contract
+        (keyword_create)
+        (keyword_contract)
         (identifier)
-        (keyword_sent)
-        (keyword_by)
-        (keyword_initiator))
-      (contract_message
-        (keyword_default)
-        (keyword_sent)
-        (keyword_by)
-        (keyword_any)))))
+        (contract_message
+          (identifier)
+          (keyword_sent)
+          (keyword_by)
+          (keyword_initiator))
+        (contract_message
+          (keyword_default)
+          (keyword_sent)
+          (keyword_by)
+          (keyword_any))))))
 
 ================================================================================
 Service Broker message type with validation
@@ -66,16 +68,17 @@ CREATE MESSAGE TYPE [//Contoso/OrderMessage]
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (create_message_type
-      (keyword_create)
-      (keyword_message)
-      (keyword_type)
-      (identifier)
-      (keyword_authorization)
-      (identifier)
-      (identifier)
-      (identifier))))
+  (batch
+    (statement
+      (create_message_type
+        (keyword_create)
+        (keyword_message)
+        (keyword_type)
+        (identifier)
+        (keyword_authorization)
+        (identifier)
+        (identifier)
+        (identifier)))))
 
 ================================================================================
 Service Broker message type validated against an XML schema collection
@@ -86,20 +89,21 @@ CREATE MESSAGE TYPE mt VALIDATION = VALID_XML WITH SCHEMA COLLECTION dbo.sc;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (create_message_type
-      (keyword_create)
-      (keyword_message)
-      (keyword_type)
-      (identifier)
-      (identifier)
-      (identifier)
-      (keyword_with)
-      (keyword_schema)
-      (keyword_collection)
-      name: (object_reference
-        schema: (identifier)
-        name: (identifier)))))
+  (batch
+    (statement
+      (create_message_type
+        (keyword_create)
+        (keyword_message)
+        (keyword_type)
+        (identifier)
+        (identifier)
+        (identifier)
+        (keyword_with)
+        (keyword_schema)
+        (keyword_collection)
+        name: (object_reference
+          schema: (identifier)
+          name: (identifier))))))
 
 ================================================================================
 Full-text index with column options
@@ -116,37 +120,38 @@ WITH CHANGE_TRACKING AUTO;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (create_fulltext_index
-      (keyword_create)
-      (keyword_fulltext)
-      (keyword_index)
-      (keyword_on)
-      (object_reference
-        schema: (identifier)
-        name: (identifier))
-      (fulltext_index_column
-        name: (identifier)
-        (identifier)
-        (identifier)
-        (identifier)
-        (identifier)
-        (literal)
-        (identifier))
-      (fulltext_index_column
-        name: (identifier)
-        (identifier)
-        (literal))
-      (keyword_key)
-      (keyword_index)
-      (identifier)
-      (keyword_on)
-      (identifier)
-      (with_clause
-        (keyword_with)
-        (option
+  (batch
+    (statement
+      (create_fulltext_index
+        (keyword_create)
+        (keyword_fulltext)
+        (keyword_index)
+        (keyword_on)
+        (object_reference
+          schema: (identifier)
+          name: (identifier))
+        (fulltext_index_column
           name: (identifier)
-          value: (identifier))))))
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier)
+          (literal)
+          (identifier))
+        (fulltext_index_column
+          name: (identifier)
+          (identifier)
+          (literal))
+        (keyword_key)
+        (keyword_index)
+        (identifier)
+        (keyword_on)
+        (identifier)
+        (with_clause
+          (keyword_with)
+          (option
+            name: (identifier)
+            value: (identifier)))))))
 
 ================================================================================
 Partition function and scheme
@@ -162,33 +167,34 @@ ALL TO ([PRIMARY]);
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (create_partition_function
-      (keyword_create)
-      (keyword_partition)
-      (keyword_function)
-      (identifier)
-      (keyword_int)
-      (keyword_as)
-      (keyword_range)
-      (keyword_left)
-      (keyword_for)
-      (keyword_values)
-      (literal)
-      (literal)
-      (literal)))
-  (statement
-    (create_partition_scheme
-      (keyword_create)
-      (keyword_partition)
-      (keyword_scheme)
-      (identifier)
-      (keyword_as)
-      (keyword_partition)
-      (identifier)
-      (keyword_all)
-      (keyword_to)
-      (identifier))))
+  (batch
+    (statement
+      (create_partition_function
+        (keyword_create)
+        (keyword_partition)
+        (keyword_function)
+        (identifier)
+        (keyword_int)
+        (keyword_as)
+        (keyword_range)
+        (keyword_left)
+        (keyword_for)
+        (keyword_values)
+        (literal)
+        (literal)
+        (literal)))
+    (statement
+      (create_partition_scheme
+        (keyword_create)
+        (keyword_partition)
+        (keyword_scheme)
+        (identifier)
+        (keyword_as)
+        (keyword_partition)
+        (identifier)
+        (keyword_all)
+        (keyword_to)
+        (identifier)))))
 
 ================================================================================
 Service Broker dialog: BEGIN DIALOG, SEND, END CONVERSATION, MOVE CONVERSATION
@@ -211,101 +217,102 @@ END CONVERSATION @h WITH CLEANUP;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (begin_dialog_statement
-      (keyword_begin)
-      (keyword_dialog)
-      (keyword_conversation)
-      (identifier)
-      (keyword_from)
-      (keyword_service)
-      (identifier)
-      (keyword_to)
-      (keyword_service)
-      (literal)
-      (literal)
-      (keyword_on)
-      (keyword_contract)
-      (identifier)
-      (with_clause
+  (batch
+    (statement
+      (begin_dialog_statement
+        (keyword_begin)
+        (keyword_dialog)
+        (keyword_conversation)
+        (identifier)
+        (keyword_from)
+        (keyword_service)
+        (identifier)
+        (keyword_to)
+        (keyword_service)
+        (literal)
+        (literal)
+        (keyword_on)
+        (keyword_contract)
+        (identifier)
+        (with_clause
+          (keyword_with)
+          (option
+            (identifier)
+            (identifier))
+          (option
+            (identifier)
+            (literal))
+          (option
+            (identifier)
+            (keyword_off)))))
+    (statement
+      (begin_dialog_statement
+        (keyword_begin)
+        (keyword_dialog)
+        (identifier)
+        (keyword_from)
+        (keyword_service)
+        (identifier)
+        (keyword_to)
+        (keyword_service)
+        (literal)))
+    (statement
+      (send_statement
+        (keyword_send)
+        (keyword_on)
+        (keyword_conversation)
+        (identifier)
+        (keyword_message)
+        (keyword_type)
+        (identifier)
+        (literal)))
+    (statement
+      (send_statement
+        (keyword_send)
+        (keyword_on)
+        (keyword_conversation)
+        (identifier)
+        (identifier)
+        (keyword_message)
+        (keyword_type)
+        (identifier)))
+    (statement
+      (send_statement
+        (keyword_send)
+        (keyword_on)
+        (keyword_conversation)
+        (identifier)))
+    (statement
+      (move_conversation_statement
+        (keyword_move)
+        (keyword_conversation)
+        (identifier)
+        (keyword_to)
+        (identifier)))
+    (statement
+      (end_conversation_statement
+        (keyword_end)
+        (keyword_conversation)
+        (identifier)))
+    (statement
+      (end_conversation_statement
+        (keyword_end)
+        (keyword_conversation)
+        (identifier)
         (keyword_with)
-        (option
-          (identifier)
-          (identifier))
         (option
           (identifier)
           (literal))
         (option
           (identifier)
-          (keyword_off)))))
-  (statement
-    (begin_dialog_statement
-      (keyword_begin)
-      (keyword_dialog)
-      (identifier)
-      (keyword_from)
-      (keyword_service)
-      (identifier)
-      (keyword_to)
-      (keyword_service)
-      (literal)))
-  (statement
-    (send_statement
-      (keyword_send)
-      (keyword_on)
-      (keyword_conversation)
-      (identifier)
-      (keyword_message)
-      (keyword_type)
-      (identifier)
-      (literal)))
-  (statement
-    (send_statement
-      (keyword_send)
-      (keyword_on)
-      (keyword_conversation)
-      (identifier)
-      (identifier)
-      (keyword_message)
-      (keyword_type)
-      (identifier)))
-  (statement
-    (send_statement
-      (keyword_send)
-      (keyword_on)
-      (keyword_conversation)
-      (identifier)))
-  (statement
-    (move_conversation_statement
-      (keyword_move)
-      (keyword_conversation)
-      (identifier)
-      (keyword_to)
-      (identifier)))
-  (statement
-    (end_conversation_statement
-      (keyword_end)
-      (keyword_conversation)
-      (identifier)))
-  (statement
-    (end_conversation_statement
-      (keyword_end)
-      (keyword_conversation)
-      (identifier)
-      (keyword_with)
-      (option
+          (literal))))
+    (statement
+      (end_conversation_statement
+        (keyword_end)
+        (keyword_conversation)
         (identifier)
-        (literal))
-      (option
-        (identifier)
-        (literal))))
-  (statement
-    (end_conversation_statement
-      (keyword_end)
-      (keyword_conversation)
-      (identifier)
-      (keyword_with)
-      (identifier))))
+        (keyword_with)
+        (identifier)))))
 
 ================================================================================
 Service Broker RECEIVE, GET CONVERSATION GROUP and WAITFOR
@@ -322,82 +329,8 @@ WAITFOR DELAY '00:00:01';
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (receive_statement
-      (keyword_receive)
-      (top_clause
-        (keyword_top)
-        (literal))
-      (select_expression
-        (term
-          (binary_expression
-            (field
-              (identifier))
-            (field
-              (identifier))))
-        (term
-          (binary_expression
-            (field
-              (identifier))
-            (field
-              (identifier))))
-        (term
-          (binary_expression
-            (field
-              (identifier))
-            (field
-              (identifier)))))
-      (keyword_from)
-      (object_reference
-        (identifier)
-        (identifier))))
-  (statement
-    (receive_statement
-      (keyword_receive)
-      (select_expression
-        (term
-          (all_fields)))
-      (keyword_from)
-      (object_reference
-        (identifier)
-        (identifier))
-      (keyword_into)
-      (identifier)
-      (where
-        (keyword_where)
-        (binary_expression
-          (field
-            (identifier))
-          (field
-            (identifier))))))
-  (statement
-    (receive_statement
-      (keyword_receive)
-      (select_expression
-        (term
-          (field
-            (identifier))
-          (keyword_as)
-          (identifier))
-        (term
-          (field
-            (identifier))))
-      (keyword_from)
-      (object_reference
-        (identifier))))
-  (statement
-    (get_conversation_group_statement
-      (keyword_get)
-      (keyword_conversation)
-      (keyword_group)
-      (identifier)
-      (keyword_from)
-      (object_reference
-        (identifier)
-        (identifier))))
-  (statement
-    (waitfor_statement
-      (keyword_waitfor)
+  (batch
+    (statement
       (receive_statement
         (keyword_receive)
         (top_clause
@@ -409,16 +342,58 @@ WAITFOR DELAY '00:00:01';
               (field
                 (identifier))
               (field
+                (identifier))))
+          (term
+            (binary_expression
+              (field
+                (identifier))
+              (field
+                (identifier))))
+          (term
+            (binary_expression
+              (field
+                (identifier))
+              (field
                 (identifier)))))
         (keyword_from)
         (object_reference
           (identifier)
-          (identifier)))
-      (keyword_timeout)
-      (literal)))
-  (statement
-    (waitfor_statement
-      (keyword_waitfor)
+          (identifier))))
+    (statement
+      (receive_statement
+        (keyword_receive)
+        (select_expression
+          (term
+            (all_fields)))
+        (keyword_from)
+        (object_reference
+          (identifier)
+          (identifier))
+        (keyword_into)
+        (identifier)
+        (where
+          (keyword_where)
+          (binary_expression
+            (field
+              (identifier))
+            (field
+              (identifier))))))
+    (statement
+      (receive_statement
+        (keyword_receive)
+        (select_expression
+          (term
+            (field
+              (identifier))
+            (keyword_as)
+            (identifier))
+          (term
+            (field
+              (identifier))))
+        (keyword_from)
+        (object_reference
+          (identifier))))
+    (statement
       (get_conversation_group_statement
         (keyword_get)
         (keyword_conversation)
@@ -427,15 +402,48 @@ WAITFOR DELAY '00:00:01';
         (keyword_from)
         (object_reference
           (identifier)
-          (identifier)))
-      (keyword_timeout)
-      (field
-        (identifier))))
-  (statement
-    (waitfor_statement
-      (keyword_waitfor)
-      (keyword_delay)
-      (literal))))
+          (identifier))))
+    (statement
+      (waitfor_statement
+        (keyword_waitfor)
+        (receive_statement
+          (keyword_receive)
+          (top_clause
+            (keyword_top)
+            (literal))
+          (select_expression
+            (term
+              (binary_expression
+                (field
+                  (identifier))
+                (field
+                  (identifier)))))
+          (keyword_from)
+          (object_reference
+            (identifier)
+            (identifier)))
+        (keyword_timeout)
+        (literal)))
+    (statement
+      (waitfor_statement
+        (keyword_waitfor)
+        (get_conversation_group_statement
+          (keyword_get)
+          (keyword_conversation)
+          (keyword_group)
+          (identifier)
+          (keyword_from)
+          (object_reference
+            (identifier)
+            (identifier)))
+        (keyword_timeout)
+        (field
+          (identifier))))
+    (statement
+      (waitfor_statement
+        (keyword_waitfor)
+        (keyword_delay)
+        (literal)))))
 
 ================================================================================
 Service Broker: variable target service, literal conversation handles
@@ -448,35 +456,36 @@ MOVE CONVERSATION '9F0E0000-0000-0000-0000-000000000000' TO @g;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (begin_dialog_statement
-      (keyword_begin)
-      (keyword_dialog)
-      (identifier)
-      (keyword_from)
-      (keyword_service)
-      (identifier)
-      (keyword_to)
-      (keyword_service)
-      (identifier)
-      (identifier)
-      (keyword_on)
-      (keyword_contract)
-      (identifier)))
-  (statement
-    (end_conversation_statement
-      (keyword_end)
-      (keyword_conversation)
-      (literal)
-      (keyword_with)
-      (identifier)))
-  (statement
-    (move_conversation_statement
-      (keyword_move)
-      (keyword_conversation)
-      (literal)
-      (keyword_to)
-      (identifier))))
+  (batch
+    (statement
+      (begin_dialog_statement
+        (keyword_begin)
+        (keyword_dialog)
+        (identifier)
+        (keyword_from)
+        (keyword_service)
+        (identifier)
+        (keyword_to)
+        (keyword_service)
+        (identifier)
+        (identifier)
+        (keyword_on)
+        (keyword_contract)
+        (identifier)))
+    (statement
+      (end_conversation_statement
+        (keyword_end)
+        (keyword_conversation)
+        (literal)
+        (keyword_with)
+        (identifier)))
+    (statement
+      (move_conversation_statement
+        (keyword_move)
+        (keyword_conversation)
+        (literal)
+        (keyword_to)
+        (identifier)))))
 
 ================================================================================
 ALTER TABLE SWITCH PARTITION
@@ -488,29 +497,275 @@ ALTER TABLE t SWITCH TO u;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (alter_table
-      (keyword_alter)
-      (keyword_table)
-      (object_reference
-        (identifier))
-      (keyword_switch)
-      (keyword_partition)
-      (literal)
-      (keyword_to)
-      (object_reference
-        (identifier))
-      (keyword_partition)
-      (literal)))
-  (statement
-    (alter_table
-      (keyword_alter)
-      (keyword_table)
-      (object_reference
-        (identifier))
-      (keyword_switch)
-      (keyword_to)
-      (object_reference
+  (batch
+    (statement
+      (alter_table
+        (keyword_alter)
+        (keyword_table)
+        (object_reference
+          (identifier))
+        (keyword_switch)
+        (keyword_partition)
+        (literal)
+        (keyword_to)
+        (object_reference
+          (identifier))
+        (keyword_partition)
+        (literal)))
+    (statement
+      (alter_table
+        (keyword_alter)
+        (keyword_table)
+        (object_reference
+          (identifier))
+        (keyword_switch)
+        (keyword_to)
+        (object_reference
+          (identifier))))))
+
+================================================================================
+TRUNCATE TABLE with a partition list
+================================================================================
+
+TRUNCATE TABLE dbo.t WITH (PARTITIONS (1, 3 TO 5));
+
+--------------------------------------------------------------------------------
+
+(program
+  (batch
+    (statement
+      (truncate_statement
+        (keyword_truncate)
+        (keyword_table)
+        (object_reference
+          schema: (identifier)
+          name: (identifier))
+        (keyword_with)
+        (keyword_partitions)
+        (truncate_partition_range
+          low: (literal))
+        (truncate_partition_range
+          low: (literal)
+          (keyword_to)
+          high: (literal))))))
+
+================================================================================
+ALTER QUEUE
+================================================================================
+
+ALTER QUEUE dbo.OrderQueue WITH STATUS = OFF;
+ALTER QUEUE dbo.OrderQueue REBUILD;
+ALTER QUEUE dbo.OrderQueue REORGANIZE WITH LOB_COMPACTION = ON;
+
+--------------------------------------------------------------------------------
+
+(program
+  (batch
+    (statement
+      (alter_queue
+        (keyword_alter)
+        (keyword_queue)
+        (object_reference
+          schema: (identifier)
+          name: (identifier))
+        (with_clause
+          (keyword_with)
+          (option
+            name: (identifier)
+            value: (keyword_off)))))
+    (statement
+      (alter_queue
+        (keyword_alter)
+        (keyword_queue)
+        (object_reference
+          schema: (identifier)
+          name: (identifier))
+        (keyword_rebuild)))
+    (statement
+      (alter_queue
+        (keyword_alter)
+        (keyword_queue)
+        (object_reference
+          schema: (identifier)
+          name: (identifier))
+        (keyword_reorganize)
+        (with_clause
+          (keyword_with)
+          (option
+            name: (identifier)
+            value: (keyword_on)))))))
+
+================================================================================
+ALTER ASSEMBLY
+================================================================================
+
+ALTER ASSEMBLY MyAssembly FROM 'C:\new.dll' WITH PERMISSION_SET = SAFE;
+ALTER ASSEMBLY MyAssembly DROP FILE ALL ADD FILE FROM 'C:\src.cs' AS src;
+
+--------------------------------------------------------------------------------
+
+(program
+  (batch
+    (statement
+      (alter_assembly
+        (keyword_alter)
+        (keyword_assembly)
+        (identifier)
+        (keyword_from)
+        (literal)
+        (with_clause
+          (keyword_with)
+          (option
+            name: (identifier)
+            value: (identifier)))))
+    (statement
+      (alter_assembly
+        (keyword_alter)
+        (keyword_assembly)
+        (identifier)
+        (keyword_drop)
+        (keyword_file)
+        (keyword_all)
+        (keyword_add)
+        (keyword_file)
+        (keyword_from)
+        (literal)
+        (keyword_as)
+        (identifier)))))
+
+================================================================================
+ALTER FULLTEXT CATALOG
+================================================================================
+
+ALTER FULLTEXT CATALOG cat REBUILD WITH ACCENT_SENSITIVITY = OFF;
+ALTER FULLTEXT CATALOG cat AS DEFAULT;
+
+--------------------------------------------------------------------------------
+
+(program
+  (batch
+    (statement
+      (alter_fulltext_catalog
+        (keyword_alter)
+        (keyword_fulltext)
+        (keyword_catalog)
+        (identifier)
+        (keyword_rebuild)
+        (with_clause
+          (keyword_with)
+          (option
+            name: (identifier)
+            value: (keyword_off)))))
+    (statement
+      (alter_fulltext_catalog
+        (keyword_alter)
+        (keyword_fulltext)
+        (keyword_catalog)
+        (identifier)
+        (keyword_as)
+        (keyword_default)))))
+
+================================================================================
+ALTER FULLTEXT INDEX
+================================================================================
+
+ALTER FULLTEXT INDEX ON dbo.Documents ENABLE;
+ALTER FULLTEXT INDEX ON dbo.Documents SET STOPLIST SYSTEM;
+ALTER FULLTEXT INDEX ON dbo.Documents STOP POPULATION;
+
+--------------------------------------------------------------------------------
+
+(program
+  (batch
+    (statement
+      (alter_fulltext_index
+        (keyword_alter)
+        (keyword_fulltext)
+        (keyword_index)
+        (keyword_on)
+        (object_reference
+          schema: (identifier)
+          name: (identifier))
+        (keyword_enable)))
+    (statement
+      (alter_fulltext_index
+        (keyword_alter)
+        (keyword_fulltext)
+        (keyword_index)
+        (keyword_on)
+        (object_reference
+          schema: (identifier)
+          name: (identifier))
+        (keyword_set)
+        (identifier)
+        (identifier)))
+    (statement
+      (alter_fulltext_index
+        (keyword_alter)
+        (keyword_fulltext)
+        (keyword_index)
+        (keyword_on)
+        (object_reference
+          schema: (identifier)
+          name: (identifier))
+        (keyword_stop)
+        (identifier)))))
+
+================================================================================
+ALTER PARTITION FUNCTION and ALTER PARTITION SCHEME
+================================================================================
+
+ALTER PARTITION FUNCTION pf() SPLIT RANGE (100);
+ALTER PARTITION SCHEME ps NEXT USED fg;
+
+--------------------------------------------------------------------------------
+
+(program
+  (batch
+    (statement
+      (alter_partition_function
+        (keyword_alter)
+        (keyword_partition)
+        (keyword_function)
+        (identifier)
+        (keyword_split)
+        (keyword_range)
+        (literal)))
+    (statement
+      (alter_partition_scheme
+        (keyword_alter)
+        (keyword_partition)
+        (keyword_scheme)
+        (identifier)
+        (keyword_next)
+        (keyword_used)
+        (identifier)))))
+
+================================================================================
+ALTER ROUTE
+================================================================================
+
+ALTER ROUTE r WITH ADDRESS = N'TCP://host:1234';
+ALTER ROUTE r;
+
+--------------------------------------------------------------------------------
+
+(program
+  (batch
+    (statement
+      (alter_route
+        (keyword_alter)
+        (keyword_route)
+        (identifier)
+        (with_clause
+          (keyword_with)
+          (option
+            name: (identifier)
+            value: (literal)))))
+    (statement
+      (alter_route
+        (keyword_alter)
+        (keyword_route)
         (identifier)))))
 
 ================================================================================
@@ -522,20 +777,21 @@ SELECT $PARTITION.pf(a) FROM t;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (select
-      (keyword_select)
-      (select_expression
-        (term
-          (invocation
-            (object_reference
-              (identifier)
-              (identifier))
-            (term
-              (field
-                (identifier)))))))
-    (from
-      (keyword_from)
-      (relation
-        (object_reference
-          (identifier))))))
+  (batch
+    (statement
+      (select
+        (keyword_select)
+        (select_expression
+          (term
+            (invocation
+              (object_reference
+                (identifier)
+                (identifier))
+              (term
+                (field
+                  (identifier)))))))
+      (from
+        (keyword_from)
+        (relation
+          (object_reference
+            (identifier)))))))

@@ -8,19 +8,20 @@ DELETE my_database.my_schema.my_table;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (delete
-      (keyword_delete)
-      (keyword_from)
-      (object_reference
-        (identifier))))
-  (statement
-    (delete
-      (keyword_delete)
-      (object_reference
-        (identifier)
-        (identifier)
-        (identifier)))))
+  (batch
+    (statement
+      (delete
+        (keyword_delete)
+        (keyword_from)
+        (object_reference
+          (identifier))))
+    (statement
+      (delete
+        (keyword_delete)
+        (object_reference
+          (identifier)
+          (identifier)
+          (identifier))))))
 
 ================================================================================
 Delete with WHERE
@@ -36,49 +37,50 @@ DELETE FROM #prod_info WHERE (t_sls = 0 AND t_sls_qty = 0);
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (delete
-      (keyword_delete)
-      (keyword_from)
-      (object_reference
-        (identifier))
-      (where
-        (keyword_where)
-        (binary_expression
-          (field
-            (identifier))
-          (literal)))))
-  (statement
-    (delete
-      (keyword_delete)
-      (object_reference
-        (identifier))
-      (where
-        (keyword_where)
-        (binary_expression
-          (field
-            (identifier))
-          (field
-            (identifier))))))
-  (statement
-    (delete
-      (keyword_delete)
-      (keyword_from)
-      (object_reference
-        (identifier))
-      (where
-        (keyword_where)
-        (parenthesized_expression
+  (batch
+    (statement
+      (delete
+        (keyword_delete)
+        (keyword_from)
+        (object_reference
+          (identifier))
+        (where
+          (keyword_where)
           (binary_expression
+            (field
+              (identifier))
+            (literal)))))
+    (statement
+      (delete
+        (keyword_delete)
+        (object_reference
+          (identifier))
+        (where
+          (keyword_where)
+          (binary_expression
+            (field
+              (identifier))
+            (field
+              (identifier))))))
+    (statement
+      (delete
+        (keyword_delete)
+        (keyword_from)
+        (object_reference
+          (identifier))
+        (where
+          (keyword_where)
+          (parenthesized_expression
             (binary_expression
-              (field
-                (identifier))
-              (literal))
-            (keyword_and)
-            (binary_expression
-              (field
-                (identifier))
-              (literal))))))))
+              (binary_expression
+                (field
+                  (identifier))
+                (literal))
+              (keyword_and)
+              (binary_expression
+                (field
+                  (identifier))
+                (literal)))))))))
 
 ================================================================================
 Delete through an alias with FROM and joins
@@ -98,25 +100,60 @@ DELETE t FROM dbo.target AS t JOIN src ON src.id = t.id;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (delete
-      (keyword_delete)
-      (object_reference
-        (identifier))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))
+  (batch
+    (statement
+      (delete
+        (keyword_delete)
+        (object_reference
           (identifier))
-        (join
-          (keyword_inner)
-          (keyword_join)
+        (from
+          (keyword_from)
           (relation
             (object_reference
               (identifier))
             (identifier))
-          (keyword_on)
+          (join
+            (keyword_inner)
+            (keyword_join)
+            (relation
+              (object_reference
+                (identifier))
+              (identifier))
+            (keyword_on)
+            (binary_expression
+              (field
+                (object_reference
+                  (identifier))
+                (identifier))
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))))
+        (where
+          (keyword_where)
+          (binary_expression
+            (field
+              (object_reference
+                (identifier))
+              (identifier))
+            (literal)))))
+    (statement
+      (delete
+        (keyword_delete)
+        (object_reference
+          (identifier))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))
+            (identifier))
+          (relation
+            (object_reference
+              (identifier))
+            (identifier)))
+        (where
+          (keyword_where)
           (binary_expression
             (field
               (object_reference
@@ -125,69 +162,35 @@ DELETE t FROM dbo.target AS t JOIN src ON src.id = t.id;
             (field
               (object_reference
                 (identifier))
-              (identifier)))))
-      (where
-        (keyword_where)
-        (binary_expression
-          (field
-            (object_reference
-              (identifier))
-            (identifier))
-          (literal)))))
-  (statement
-    (delete
-      (keyword_delete)
-      (object_reference
-        (identifier))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))
+              (identifier))))))
+    (statement
+      (delete
+        (keyword_delete)
+        (object_reference
           (identifier))
-        (relation
-          (object_reference
-            (identifier))
-          (identifier)))
-      (where
-        (keyword_where)
-        (binary_expression
-          (field
-            (object_reference
-              (identifier))
-            (identifier))
-          (field
-            (object_reference
-              (identifier))
-            (identifier))))))
-  (statement
-    (delete
-      (keyword_delete)
-      (object_reference
-        (identifier))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)
-            (identifier))
-          (keyword_as)
-          (identifier))
-        (join
-          (keyword_join)
+        (from
+          (keyword_from)
           (relation
             (object_reference
-              (identifier)))
-          (keyword_on)
-          (binary_expression
-            (field
-              (object_reference
-                (identifier))
+              (identifier)
               (identifier))
-            (field
+            (keyword_as)
+            (identifier))
+          (join
+            (keyword_join)
+            (relation
               (object_reference
+                (identifier)))
+            (keyword_on)
+            (binary_expression
+              (field
+                (object_reference
+                  (identifier))
                 (identifier))
-              (identifier))))))))
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))))))))
 
 ================================================================================
 Delete with TOP, a table hint and OUTPUT
@@ -200,36 +203,57 @@ WHERE logged < @cutoff;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (delete
-      (keyword_delete)
-      (top_clause
-        (keyword_top)
-        (literal))
-      (keyword_from)
-      (object_reference
-        (identifier)
-        (identifier))
-      (table_hint
-        (keyword_with)
-        (table_hint_item
-          (identifier)))
-      (output_clause
-        (keyword_output)
-        (term
-          (field
-            (object_reference
-              (identifier))
-            (identifier)))
-        (keyword_into)
+  (batch
+    (statement
+      (delete
+        (keyword_delete)
+        (top_clause
+          (keyword_top)
+          (literal))
+        (keyword_from)
         (object_reference
-          (identifier)))
-      (where
-        (keyword_where)
-        (binary_expression
-          (field
-            (identifier))
-          (field
+          (identifier)
+          (identifier))
+        (table_hint
+          (keyword_with)
+          (table_hint_item
+            (identifier)))
+        (output_clause
+          (keyword_output)
+          (term
+            (field
+              (object_reference
+                (identifier))
+              (identifier)))
+          (keyword_into)
+          (object_reference
+            (identifier)))
+        (where
+          (keyword_where)
+          (binary_expression
+            (field
+              (identifier))
+            (field
+              (identifier))))))))
+
+================================================================================
+Delete with the deprecated bare table hint (ARCH-6)
+================================================================================
+
+DELETE FROM t (NOLOCK);
+
+--------------------------------------------------------------------------------
+
+(program
+  (batch
+    (statement
+      (delete
+        (keyword_delete)
+        (keyword_from)
+        (object_reference
+          (identifier))
+        (table_hint
+          (table_hint_item
             (identifier)))))))
 
 ================================================================================
@@ -241,23 +265,47 @@ DELETE FROM dbo.t WHERE id = 1 OPTION (RECOMPILE);
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (delete
-      (keyword_delete)
-      (keyword_from)
-      (object_reference
-        (identifier)
-        (identifier))
-      (where
-        (keyword_where)
-        (binary_expression
-          (field
+  (batch
+    (statement
+      (delete
+        (keyword_delete)
+        (keyword_from)
+        (object_reference
+          (identifier)
+          (identifier))
+        (where
+          (keyword_where)
+          (binary_expression
+            (field
+              (identifier))
+            (literal)))
+        (option_clause
+          (keyword_option)
+          (query_hint
+            (keyword_recompile)))))))
+
+================================================================================
+Delete through a linked-server rowset function target (ARCH-6)
+================================================================================
+
+DELETE FROM OPENQUERY(lnk, 'SELECT a FROM t');
+
+--------------------------------------------------------------------------------
+
+(program
+  (batch
+    (statement
+      (delete
+        (keyword_delete)
+        (keyword_from)
+        (invocation
+          (object_reference
             (identifier))
-          (literal)))
-      (option_clause
-        (keyword_option)
-        (query_hint
-          (keyword_recompile))))))
+          (term
+            (field
+              (identifier)))
+          (term
+            (literal)))))))
 
 ================================================================================
 Truncate table
@@ -268,10 +316,11 @@ TRUNCATE TABLE dbo.employees;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (truncate_statement
-      (keyword_truncate)
-      (keyword_table)
-      (object_reference
-        (identifier)
-        (identifier)))))
+  (batch
+    (statement
+      (truncate_statement
+        (keyword_truncate)
+        (keyword_table)
+        (object_reference
+          (identifier)
+          (identifier))))))

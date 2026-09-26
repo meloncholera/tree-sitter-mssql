@@ -8,29 +8,30 @@ CREATE UNIQUE INDEX "akRoleName" ON "Role" ("name");
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (create_index
-      (keyword_create)
-      (keyword_index)
-      (identifier)
-      (keyword_on)
-      (object_reference
-        (identifier))
-      (ordered_columns
-        (column
-          (identifier)))))
-  (statement
-    (create_index
-      (keyword_create)
-      (keyword_unique)
-      (keyword_index)
-      (identifier)
-      (keyword_on)
-      (object_reference
-        (identifier))
-      (ordered_columns
-        (column
-          (identifier))))))
+  (batch
+    (statement
+      (create_index
+        (keyword_create)
+        (keyword_index)
+        (identifier)
+        (keyword_on)
+        (object_reference
+          (identifier))
+        (ordered_columns
+          (column
+            (identifier)))))
+    (statement
+      (create_index
+        (keyword_create)
+        (keyword_unique)
+        (keyword_index)
+        (identifier)
+        (keyword_on)
+        (object_reference
+          (identifier))
+        (ordered_columns
+          (column
+            (identifier)))))))
 
 ================================================================================
 Create clustered and nonclustered indexes with options, SSMS style
@@ -51,79 +52,80 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_orders_stat] ON [dbo].[orders]
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (create_index
-      (keyword_create)
-      (keyword_clustered)
-      (keyword_index)
-      (identifier)
-      (keyword_on)
-      (object_reference
+  (batch
+    (statement
+      (create_index
+        (keyword_create)
+        (keyword_clustered)
+        (keyword_index)
         (identifier)
-        (identifier))
-      (ordered_columns
-        (column
-          (identifier)
-          (direction
-            (keyword_asc)))
-        (column
-          (identifier)
-          (direction
-            (keyword_asc)))
-        (column
-          (identifier)
-          (direction
-            (keyword_asc))))
-      (with_options
-        (keyword_with)
-        (option
-          (identifier)
-          (keyword_off))
-        (option
-          (identifier)
-          (keyword_off))
-        (option
-          (identifier)
-          (keyword_off))
-        (option
-          (identifier)
-          (keyword_off))
-        (option
-          (identifier)
-          (keyword_off))
-        (option
-          (identifier)
-          (keyword_on))
-        (option
-          (identifier)
-          (keyword_on)))
-      (on_filegroup
         (keyword_on)
-        (identifier))))
-  (statement
-    (create_index
-      (keyword_create)
-      (keyword_unique)
-      (keyword_nonclustered)
-      (keyword_index)
-      (identifier)
-      (keyword_on)
-      (object_reference
+        (object_reference
+          (identifier)
+          (identifier))
+        (ordered_columns
+          (column
+            (identifier)
+            (direction
+              (keyword_asc)))
+          (column
+            (identifier)
+            (direction
+              (keyword_asc)))
+          (column
+            (identifier)
+            (direction
+              (keyword_asc))))
+        (with_options
+          (keyword_with)
+          (option
+            (identifier)
+            (keyword_off))
+          (option
+            (identifier)
+            (keyword_off))
+          (option
+            (identifier)
+            (keyword_off))
+          (option
+            (identifier)
+            (keyword_off))
+          (option
+            (identifier)
+            (keyword_off))
+          (option
+            (identifier)
+            (keyword_on))
+          (option
+            (identifier)
+            (keyword_on)))
+        (on_filegroup
+          (keyword_on)
+          (identifier))))
+    (statement
+      (create_index
+        (keyword_create)
+        (keyword_unique)
+        (keyword_nonclustered)
+        (keyword_index)
         (identifier)
-        (identifier))
-      (ordered_columns
-        (column
-          (identifier)
-          (direction
-            (keyword_desc))))
-      (with_options
-        (keyword_with)
-        (option
-          (identifier)
-          (literal)))
-      (on_filegroup
         (keyword_on)
-        (identifier)))))
+        (object_reference
+          (identifier)
+          (identifier))
+        (ordered_columns
+          (column
+            (identifier)
+            (direction
+              (keyword_desc))))
+        (with_options
+          (keyword_with)
+          (option
+            (identifier)
+            (literal)))
+        (on_filegroup
+          (keyword_on)
+          (identifier))))))
 
 ================================================================================
 Create covering and filtered indexes
@@ -139,54 +141,55 @@ WITH (ONLINE = ON, DATA_COMPRESSION = PAGE);
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (create_index
-      (keyword_create)
-      (keyword_index)
-      (identifier)
-      (keyword_on)
-      (object_reference
+  (batch
+    (statement
+      (create_index
+        (keyword_create)
+        (keyword_index)
         (identifier)
-        (identifier))
-      (ordered_columns
-        (column
+        (keyword_on)
+        (object_reference
+          (identifier)
           (identifier))
-        (column
-          (identifier)))
-      (covering_columns
-        (keyword_include)
-        (identifier)
-        (identifier))))
-  (statement
-    (create_index
-      (keyword_create)
-      (keyword_nonclustered)
-      (keyword_index)
-      (identifier)
-      (keyword_on)
-      (object_reference
-        (identifier)
-        (identifier))
-      (ordered_columns
-        (column
-          (identifier)))
-      (covering_columns
-        (keyword_include)
-        (identifier))
-      (where
-        (keyword_where)
-        (binary_expression
-          (field
+        (ordered_columns
+          (column
             (identifier))
-          (literal)))
-      (with_options
-        (keyword_with)
-        (option
+          (column
+            (identifier)))
+        (covering_columns
+          (keyword_include)
           (identifier)
-          (keyword_on))
-        (option
+          (identifier))))
+    (statement
+      (create_index
+        (keyword_create)
+        (keyword_nonclustered)
+        (keyword_index)
+        (identifier)
+        (keyword_on)
+        (object_reference
           (identifier)
-          (identifier))))))
+          (identifier))
+        (ordered_columns
+          (column
+            (identifier)))
+        (covering_columns
+          (keyword_include)
+          (identifier))
+        (where
+          (keyword_where)
+          (binary_expression
+            (field
+              (identifier))
+            (literal)))
+        (with_options
+          (keyword_with)
+          (option
+            (identifier)
+            (keyword_on))
+          (option
+            (identifier)
+            (identifier)))))))
 
 ================================================================================
 Create columnstore index
@@ -198,33 +201,58 @@ CREATE NONCLUSTERED COLUMNSTORE INDEX ncci ON dbo.facts (a, b);
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (create_index
-      (keyword_create)
-      (keyword_clustered)
-      (identifier)
-      (keyword_index)
-      (identifier)
-      (keyword_on)
-      (object_reference
+  (batch
+    (statement
+      (create_index
+        (keyword_create)
+        (keyword_clustered)
+        (keyword_columnstore)
+        (keyword_index)
         (identifier)
-        (identifier))))
-  (statement
-    (create_index
-      (keyword_create)
-      (keyword_nonclustered)
-      (identifier)
-      (keyword_index)
-      (identifier)
-      (keyword_on)
-      (object_reference
+        (keyword_on)
+        (object_reference
+          (identifier)
+          (identifier))))
+    (statement
+      (create_index
+        (keyword_create)
+        (keyword_nonclustered)
+        (keyword_columnstore)
+        (keyword_index)
         (identifier)
-        (identifier))
-      (ordered_columns
-        (column
+        (keyword_on)
+        (object_reference
+          (identifier)
           (identifier))
-        (column
-          (identifier))))))
+        (ordered_columns
+          (column
+            (identifier))
+          (column
+            (identifier)))))))
+
+================================================================================
+Create spatial index falls back to an untyped storage identifier (ARCH-12)
+================================================================================
+
+CREATE SPATIAL INDEX si ON dbo.t (geom);
+
+--------------------------------------------------------------------------------
+
+(program
+  (batch
+    (statement
+      (create_index
+        (keyword_create)
+        storage: (identifier)
+        (keyword_index)
+        name: (identifier)
+        (keyword_on)
+        (object_reference
+          schema: (identifier)
+          name: (identifier))
+        (ordered_columns
+          (column
+            name: (identifier)))))))
 
 ================================================================================
 Alter index
@@ -239,67 +267,68 @@ ALTER INDEX ix_t ON dbo.t SET (ALLOW_PAGE_LOCKS = OFF);
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (alter_index
-      (keyword_alter)
-      (keyword_index)
-      (keyword_all)
-      (keyword_on)
-      (object_reference
+  (batch
+    (statement
+      (alter_index
+        (keyword_alter)
+        (keyword_index)
+        (keyword_all)
+        (keyword_on)
+        (object_reference
+          (identifier)
+          (identifier))
+        (keyword_rebuild)))
+    (statement
+      (alter_index
+        (keyword_alter)
+        (keyword_index)
         (identifier)
-        (identifier))
-      (keyword_rebuild)))
-  (statement
-    (alter_index
-      (keyword_alter)
-      (keyword_index)
-      (identifier)
-      (keyword_on)
-      (object_reference
+        (keyword_on)
+        (object_reference
+          (identifier)
+          (identifier))
+        (keyword_rebuild)
+        (with_options
+          (keyword_with)
+          (option
+            (identifier)
+            (literal))
+          (option
+            (identifier)
+            (keyword_on)))))
+    (statement
+      (alter_index
+        (keyword_alter)
+        (keyword_index)
         (identifier)
-        (identifier))
-      (keyword_rebuild)
-      (with_options
-        (keyword_with)
+        (keyword_on)
+        (object_reference
+          (identifier)
+          (identifier))
+        (keyword_reorganize)))
+    (statement
+      (alter_index
+        (keyword_alter)
+        (keyword_index)
+        (identifier)
+        (keyword_on)
+        (object_reference
+          (identifier)
+          (identifier))
+        (keyword_disable)))
+    (statement
+      (alter_index
+        (keyword_alter)
+        (keyword_index)
+        (identifier)
+        (keyword_on)
+        (object_reference
+          (identifier)
+          (identifier))
+        (keyword_set)
         (option
           (identifier)
-          (literal))
-        (option
-          (identifier)
-          (keyword_on)))))
-  (statement
-    (alter_index
-      (keyword_alter)
-      (keyword_index)
-      (identifier)
-      (keyword_on)
-      (object_reference
-        (identifier)
-        (identifier))
-      (keyword_reorganize)))
-  (statement
-    (alter_index
-      (keyword_alter)
-      (keyword_index)
-      (identifier)
-      (keyword_on)
-      (object_reference
-        (identifier)
-        (identifier))
-      (keyword_disable)))
-  (statement
-    (alter_index
-      (keyword_alter)
-      (keyword_index)
-      (identifier)
-      (keyword_on)
-      (object_reference
-        (identifier)
-        (identifier))
-      (keyword_set)
-      (option
-        (identifier)
-        (keyword_off)))))
+          (keyword_off))))))
 
 ================================================================================
 Alter index resumable rebuild control
@@ -313,61 +342,62 @@ ALTER INDEX ix_t ON dbo.t ABORT;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (alter_index
-      (keyword_alter)
-      (keyword_index)
-      (identifier)
-      (keyword_on)
-      (object_reference
+  (batch
+    (statement
+      (alter_index
+        (keyword_alter)
+        (keyword_index)
         (identifier)
-        (identifier))
-      (keyword_resume)))
-  (statement
-    (alter_index
-      (keyword_alter)
-      (keyword_index)
-      (identifier)
-      (keyword_on)
-      (object_reference
-        (identifier)
-        (identifier))
-      (keyword_resume)
-      (with_options
-        (keyword_with)
-        (option
+        (keyword_on)
+        (object_reference
           (identifier)
-          (literal)
           (identifier))
-        (option
+        (keyword_resume)))
+    (statement
+      (alter_index
+        (keyword_alter)
+        (keyword_index)
+        (identifier)
+        (keyword_on)
+        (object_reference
           (identifier)
+          (identifier))
+        (keyword_resume)
+        (with_options
+          (keyword_with)
           (option
             (identifier)
             (literal)
             (identifier))
           (option
             (identifier)
-            (identifier))))))
-  (statement
-    (alter_index
-      (keyword_alter)
-      (keyword_index)
-      (identifier)
-      (keyword_on)
-      (object_reference
+            (option
+              (identifier)
+              (literal)
+              (identifier))
+            (option
+              (identifier)
+              (identifier))))))
+    (statement
+      (alter_index
+        (keyword_alter)
+        (keyword_index)
         (identifier)
-        (identifier))
-      (keyword_pause)))
-  (statement
-    (alter_index
-      (keyword_alter)
-      (keyword_index)
-      (identifier)
-      (keyword_on)
-      (object_reference
+        (keyword_on)
+        (object_reference
+          (identifier)
+          (identifier))
+        (keyword_pause)))
+    (statement
+      (alter_index
+        (keyword_alter)
+        (keyword_index)
         (identifier)
-        (identifier))
-      (keyword_abort))))
+        (keyword_on)
+        (object_reference
+          (identifier)
+          (identifier))
+        (keyword_abort)))))
 
 ================================================================================
 Drop index
@@ -380,40 +410,41 @@ DROP INDEX tbl.idx;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (drop_index
-      (keyword_drop)
-      (keyword_index)
-      (object_reference
-        (identifier))
-      (keyword_on)
-      (object_reference
-        (identifier))))
-  (statement
-    (drop_index
-      (keyword_drop)
-      (keyword_index)
-      (keyword_if)
-      (keyword_exists)
-      (object_reference
-        (identifier))
-      (keyword_on)
-      (object_reference
-        (identifier)
-        (identifier))
-      (object_reference
-        (identifier))
-      (keyword_on)
-      (object_reference
-        (identifier)
-        (identifier))))
-  (statement
-    (drop_index
-      (keyword_drop)
-      (keyword_index)
-      (object_reference
-        (identifier)
-        (identifier)))))
+  (batch
+    (statement
+      (drop_index
+        (keyword_drop)
+        (keyword_index)
+        (object_reference
+          (identifier))
+        (keyword_on)
+        (object_reference
+          (identifier))))
+    (statement
+      (drop_index
+        (keyword_drop)
+        (keyword_index)
+        (keyword_if)
+        (keyword_exists)
+        (object_reference
+          (identifier))
+        (keyword_on)
+        (object_reference
+          (identifier)
+          (identifier))
+        (object_reference
+          (identifier))
+        (keyword_on)
+        (object_reference
+          (identifier)
+          (identifier))))
+    (statement
+      (drop_index
+        (keyword_drop)
+        (keyword_index)
+        (object_reference
+          (identifier)
+          (identifier))))))
 
 ================================================================================
 Update statistics
@@ -426,39 +457,40 @@ UPDATE STATISTICS dbo.t (st_a, st_b) WITH SAMPLE 50 PERCENT, NORECOMPUTE;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (update_statistics_statement
-      (keyword_update)
-      (keyword_statistics)
-      (object_reference
-        (identifier)
-        (identifier))))
-  (statement
-    (update_statistics_statement
-      (keyword_update)
-      (keyword_statistics)
-      (object_reference
-        (identifier)
-        (identifier))
-      (identifier)
-      (with_clause
-        (keyword_with)
-        (option
-          (identifier)))))
-  (statement
-    (update_statistics_statement
-      (keyword_update)
-      (keyword_statistics)
-      (object_reference
-        (identifier)
-        (identifier))
-      (identifier)
-      (identifier)
-      (with_clause
-        (keyword_with)
-        (option
+  (batch
+    (statement
+      (update_statistics_statement
+        (keyword_update)
+        (keyword_statistics)
+        (object_reference
           (identifier)
-          (literal)
+          (identifier))))
+    (statement
+      (update_statistics_statement
+        (keyword_update)
+        (keyword_statistics)
+        (object_reference
+          (identifier)
           (identifier))
-        (option
-          (identifier))))))
+        (identifier)
+        (with_clause
+          (keyword_with)
+          (option
+            (identifier)))))
+    (statement
+      (update_statistics_statement
+        (keyword_update)
+        (keyword_statistics)
+        (object_reference
+          (identifier)
+          (identifier))
+        (identifier)
+        (identifier)
+        (with_clause
+          (keyword_with)
+          (option
+            (identifier)
+            (literal)
+            (identifier))
+          (option
+            (identifier)))))))

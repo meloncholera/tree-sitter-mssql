@@ -12,20 +12,21 @@ SELECT 2;
 
 (program
   (comment)
-  (statement
-    (select
-      (keyword_select)
-      (select_expression
-        (term
-          (literal)))))
-  (comment)
-  (comment)
-  (statement
-    (select
-      (keyword_select)
-      (select_expression
-        (term
-          (literal)))))
+  (batch
+    (statement
+      (select
+        (keyword_select)
+        (select_expression
+          (term
+            (literal)))))
+    (comment)
+    (comment)
+    (statement
+      (select
+        (keyword_select)
+        (select_expression
+          (term
+            (literal))))))
   (comment))
 
 ================================================================================
@@ -58,47 +59,48 @@ FROM my_table;
 
 (program
   (marginalia)
-  (statement
-    (select
-      (keyword_select)
-      (select_expression
-        (term
-          (field
+  (batch
+    (statement
+      (select
+        (keyword_select)
+        (select_expression
+          (term
+            (field
+              (identifier)))))
+      (marginalia)
+      (from
+        (keyword_from)
+        (relation
+          (object_reference
             (identifier)))))
     (marginalia)
-    (from
-      (keyword_from)
-      (relation
-        (object_reference
-          (identifier)))))
-  (marginalia)
-  (statement
-    (select
-      (keyword_select)
-      (select_expression
-        (term
-          (field
+    (statement
+      (select
+        (keyword_select)
+        (select_expression
+          (term
+            (field
+              (identifier)))))
+      (marginalia)
+      (from
+        (keyword_from)
+        (relation
+          (object_reference
             (identifier)))))
     (marginalia)
-    (from
-      (keyword_from)
-      (relation
-        (object_reference
-          (identifier)))))
-  (marginalia)
-  (statement
-    (select
-      (keyword_select)
-      (select_expression
-        (term
-          (field
-            (identifier)))))
-    (marginalia)
-    (from
-      (keyword_from)
-      (relation
-        (object_reference
-          (identifier))))))
+    (statement
+      (select
+        (keyword_select)
+        (select_expression
+          (term
+            (field
+              (identifier)))))
+      (marginalia)
+      (from
+        (keyword_from)
+        (relation
+          (object_reference
+            (identifier)))))))
 
 ================================================================================
 Block comments with more symbols
@@ -116,19 +118,20 @@ FROM my_table;
 
 (program
   (marginalia)
-  (statement
-    (select
-      (keyword_select)
-      (select_expression
-        (term
-          (field
-            (identifier)))))
-    (marginalia)
-    (from
-      (keyword_from)
-      (relation
-        (object_reference
-          (identifier))))))
+  (batch
+    (statement
+      (select
+        (keyword_select)
+        (select_expression
+          (term
+            (field
+              (identifier)))))
+      (marginalia)
+      (from
+        (keyword_from)
+        (relation
+          (object_reference
+            (identifier)))))))
 
 ================================================================================
 Comment between a statement and its terminator
@@ -141,14 +144,15 @@ FROM my_table -- trailing
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (delete
-      (keyword_delete)
-      (marginalia)
-      (keyword_from)
-      (object_reference
-        (identifier))))
-  (comment))
+  (batch
+    (statement
+      (delete
+        (keyword_delete)
+        (marginalia)
+        (keyword_from)
+        (object_reference
+          (identifier))))
+    (comment)))
 
 ================================================================================
 Nested block comments
@@ -168,62 +172,63 @@ END
 
 (program
   (marginalia)
-  (statement
-    (select
-      (keyword_select)
-      (select_expression
-        (term
-          (field
-            (identifier)))
-        (marginalia)
-        (term
-          (binary_expression
+  (batch
+    (statement
+      (select
+        (keyword_select)
+        (select_expression
+          (term
             (field
-              (identifier))
-            (marginalia)
-            (literal)))
-        (term
-          (binary_expression
-            (field
-              (identifier))
-            (marginalia)
-            (literal)))))
-    (from
-      (keyword_from)
-      (relation
-        (object_reference
-          (identifier))))
-    (marginalia)
-    (where
-      (keyword_where)
-      (binary_expression
+              (identifier)))
+          (marginalia)
+          (term
+            (binary_expression
+              (field
+                (identifier))
+              (marginalia)
+              (literal)))
+          (term
+            (binary_expression
+              (field
+                (identifier))
+              (marginalia)
+              (literal)))))
+      (from
+        (keyword_from)
+        (relation
+          (object_reference
+            (identifier))))
+      (marginalia)
+      (where
+        (keyword_where)
         (binary_expression
-          (field
-            (identifier))
-          (marginalia)
-          (literal))
-        (literal))))
-  (statement
-    (create_procedure
-      (keyword_create)
-      (keyword_procedure)
-      (object_reference
-        (identifier))
-      (procedure_body
-        (keyword_as)
-        (block
-          (keyword_begin)
-          (marginalia)
-          (statement
-            (select
-              (keyword_select)
-              (select_expression
-                (term
-                  (all_fields))))
+          (binary_expression
+            (field
+              (identifier))
             (marginalia)
-            (from
-              (keyword_from)
-              (relation
-                (object_reference
-                  (identifier)))))
-          (keyword_end))))))
+            (literal))
+          (literal))))
+    (statement
+      (create_procedure
+        (keyword_create)
+        (keyword_procedure)
+        (object_reference
+          (identifier))
+        (procedure_body
+          (keyword_as)
+          (block
+            (keyword_begin)
+            (marginalia)
+            (statement
+              (select
+                (keyword_select)
+                (select_expression
+                  (term
+                    (all_fields))))
+              (marginalia)
+              (from
+                (keyword_from)
+                (relation
+                  (object_reference
+                    (identifier)))))
+            (keyword_end)))))))

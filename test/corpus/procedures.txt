@@ -11,33 +11,34 @@ END
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (create_procedure
-      (keyword_create)
-      (keyword_procedure)
-      (object_reference
-        (identifier)
-        (identifier))
-      (function_arguments
-        (function_argument
+  (batch
+    (statement
+      (create_procedure
+        (keyword_create)
+        (keyword_procedure)
+        (object_reference
           (identifier)
-          (keyword_int)))
-      (procedure_body
-        (keyword_as)
-        (block
-          (keyword_begin)
-          (statement
-            (select
-              (keyword_select)
-              (select_expression
-                (term
-                  (all_fields))))
-            (from
-              (keyword_from)
-              (relation
-                (object_reference
-                  (identifier)))))
-          (keyword_end))))))
+          (identifier))
+        (function_arguments
+          (function_argument
+            (identifier)
+            (keyword_int)))
+        (procedure_body
+          (keyword_as)
+          (block
+            (keyword_begin)
+            (statement
+              (select
+                (keyword_select)
+                (select_expression
+                  (term
+                    (all_fields))))
+              (from
+                (keyword_from)
+                (relation
+                  (object_reference
+                    (identifier)))))
+            (keyword_end)))))))
 
 ================================================================================
 Procedure with DECLARE and nested blocks
@@ -58,27 +59,106 @@ END
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (create_procedure
-      (keyword_create)
-      (keyword_procedure)
-      (object_reference
-        (identifier)
-        (identifier))
-      (function_arguments
-        (function_argument
+  (batch
+    (statement
+      (create_procedure
+        (keyword_create)
+        (keyword_procedure)
+        (object_reference
           (identifier)
-          (keyword_int)))
-      (procedure_body
-        (keyword_as)
-        (block
-          (keyword_begin)
-          (statement
-            (var_declarations
-              (keyword_declare)
-              (var_declaration
-                (identifier)
-                (keyword_int))))
+          (identifier))
+        (function_arguments
+          (function_argument
+            (identifier)
+            (keyword_int)))
+        (procedure_body
+          (keyword_as)
+          (block
+            (keyword_begin)
+            (statement
+              (var_declarations
+                (keyword_declare)
+                (var_declaration
+                  (identifier)
+                  (keyword_int))))
+            (block
+              (keyword_begin)
+              (statement
+                (select
+                  (keyword_select)
+                  (select_expression
+                    (term
+                      (binary_expression
+                        (field
+                          (identifier))
+                        (invocation
+                          (object_reference
+                            (identifier))
+                          (term
+                            (all_fields)))))))
+                (from
+                  (keyword_from)
+                  (relation
+                    (object_reference
+                      (identifier)))))
+              (keyword_end))
+            (block
+              (keyword_begin)
+              (statement
+                (select
+                  (keyword_select)
+                  (select_expression
+                    (term
+                      (all_fields))))
+                (from
+                  (keyword_from)
+                  (relation
+                    (object_reference
+                      (identifier)))))
+              (keyword_end))
+            (keyword_end)))))))
+
+================================================================================
+Procedure with OUTPUT parameter and default
+================================================================================
+
+CREATE PROCEDURE dbo.GetCount @site nvarchar(50) = NULL, @count int OUTPUT, @neg int = -1
+AS
+BEGIN
+  SELECT @count = COUNT(*) FROM tbl WHERE site = @site;
+  RETURN 0;
+END
+
+--------------------------------------------------------------------------------
+
+(program
+  (batch
+    (statement
+      (create_procedure
+        (keyword_create)
+        (keyword_procedure)
+        (object_reference
+          (identifier)
+          (identifier))
+        (function_arguments
+          (function_argument
+            (identifier)
+            (nvarchar
+              (keyword_nvarchar)
+              (literal))
+            (literal
+              (keyword_null)))
+          (function_argument
+            (identifier)
+            (keyword_int)
+            (keyword_output))
+          (function_argument
+            (identifier)
+            (keyword_int)
+            (unary_expression
+              (literal))))
+        (procedure_body
+          (keyword_as)
           (block
             (keyword_begin)
             (statement
@@ -98,96 +178,19 @@ END
                 (keyword_from)
                 (relation
                   (object_reference
+                    (identifier))))
+              (where
+                (keyword_where)
+                (binary_expression
+                  (field
+                    (identifier))
+                  (field
                     (identifier)))))
-            (keyword_end))
-          (block
-            (keyword_begin)
             (statement
-              (select
-                (keyword_select)
-                (select_expression
-                  (term
-                    (all_fields))))
-              (from
-                (keyword_from)
-                (relation
-                  (object_reference
-                    (identifier)))))
-            (keyword_end))
-          (keyword_end))))))
-
-================================================================================
-Procedure with OUTPUT parameter and default
-================================================================================
-
-CREATE PROCEDURE dbo.GetCount @site nvarchar(50) = NULL, @count int OUTPUT, @neg int = -1
-AS
-BEGIN
-  SELECT @count = COUNT(*) FROM tbl WHERE site = @site;
-  RETURN 0;
-END
-
---------------------------------------------------------------------------------
-
-(program
-  (statement
-    (create_procedure
-      (keyword_create)
-      (keyword_procedure)
-      (object_reference
-        (identifier)
-        (identifier))
-      (function_arguments
-        (function_argument
-          (identifier)
-          (nvarchar
-            (keyword_nvarchar)
-            (literal))
-          (literal
-            (keyword_null)))
-        (function_argument
-          (identifier)
-          (keyword_int)
-          (keyword_output))
-        (function_argument
-          (identifier)
-          (keyword_int)
-          (unary_expression
-            (literal))))
-      (procedure_body
-        (keyword_as)
-        (block
-          (keyword_begin)
-          (statement
-            (select
-              (keyword_select)
-              (select_expression
-                (term
-                  (binary_expression
-                    (field
-                      (identifier))
-                    (invocation
-                      (object_reference
-                        (identifier))
-                      (term
-                        (all_fields)))))))
-            (from
-              (keyword_from)
-              (relation
-                (object_reference
-                  (identifier))))
-            (where
-              (keyword_where)
-              (binary_expression
-                (field
-                  (identifier))
-                (field
-                  (identifier)))))
-          (statement
-            (return_statement
-              (keyword_return)
-              (literal)))
-          (keyword_end))))))
+              (return_statement
+                (keyword_return)
+                (literal)))
+            (keyword_end)))))))
 
 ================================================================================
 CREATE OR ALTER PROC with options and bare body
@@ -203,58 +206,58 @@ RETURN;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (create_procedure
-      (keyword_create)
-      (keyword_or)
-      (keyword_alter)
-      (keyword_proc)
-      (object_reference
-        (identifier)
-        (identifier))
-      (function_arguments
-        (function_argument
+  (batch
+    (statement
+      (create_procedure
+        (keyword_create)
+        (keyword_or)
+        (keyword_alter)
+        (keyword_proc)
+        (object_reference
           (identifier)
-          (keyword_int)))
-      (procedure_options
-        (keyword_with)
-        (procedure_option
-          (keyword_recompile))
-        (procedure_option
-          (execute_as_clause
-            (keyword_execute)
-            (keyword_as)
-            (keyword_owner))))
-      (procedure_body
-        (keyword_as)
-        (statement
-          (set_statement
-            (keyword_set)
-            (object_reference
-              (identifier))
-            (keyword_on)))
-        (statement
-          (update
-            (keyword_update)
-            (relation
+          (identifier))
+        (function_arguments
+          (function_argument
+            (identifier)
+            (keyword_int)))
+        (procedure_options
+          (keyword_with)
+          (procedure_option
+            (keyword_recompile))
+          (procedure_option
+            (execute_as_clause
+              (keyword_execute)
+              (keyword_as)
+              (keyword_owner))))
+        (procedure_body
+          (keyword_as)
+          (statement
+            (set_statement
+              (keyword_set)
               (object_reference
-                (identifier)))
-            (keyword_set)
-            (assignment
-              (field
                 (identifier))
-              (assignment_operator)
-              (literal))
-            (where
-              (keyword_where)
-              (binary_expression
+              (keyword_on)))
+          (statement
+            (update
+              (keyword_update)
+              (object_reference
+                (identifier))
+              (keyword_set)
+              (assignment
                 (field
                   (identifier))
-                (field
-                  (identifier))))))
-        (statement
-          (return_statement
-            (keyword_return)))))))
+                (assignment_operator)
+                (literal))
+              (where
+                (keyword_where)
+                (binary_expression
+                  (field
+                    (identifier))
+                  (field
+                    (identifier))))))
+          (statement
+            (return_statement
+              (keyword_return))))))))
 
 ================================================================================
 Procedure body with semicolons and nested block
@@ -274,32 +277,24 @@ END
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (create_procedure
-      (keyword_create)
-      (keyword_procedure)
-      (object_reference
-        (identifier)
-        (identifier))
-      (procedure_body
-        (keyword_as)
-        (block
-          (keyword_begin)
-          (statement
-            (var_declarations
-              (keyword_declare)
-              (var_declaration
-                (identifier)
-                (keyword_int))))
-          (statement
-            (set_statement
-              (keyword_set)
-              (object_reference
-                (identifier))
-              (assignment_operator)
-              (literal)))
+  (batch
+    (statement
+      (create_procedure
+        (keyword_create)
+        (keyword_procedure)
+        (object_reference
+          (identifier)
+          (identifier))
+        (procedure_body
+          (keyword_as)
           (block
             (keyword_begin)
+            (statement
+              (var_declarations
+                (keyword_declare)
+                (var_declaration
+                  (identifier)
+                  (keyword_int))))
             (statement
               (set_statement
                 (keyword_set)
@@ -307,19 +302,28 @@ END
                   (identifier))
                 (assignment_operator)
                 (literal)))
-            (keyword_end))
-          (statement
-            (if_statement
-              (keyword_if)
-              (binary_expression
-                (field
-                  (identifier))
-                (literal))
+            (block
+              (keyword_begin)
               (statement
-                (return_statement
-                  (keyword_return)
-                  (literal)))))
-          (keyword_end))))))
+                (set_statement
+                  (keyword_set)
+                  (object_reference
+                    (identifier))
+                  (assignment_operator)
+                  (literal)))
+              (keyword_end))
+            (statement
+              (if_statement
+                (keyword_if)
+                (binary_expression
+                  (field
+                    (identifier))
+                  (literal))
+                (statement
+                  (return_statement
+                    (keyword_return)
+                    (literal)))))
+            (keyword_end)))))))
 
 ================================================================================
 ALTER PROCEDURE with max types and PRINT
@@ -338,67 +342,68 @@ END;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (alter_procedure
-      (keyword_alter)
-      (keyword_procedure)
-      (object_reference
-        (identifier)
-        (identifier))
-      (function_arguments
-        (function_argument
+  (batch
+    (statement
+      (alter_procedure
+        (keyword_alter)
+        (keyword_procedure)
+        (object_reference
           (identifier)
+          (identifier))
+        (function_arguments
+          (function_argument
+            (identifier)
+            (keyword_as)
+            (nvarchar
+              (keyword_nvarchar)
+              (keyword_max)))
+          (function_argument
+            (identifier)
+            (keyword_as)
+            (nvarchar
+              (keyword_nvarchar)
+              (literal))
+            (keyword_output)))
+        (procedure_body
           (keyword_as)
-          (nvarchar
-            (keyword_nvarchar)
-            (keyword_max)))
-        (function_argument
-          (identifier)
-          (keyword_as)
-          (nvarchar
-            (keyword_nvarchar)
-            (literal))
-          (keyword_output)))
-      (procedure_body
-        (keyword_as)
-        (block
-          (keyword_begin)
-          (statement
-            (var_declarations
-              (keyword_declare)
-              (var_declaration
-                (identifier)
-                (custom_type
-                  (object_reference
-                    (identifier)))
-                (invocation
-                  (object_reference
-                    (identifier)
-                    (identifier))
-                  (term
-                    (invocation
-                      (object_reference
-                        (identifier))))))
-              (var_declaration
-                (identifier)
-                (nvarchar
-                  (keyword_nvarchar)
-                  (keyword_max)))))
-          (statement
-            (print_statement
-              (keyword_print)
-              (literal)))
-          (statement
-            (print_statement
-              (keyword_print)
-              (binary_expression
+          (block
+            (keyword_begin)
+            (statement
+              (var_declarations
+                (keyword_declare)
+                (var_declaration
+                  (identifier)
+                  (custom_type
+                    (object_reference
+                      (identifier)))
+                  (invocation
+                    (object_reference
+                      (identifier)
+                      (identifier))
+                    (term
+                      (invocation
+                        (object_reference
+                          (identifier))))))
+                (var_declaration
+                  (identifier)
+                  (nvarchar
+                    (keyword_nvarchar)
+                    (keyword_max)))))
+            (statement
+              (print_statement
+                (keyword_print)
+                (literal)))
+            (statement
+              (print_statement
+                (keyword_print)
                 (binary_expression
+                  (binary_expression
+                    (field
+                      (identifier))
+                    (literal))
                   (field
-                    (identifier))
-                  (literal))
-                (field
-                  (identifier)))))
-          (keyword_end))))))
+                    (identifier)))))
+            (keyword_end)))))))
 
 ================================================================================
 Procedure with a table-valued parameter and FOR REPLICATION
@@ -413,54 +418,55 @@ INSERT INTO dbo.t (id) SELECT id FROM @rows
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (create_procedure
-      (keyword_create)
-      (keyword_procedure)
-      (object_reference
-        (identifier)
-        (identifier))
-      (function_arguments
-        (function_argument
+  (batch
+    (statement
+      (create_procedure
+        (keyword_create)
+        (keyword_procedure)
+        (object_reference
           (identifier)
-          (custom_type
-            (object_reference
-              (identifier)
-              (identifier)))
-          (keyword_readonly))
-        (function_argument
-          (identifier)
-          (keyword_bit)
-          (literal)))
-      (procedure_options
-        (keyword_with)
-        (procedure_option
-          (keyword_encryption)))
-      (keyword_for)
-      (keyword_replication)
-      (procedure_body
-        (keyword_as)
-        (statement
-          (insert
-            (keyword_insert)
-            (keyword_into)
-            (object_reference
-              (identifier)
-              (identifier))
-            (list
-              (column
+          (identifier))
+        (function_arguments
+          (function_argument
+            (identifier)
+            (custom_type
+              (object_reference
+                (identifier)
                 (identifier)))
-            (select
-              (keyword_select)
-              (select_expression
-                (term
-                  (field
-                    (identifier)))))
-            (from
-              (keyword_from)
-              (relation
-                (object_reference
-                  (identifier))))))))))
+            (keyword_readonly))
+          (function_argument
+            (identifier)
+            (keyword_bit)
+            (literal)))
+        (procedure_options
+          (keyword_with)
+          (procedure_option
+            (keyword_encryption)))
+        (keyword_for)
+        (keyword_replication)
+        (procedure_body
+          (keyword_as)
+          (statement
+            (insert
+              (keyword_insert)
+              (keyword_into)
+              (object_reference
+                (identifier)
+                (identifier))
+              (list
+                (column
+                  (identifier)))
+              (select
+                (keyword_select)
+                (select_expression
+                  (term
+                    (field
+                      (identifier)))))
+              (from
+                (keyword_from)
+                (relation
+                  (object_reference
+                    (identifier)))))))))))
 
 ================================================================================
 Vendor-style procedure: bare body, touch points, separator-free statements
@@ -522,303 +528,304 @@ RETURN @Severity
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (alter_procedure
-      (keyword_alter)
-      (keyword_procedure)
-      (object_reference
-        (identifier)
-        (identifier))
-      (function_arguments
-        (function_argument
+  (batch
+    (statement
+      (alter_procedure
+        (keyword_alter)
+        (keyword_procedure)
+        (object_reference
           (identifier)
-          (custom_type
-            (object_reference
-              (identifier))))
-        (function_argument
-          (identifier)
-          (custom_type
-            (object_reference
-              (identifier))))
-        (function_argument
-          (identifier)
-          (custom_type
-            (object_reference
-              (identifier)))
-          (keyword_output)))
-      (procedure_body
-        (keyword_as)
-        (statement
-          (if_statement
-            (keyword_if)
-            (exists
-              (keyword_exists)
-              (subquery
-                (select
-                  (keyword_select)
-                  (select_expression
-                    (term
-                      (literal))))
-                (from
-                  (keyword_from)
-                  (relation
-                    (object_reference
-                      (identifier))
-                    (identifier)))
-                (where
-                  (keyword_where)
-                  (binary_expression
-                    (binary_expression
-                      (invocation
-                        (object_reference
-                          (identifier))
-                        (term
-                          (field
-                            (object_reference
-                              (identifier))
-                            (identifier)))
-                        (term
-                          (literal)))
-                      (literal))
-                    (keyword_and)
-                    (binary_expression
-                      (invocation
-                        (object_reference
-                          (identifier))
-                        (term
-                          (invocation
-                            (object_reference
-                              (identifier))
-                            (term
-                              (binary_expression
-                                (literal)
-                                (field
-                                  (object_reference
-                                    (identifier))
-                                  (identifier)))))))
-                      (is_not
-                        (keyword_is)
-                        (keyword_not))
-                      (literal
-                        (keyword_null)))))))
-            (block
-              (keyword_begin)
-              (statement
-                (var_declarations
-                  (keyword_declare)
-                  (table_var_declaration
-                    (identifier)
-                    (keyword_table)
-                    (column_definitions
-                      (column_definition
-                        (identifier)
-                        (custom_type
-                          (object_reference
-                            (identifier))))))))
-              (statement
-                (var_declarations
-                  (keyword_declare)
-                  (var_declaration
-                    (identifier)
-                    (custom_type
-                      (object_reference
-                        (identifier))))))
-              (statement
-                (var_declarations
-                  (keyword_declare)
-                  (var_declaration
-                    (identifier)
-                    (keyword_int))))
-              (statement
-                (while_statement
-                  (keyword_while)
-                  (exists
-                    (keyword_exists)
-                    (subquery
-                      (select
-                        (keyword_select)
-                        (select_expression
-                          (term
-                            (literal))))
-                      (from
-                        (keyword_from)
-                        (relation
-                          (object_reference
-                            (identifier))))))
-                  (block
-                    (keyword_begin)
-                    (statement
-                      (select
-                        (keyword_select)
-                        (top_clause
-                          (keyword_top)
-                          (literal))
-                        (select_expression
-                          (term
-                            (binary_expression
-                              (field
-                                (identifier))
-                              (field
-                                (identifier))))))
-                      (from
-                        (keyword_from)
-                        (relation
-                          (object_reference
-                            (identifier)))))
-                    (statement
-                      (execute_statement
-                        (keyword_exec)
-                        (identifier)
-                        (object_reference
-                          (identifier))
-                        (exec_argument
-                          (field
-                            (identifier)))
-                        (exec_argument
-                          (field
-                            (identifier)))
-                        (exec_argument
-                          (field
-                            (identifier))
-                          (keyword_output))))
-                    (statement
-                      (if_statement
-                        (keyword_if)
-                        (binary_expression
-                          (field
-                            (identifier))
-                          (literal))
-                        (statement
-                          (return_statement
-                            (keyword_return)
-                            (field
-                              (identifier))))))
-                    (statement
-                      (delete
-                        (keyword_delete)
-                        (object_reference
-                          (identifier))
-                        (where
-                          (keyword_where)
-                          (binary_expression
-                            (field
-                              (identifier))
-                            (field
-                              (identifier))))))
-                    (keyword_end))))
-              (keyword_end))))
-        (statement
-          (var_declarations
-            (keyword_declare)
-            (var_declaration
-              (identifier)
-              (keyword_int))
-            (var_declaration
-              (identifier)
-              (custom_type
-                (object_reference
-                  (identifier))))))
-        (statement
-          (var_declarations
-            (keyword_declare)
-            (table_var_declaration
-              (identifier)
-              (keyword_table)
-              (column_definitions
-                (column_definition
-                  (identifier)
-                  (custom_type
-                    (object_reference
-                      (identifier))))))))
-        (statement
-          (set_statement
-            (keyword_set)
-            (object_reference
-              (identifier))
-            (assignment_operator)
-            (literal)))
-        (statement
-          (insert
-            (keyword_insert)
-            (keyword_into)
-            (object_reference
-              (identifier))
-            (select
-              (keyword_select)
-              (select_expression
-                (term
-                  (field
-                    (identifier)))))
-            (from
-              (keyword_from)
-              (relation
-                (object_reference
-                  (identifier)))
-              (table_hint
-                (keyword_with)
-                (table_hint_item
-                  (identifier))))
-            (where
-              (keyword_where)
-              (binary_expression
-                (field
-                  (identifier))
+          (identifier))
+        (function_arguments
+          (function_argument
+            (identifier)
+            (custom_type
+              (object_reference
+                (identifier))))
+          (function_argument
+            (identifier)
+            (custom_type
+              (object_reference
+                (identifier))))
+          (function_argument
+            (identifier)
+            (custom_type
+              (object_reference
+                (identifier)))
+            (keyword_output)))
+        (procedure_body
+          (keyword_as)
+          (statement
+            (if_statement
+              (keyword_if)
+              (exists
+                (keyword_exists)
                 (subquery
                   (select
                     (keyword_select)
                     (select_expression
                       (term
-                        (field
-                          (identifier)))))
+                        (literal))))
                   (from
                     (keyword_from)
                     (relation
                       (object_reference
-                        (identifier)))
-                    (table_hint
-                      (keyword_with)
-                      (table_hint_item
-                        (identifier)))))))))
-        (statement
-          (if_statement
-            (keyword_if)
-            (binary_expression
-              (field
-                (identifier))
-              (literal))
-            (block
-              (keyword_begin)
-              (statement
-                (execute_statement
-                  (keyword_exec)
-                  (identifier)
+                        (identifier))
+                      (identifier)))
+                  (where
+                    (keyword_where)
+                    (binary_expression
+                      (binary_expression
+                        (invocation
+                          (object_reference
+                            (identifier))
+                          (term
+                            (field
+                              (object_reference
+                                (identifier))
+                              (identifier)))
+                          (term
+                            (literal)))
+                        (literal))
+                      (keyword_and)
+                      (binary_expression
+                        (invocation
+                          (object_reference
+                            (identifier))
+                          (term
+                            (invocation
+                              (object_reference
+                                (identifier))
+                              (term
+                                (binary_expression
+                                  (literal)
+                                  (field
+                                    (object_reference
+                                      (identifier))
+                                    (identifier)))))))
+                        (is_not
+                          (keyword_is)
+                          (keyword_not))
+                        (literal
+                          (keyword_null)))))))
+              (block
+                (keyword_begin)
+                (statement
+                  (var_declarations
+                    (keyword_declare)
+                    (table_var_declaration
+                      (identifier)
+                      (keyword_table)
+                      (column_definitions
+                        (column_definition
+                          (identifier)
+                          (custom_type
+                            (object_reference
+                              (identifier))))))))
+                (statement
+                  (var_declarations
+                    (keyword_declare)
+                    (var_declaration
+                      (identifier)
+                      (custom_type
+                        (object_reference
+                          (identifier))))))
+                (statement
+                  (var_declarations
+                    (keyword_declare)
+                    (var_declaration
+                      (identifier)
+                      (keyword_int))))
+                (statement
+                  (while_statement
+                    (keyword_while)
+                    (exists
+                      (keyword_exists)
+                      (subquery
+                        (select
+                          (keyword_select)
+                          (select_expression
+                            (term
+                              (literal))))
+                        (from
+                          (keyword_from)
+                          (relation
+                            (object_reference
+                              (identifier))))))
+                    (block
+                      (keyword_begin)
+                      (statement
+                        (select
+                          (keyword_select)
+                          (top_clause
+                            (keyword_top)
+                            (literal))
+                          (select_expression
+                            (term
+                              (binary_expression
+                                (field
+                                  (identifier))
+                                (field
+                                  (identifier))))))
+                        (from
+                          (keyword_from)
+                          (relation
+                            (object_reference
+                              (identifier)))))
+                      (statement
+                        (execute_statement
+                          (keyword_exec)
+                          (identifier)
+                          (object_reference
+                            (identifier))
+                          (exec_argument
+                            (field
+                              (identifier)))
+                          (exec_argument
+                            (field
+                              (identifier)))
+                          (exec_argument
+                            (field
+                              (identifier))
+                            (keyword_output))))
+                      (statement
+                        (if_statement
+                          (keyword_if)
+                          (binary_expression
+                            (field
+                              (identifier))
+                            (literal))
+                          (statement
+                            (return_statement
+                              (keyword_return)
+                              (field
+                                (identifier))))))
+                      (statement
+                        (delete
+                          (keyword_delete)
+                          (object_reference
+                            (identifier))
+                          (where
+                            (keyword_where)
+                            (binary_expression
+                              (field
+                                (identifier))
+                              (field
+                                (identifier))))))
+                      (keyword_end))))
+                (keyword_end))))
+          (statement
+            (var_declarations
+              (keyword_declare)
+              (var_declaration
+                (identifier)
+                (keyword_int))
+              (var_declaration
+                (identifier)
+                (custom_type
                   (object_reference
+                    (identifier))))))
+          (statement
+            (var_declarations
+              (keyword_declare)
+              (table_var_declaration
+                (identifier)
+                (keyword_table)
+                (column_definitions
+                  (column_definition
                     (identifier)
-                    (identifier))
-                  (exec_argument
-                    (field
-                      (identifier))
-                    (keyword_output))
-                  (exec_argument
-                    (literal))
-                  (exec_argument
-                    (literal))
-                  (exec_argument
-                    (literal))
-                  (exec_argument
+                    (custom_type
+                      (object_reference
+                        (identifier))))))))
+          (statement
+            (set_statement
+              (keyword_set)
+              (object_reference
+                (identifier))
+              (assignment_operator)
+              (literal)))
+          (statement
+            (insert
+              (keyword_insert)
+              (keyword_into)
+              (object_reference
+                (identifier))
+              (select
+                (keyword_select)
+                (select_expression
+                  (term
                     (field
                       (identifier)))))
-              (statement
-                (return_statement
-                  (keyword_return)
-                  (field
+              (from
+                (keyword_from)
+                (relation
+                  (object_reference
+                    (identifier)))
+                (table_hint
+                  (keyword_with)
+                  (table_hint_item
                     (identifier))))
-              (keyword_end))))
-        (statement
-          (return_statement
-            (keyword_return)
-            (field
-              (identifier))))))))
+              (where
+                (keyword_where)
+                (binary_expression
+                  (field
+                    (identifier))
+                  (subquery
+                    (select
+                      (keyword_select)
+                      (select_expression
+                        (term
+                          (field
+                            (identifier)))))
+                    (from
+                      (keyword_from)
+                      (relation
+                        (object_reference
+                          (identifier)))
+                      (table_hint
+                        (keyword_with)
+                        (table_hint_item
+                          (identifier)))))))))
+          (statement
+            (if_statement
+              (keyword_if)
+              (binary_expression
+                (field
+                  (identifier))
+                (literal))
+              (block
+                (keyword_begin)
+                (statement
+                  (execute_statement
+                    (keyword_exec)
+                    (identifier)
+                    (object_reference
+                      (identifier)
+                      (identifier))
+                    (exec_argument
+                      (field
+                        (identifier))
+                      (keyword_output))
+                    (exec_argument
+                      (literal))
+                    (exec_argument
+                      (literal))
+                    (exec_argument
+                      (literal))
+                    (exec_argument
+                      (field
+                        (identifier)))))
+                (statement
+                  (return_statement
+                    (keyword_return)
+                    (field
+                      (identifier))))
+                (keyword_end))))
+          (statement
+            (return_statement
+              (keyword_return)
+              (field
+                (identifier)))))))))
 
 ================================================================================
 Drop procedure
@@ -830,24 +837,25 @@ DROP PROC IF EXISTS dbo.my_procedure, dbo.other;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (drop_procedure
-      (keyword_drop)
-      (keyword_procedure)
-      (object_reference
-        (identifier))))
-  (statement
-    (drop_procedure
-      (keyword_drop)
-      (keyword_proc)
-      (keyword_if)
-      (keyword_exists)
-      (object_reference
-        (identifier)
-        (identifier))
-      (object_reference
-        (identifier)
-        (identifier)))))
+  (batch
+    (statement
+      (drop_procedure
+        (keyword_drop)
+        (keyword_procedure)
+        (object_reference
+          (identifier))))
+    (statement
+      (drop_procedure
+        (keyword_drop)
+        (keyword_proc)
+        (keyword_if)
+        (keyword_exists)
+        (object_reference
+          (identifier)
+          (identifier))
+        (object_reference
+          (identifier)
+          (identifier))))))
 
 ================================================================================
 An empty procedure body and a numbered procedure
@@ -861,37 +869,71 @@ GO
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (create_procedure
-      (keyword_create)
-      (keyword_procedure)
-      (object_reference
-        (identifier)
-        (identifier))
-      (procedure_body
-        (keyword_as))))
-  (go_statement
-    (keyword_go))
-  (statement
-    (create_procedure
-      (keyword_create)
-      (keyword_proc)
-      (object_reference
-        (identifier)
-        (identifier))
-      (literal)
-      (function_arguments
-        (function_argument
+  (batch
+    (statement
+      (create_procedure
+        (keyword_create)
+        (keyword_procedure)
+        (object_reference
           (identifier)
-          (keyword_int)))
-      (procedure_body
-        (keyword_as)
-        (statement
-          (select
-            (keyword_select)
-            (select_expression
-              (term
-                (field
-                  (identifier)))))))))
-  (go_statement
-    (keyword_go)))
+          (identifier))
+        (procedure_body
+          (keyword_as))))
+    (go_statement
+      (keyword_go)))
+  (batch
+    (statement
+      (create_procedure
+        (keyword_create)
+        (keyword_proc)
+        (object_reference
+          (identifier)
+          (identifier))
+        (literal)
+        (function_arguments
+          (function_argument
+            (identifier)
+            (keyword_int)))
+        (procedure_body
+          (keyword_as)
+          (statement
+            (select
+              (keyword_select)
+              (select_expression
+                (term
+                  (field
+                    (identifier)))))))))
+    (go_statement
+      (keyword_go))))
+
+================================================================================
+CREATE PROCEDURE WITH EXECUTE AS SELF (TEST-2)
+================================================================================
+
+CREATE PROCEDURE p WITH EXECUTE AS SELF AS SELECT 1;
+
+--------------------------------------------------------------------------------
+
+(program
+  (batch
+    (statement
+      (create_procedure
+        (keyword_create)
+        (keyword_procedure)
+        (object_reference
+          (identifier))
+        (procedure_options
+          (keyword_with)
+          (procedure_option
+            (execute_as_clause
+              (keyword_execute)
+              (keyword_as)
+              (keyword_self))))
+        (procedure_body
+          (keyword_as)
+          (statement
+            (select
+              (keyword_select)
+              (select_expression
+                (term
+                  (literal))))))))))

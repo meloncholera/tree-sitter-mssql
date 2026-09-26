@@ -32,10 +32,11 @@ inserted_at
 ---
 
 (program
-  (statement
-    (label_statement
-      (identifier)
-      (MISSING ":"))))
+  (batch
+    (statement
+      (label_statement
+        (identifier)
+        (MISSING ":")))))
 
 ==================
 ^updated_at
@@ -82,17 +83,18 @@ EXEC dbo.p @a = 1, 2;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (execute_statement
-      (keyword_exec)
-      (object_reference
-        (identifier)
-        (identifier))
-      (exec_argument
-        (identifier)
-        (literal))))
-  (ERROR
-    (literal)))
+  (batch
+    (statement
+      (execute_statement
+        (keyword_exec)
+        (object_reference
+          (identifier)
+          (identifier))
+        (exec_argument
+          (identifier)
+          (literal))))
+    (ERROR
+      (literal))))
 
 ================================================================================
 An expression is not a procedure argument
@@ -103,17 +105,18 @@ EXEC dbo.p 1 + 2;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (execute_statement
-      (keyword_exec)
-      (object_reference
-        (identifier)
-        (identifier))
-      (ERROR
-        (literal))
-      (exec_argument
-        (unary_expression
-          (literal))))))
+  (batch
+    (statement
+      (execute_statement
+        (keyword_exec)
+        (object_reference
+          (identifier)
+          (identifier))
+        (ERROR
+          (literal))
+        (exec_argument
+          (unary_expression
+            (literal)))))))
 
 ================================================================================
 A run of words after WITH inside a function call is not a clause
@@ -124,19 +127,20 @@ SELECT dbo.f(1 WITH nonsense words);
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (select
-      (keyword_select)
-      (select_expression
-        (term
-          (invocation
-            (object_reference
-              (identifier)
-              (identifier))
-            (term
-              (literal))
-            (ERROR
-              (keyword_with))))))))
+  (batch
+    (statement
+      (select
+        (keyword_select)
+        (select_expression
+          (term
+            (invocation
+              (object_reference
+                (identifier)
+                (identifier))
+              (term
+                (literal))
+              (ERROR
+                (keyword_with)))))))))
 
 ==================
 CREATE CERTIFICATE cannot both load a source and generate a subject
@@ -147,17 +151,18 @@ CREATE CERTIFICATE c FROM FILE = 'x' WITH SUBJECT = 's';
 ---
 
 (program
-  (statement
-    (create_certificate
-      (keyword_create)
-      (keyword_certificate)
-      name: (identifier)
-      (keyword_from)
-      (option
+  (batch
+    (statement
+      (create_certificate
+        (keyword_create)
+        (keyword_certificate)
         name: (identifier)
-        value: (literal))))
-  (ERROR
-    (keyword_with)))
+        (keyword_from)
+        (option
+          name: (identifier)
+          value: (literal))))
+    (ERROR
+      (keyword_with))))
 
 ==================
 CREATE SECURITY POLICY takes only ADD predicates
@@ -172,8 +177,8 @@ CREATE SECURITY POLICY p DROP FILTER PREDICATE ON t;
     (keyword_create)
     (keyword_security)
     (keyword_policy)
-    (identifier)
-    (keyword_drop)
+    (object_reference
+      name: (identifier))
     (keyword_filter)
     (keyword_predicate)
     (keyword_on)))
@@ -202,16 +207,17 @@ SELECT "" FROM t;
 ---
 
 (program
-  (statement
-    (select
-      (keyword_select)
-      (ERROR
-        (UNEXPECTED ' ')
-        (keyword_from))
-      (select_expression
-        (term
-          (field
-            (identifier)))))))
+  (batch
+    (statement
+      (select
+        (keyword_select)
+        (ERROR
+          (UNEXPECTED ' ')
+          (keyword_from))
+        (select_expression
+          (term
+            (field
+              (identifier))))))))
 
 ==================
 WHERE without FROM is not legal T-SQL, even though WHERE lexes as a bare alias here
@@ -222,16 +228,17 @@ SELECT 1 WHERE 1=1;
 ---
 
 (program
-  (statement
-    (select
-      (keyword_select)
-      (select_expression
-        (term
-          (literal)
-          (identifier)))))
-  (ERROR
-    (literal)
-    (literal)))
+  (batch
+    (statement
+      (select
+        (keyword_select)
+        (select_expression
+          (term
+            (literal)
+            (identifier)))))
+    (ERROR
+      (literal)
+      (literal))))
 
 ==================
 GROUP BY without FROM is not legal T-SQL
@@ -242,12 +249,450 @@ SELECT 1 GROUP BY 1;
 ---
 
 (program
-  (statement
-    (select
-      (keyword_select)
-      (select_expression
-        (term
-          (literal)
-          (identifier)))))
+  (batch
+    (statement
+      (select
+        (keyword_select)
+        (select_expression
+          (term
+            (literal)
+            (identifier))))))
+  (ERROR
+    (identifier)
+    (literal)))
+
+==================
+A string literal is not a valid table alias (ARCH-11)
+==================
+
+SELECT * FROM dbo.t 'x';
+
+---
+
+(program
+  (batch
+    (statement
+      (select
+        (keyword_select)
+        (select_expression
+          (term
+            (all_fields))))
+      (from
+        (keyword_from)
+        (relation
+          (object_reference
+            (identifier)
+            (identifier)))))
+    (ERROR)))
+
+==================
+A string literal is not a valid table alias after AS either (ARCH-11)
+==================
+
+SELECT * FROM dbo.t AS 'x';
+
+---
+
+(program
+  (batch
+    (statement
+      (select
+        (keyword_select)
+        (select_expression
+          (term
+            (all_fields))))
+      (from
+        (keyword_from)
+        (relation
+          (object_reference
+            (identifier)
+            (identifier)))))
+    (ERROR
+      (keyword_as))))
+
+==================
+The multiplication sign is a math symbol, not a letter, and is not a valid identifier (ARCH-15)
+==================
+
+SELECT × FROM t;
+
+---
+
+(program
+  (batch
+    (statement
+      (select
+        (keyword_select)
+        (ERROR
+          (UNEXPECTED 215)
+          (keyword_from))
+        (select_expression
+          (term
+            (field
+              (identifier))))))))
+
+==================
+The head element of a CREATE SYMMETRIC KEY encryptor list requires ENCRYPTION BY (ARCH-13)
+==================
+
+CREATE SYMMETRIC KEY k WITH ALGORITHM = AES_256 PASSWORD = 'p';
+
+---
+
+(program
+  (batch
+    (statement
+      (create_symmetric_key
+        (keyword_create)
+        (keyword_symmetric)
+        (keyword_key)
+        name: (identifier)
+        (with_clause
+          (keyword_with)
+          (option
+            name: (identifier)
+            value: (identifier))))))
   (ERROR
     (identifier)))
+
+==================
+TABLESAMPLE is not a valid UPDATE target modifier (ARCH-6)
+==================
+
+UPDATE t TABLESAMPLE (10 PERCENT) SET a = 1;
+
+---
+
+(program
+  (batch
+    (statement
+      (update
+        (keyword_update)
+        (invocation
+          (object_reference
+            name: (identifier))
+          (ERROR)
+          parameter: (term
+            value: (literal)
+            alias: (identifier)))
+        (keyword_set)
+        (assignment
+          left: (field
+            name: (identifier))
+          (assignment_operator)
+          right: (literal))))))
+
+==================
+CREATE TABLE's trailing clauses stop after two TEXTIMAGE_ON/FILESTREAM_ON pairs (ARCH-7)
+==================
+
+CREATE TABLE dbo.t (a int) foo bar baz qux quux corge
+
+---
+
+(program
+  (batch
+    (statement
+      (create_table
+        (keyword_create)
+        (keyword_table)
+        name: (object_reference
+          schema: (identifier)
+          name: (identifier))
+        (column_definitions
+          (column_definition
+            name: (identifier)
+            type: (keyword_int)))
+        (table_data_placement
+          option: (identifier)
+          filegroup: (identifier))
+        (table_data_placement
+          option: (identifier)
+          filegroup: (identifier)))))
+  (ERROR
+    (identifier)))
+
+==================
+A non-final UNION branch cannot carry its own ORDER BY (ARCH-4)
+==================
+
+SELECT a FROM t ORDER BY 1 UNION SELECT b FROM u;
+
+---
+
+(program
+  (batch
+    (statement
+      (select
+        (keyword_select)
+        (select_expression
+          (term
+            (field
+              (identifier)))))
+      (from
+        (keyword_from)
+        (relation
+          (object_reference
+            (identifier))))
+      (order_by
+        (keyword_order)
+        (keyword_by)
+        (order_target
+          (literal))))
+    (statement
+      (label_statement
+        (identifier)
+        (MISSING ":")))
+    (statement
+      (select
+        (keyword_select)
+        (select_expression
+          (term
+            (field
+              (identifier)))))
+      (from
+        (keyword_from)
+        (relation
+          (object_reference
+            (identifier)))))))
+
+==================
+INSERT does not accept a CTE (ARCH-10)
+==================
+
+INSERT INTO dbo.t WITH cte AS (SELECT 1 AS a) SELECT a FROM cte;
+
+---
+
+(program
+  (batch
+    (statement
+      (insert
+        (keyword_insert)
+        (keyword_into)
+        (object_reference
+          schema: (identifier)
+          name: (identifier))
+        (table_hint
+          (keyword_with)
+          (ERROR
+            (keyword_as))
+          (table_hint_item
+            (identifier))
+          (ERROR
+            (literal)
+            (keyword_as)))
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              value: (field
+                name: (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              name: (identifier))))))))
+
+==================
+MERGE only accepts INSERT under NOT MATCHED [BY TARGET] (ARCH-5)
+==================
+
+MERGE INTO t USING s ON t.id = s.id WHEN MATCHED THEN INSERT (a) VALUES (1);
+
+---
+
+(program
+  (ERROR
+    (keyword_merge)
+    (keyword_into)
+    (object_reference
+      name: (identifier))
+    (keyword_using)
+    (object_reference
+      name: (identifier))
+    (keyword_on)
+    (binary_expression
+      left: (field
+        (object_reference
+          name: (identifier))
+        name: (identifier))
+      right: (field
+        (object_reference
+          name: (identifier))
+        name: (identifier)))
+    (keyword_when)
+    (keyword_matched)
+    (keyword_then)
+    (keyword_values)
+    (literal)))
+
+==================
+MERGE only accepts DELETE/UPDATE under MATCHED or NOT MATCHED BY SOURCE (ARCH-5)
+==================
+
+MERGE INTO t USING s ON t.id = s.id WHEN NOT MATCHED BY TARGET THEN DELETE;
+
+---
+
+(program
+  (ERROR
+    (keyword_merge)
+    (keyword_into)
+    (object_reference
+      name: (identifier))
+    (keyword_using)
+    (object_reference
+      name: (identifier))
+    (keyword_on)
+    (binary_expression
+      left: (field
+        (object_reference
+          name: (identifier))
+        name: (identifier))
+      right: (field
+        (object_reference
+          name: (identifier))
+        name: (identifier)))
+    (keyword_when)
+    (keyword_not)
+    (keyword_matched)
+    (keyword_by)
+    (keyword_target)
+    (keyword_then)))
+
+==================
+CLOSE master is a cursor-name/keyword collision (TEST-3)
+==================
+
+CLOSE master;
+
+---
+
+(program
+  (batch
+    (statement
+      (close_key_statement
+        (keyword_close)
+        (keyword_master)
+        (MISSING keyword_key)))))
+
+==================
+FROM t bulk is a documented alias/keyword collision (TEST-3)
+==================
+
+SELECT * FROM t bulk;
+
+---
+
+(program
+  (batch
+    (statement
+      (select
+        (keyword_select)
+        (select_expression
+          (term
+            (all_fields))))
+      (from
+        (keyword_from)
+        (relation
+          (object_reference
+            (identifier))))))
+  (ERROR
+    (keyword_bulk)))
+
+==================
+FROM t tablesample is a documented alias/keyword collision (TEST-3)
+==================
+
+SELECT * FROM t tablesample;
+
+---
+
+(program
+  (batch
+    (statement
+      (select
+        (keyword_select)
+        (select_expression
+          (term
+            (all_fields))))
+      (from
+        (keyword_from)
+        (relation
+          (object_reference
+            (identifier)))))
+    (ERROR
+      (keyword_tablesample))))
+
+==================
+FROM t window is a documented alias/keyword collision (TEST-3)
+==================
+
+SELECT * FROM t window;
+
+---
+
+(program
+  (batch
+    (statement
+      (select
+        (keyword_select)
+        (select_expression
+          (term
+            (all_fields))))
+      (from
+        (keyword_from)
+        (relation
+          (object_reference
+            (identifier)))))
+    (ERROR
+      (keyword_window))))
+
+==================
+SELECT match FROM t is a documented column/keyword collision (TEST-3)
+==================
+
+SELECT match FROM t;
+
+---
+
+(program
+  (batch
+    (statement
+      (select
+        (keyword_select)
+        (ERROR
+          (keyword_match))
+        (select_expression
+          (term
+            value: (field
+              name: (identifier))
+            alias: (identifier)))))))
+
+==================
+ALTER PARTITION SCHEME's optional trailing filegroup swallows a following label
+==================
+
+ALTER PARTITION SCHEME ps NEXT USED mylabel: SELECT 1;
+
+---
+
+(program
+  (batch
+    (statement
+      (alter_partition_scheme
+        (keyword_alter)
+        (keyword_partition)
+        (keyword_scheme)
+        (identifier)
+        (keyword_next)
+        (keyword_used)
+        (identifier)))
+    (ERROR)
+    (statement
+      (select
+        (keyword_select)
+        (select_expression
+          (term
+            value: (literal)))))))

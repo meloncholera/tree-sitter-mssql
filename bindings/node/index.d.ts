@@ -47,6 +47,9 @@ declare const binding: {
   /** The syntax highlighting query for this grammar. */
   HIGHLIGHTS_QUERY?: string;
 
+  /** The indentation query for this grammar. */
+  INDENTS_QUERY?: string;
+
   /** The language injection query for this grammar. */
   INJECTIONS_QUERY?: string;
 

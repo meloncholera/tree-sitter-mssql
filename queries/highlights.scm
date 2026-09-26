@@ -28,11 +28,18 @@
 (comment) @comment @spell
 (marginalia) @comment
 
+; Matches `_integer`/`_decimal_number`/`_money` in grammar/expressions.js
+; exactly, so a hex integer, a scientific-notation float, a leading-dot
+; float and a `$`-prefixed money literal all highlight as a number rather
+; than falling through to the blanket `(literal) @string` above.
 ((literal) @number
-   (#match? @number "^[-+]?%d+$"))
+   (#match? @number "^(0[xX][0-9A-Fa-f]*|\\d+)$"))
+
+((literal) @number
+  (#match? @number "^\\$\\d+(,\\d{3})*(\\.\\d+)?$"))
 
 ((literal) @float
-  (#match? @float "^[-+]?%d*\.%d*$"))
+  (#match? @float "^((\\d+\\.\\d*|\\.\\d+)([eE][+-]?\\d+)?|\\d+[eE][+-]?\\d+)$"))
 
 [
  (keyword_asc)
@@ -311,6 +318,20 @@
   (keyword_block)
   (keyword_before)
   (keyword_collection)
+  (keyword_changes)
+  (keyword_changetable)
+  (keyword_contained)
+  (keyword_for_system_time)
+  (keyword_holdlock)
+  (keyword_match)
+  (keyword_opendatasource)
+  (keyword_period_for_system_time)
+  (keyword_shortest_path)
+  (keyword_switch)
+  (keyword_system)
+  (keyword_tablesample)
+  (keyword_version)
+  (keyword_zone)
 ] @keyword
 
 [

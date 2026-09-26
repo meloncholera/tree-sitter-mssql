@@ -8,9 +8,11 @@
 #                      push (dev, main)
 #  Purpose             Regenerate the parser from grammar.js, fail on any
 #                      drift in the generated parser or the committed
-#                      node-kind snapshot, run the tree-sitter corpus and
-#                      highlight tests, parse every fixture and fail on any
-#                      ERROR/MISSING/zero-width node, build and test the
+#                      node-kind snapshot, fail if a create/alter/drop rule
+#                      is defined but not registered, lint and format-check
+#                      the grammar JavaScript, run the tree-sitter corpus
+#                      and highlight tests, parse every fixture and fail on
+#                      any ERROR/MISSING/zero-width node, build and test the
 #                      Rust binding, build and test the Node binding,
 #                      validate the PR title, scan for secrets, and lint
 #                      workflow/YAML files. A final aggregate job rolls
@@ -152,6 +154,26 @@ jobs:
           node test/generate-node-kinds.mjs
           git diff --exit-code -- test/node-kinds.txt
 
+      - name: Fail if a create/alter/drop rule is defined but not registered
+        run: node test/check-registries.mjs
+
+      - name: Install lint/format devDependencies
+        # A bare `npm install` here would also run this package's own
+        # "install": "node-gyp-build" lifecycle script and fail without
+        # MSVC; --ignore-scripts installs the declared devDependencies
+        # (eslint, @eslint/js, prettier) without running any of them.
+        # ESLint's flat config resolves its own imports (@eslint/js) from
+        # this checkout's node_modules, so this step is required — an
+        # npx --package= invocation installs into a separate ephemeral
+        # cache the config file's own import can't see.
+        run: npm install --ignore-scripts
+
+      - name: Lint the grammar JS
+        run: npm run lint
+
+      - name: Check formatting of the grammar JS
+        run: npm run format:check
+
       - name: Verify publishable package contents
         run: |
           set -euo pipefail
@@ -159,6 +181,10 @@ jobs:
           grep -Fx 'src/parser.c' cargo-package-files.txt
           grep -Fx 'src/scanner.c' cargo-package-files.txt
           grep -Fx 'queries/highlights.scm' cargo-package-files.txt
+          grep -Fx 'queries/indents.scm' cargo-package-files.txt
+          grep -Fx 'queries/injections.scm' cargo-package-files.txt
+          grep -Fx 'queries/locals.scm' cargo-package-files.txt
+          grep -Fx 'queries/tags.scm' cargo-package-files.txt
           ! grep -Eq '(^|/)(\.git|\.worktrees|node_modules|target)/' cargo-package-files.txt
 
           npm pack --dry-run --json > npm-package.json
@@ -166,7 +192,7 @@ jobs:
             const packageInfo = JSON.parse(require("fs").readFileSync("npm-package.json", "utf8"));
             const pack = Array.isArray(packageInfo) ? packageInfo[0] : packageInfo["tree-sitter-mssql"];
             const files = pack.files.map(({path}) => path);
-            for (const required of ["src/parser.c", "src/scanner.c", "queries/highlights.scm"]) {
+            for (const required of ["src/parser.c", "src/scanner.c", "queries/highlights.scm", "queries/indents.scm", "queries/injections.scm", "queries/locals.scm", "queries/tags.scm"]) {
               if (!files.includes(required)) throw new Error(`npm package is missing ${required}`);
             }
             if (files.some(path => /(^|\/)(?:\.git|\.worktrees|node_modules|target)\//.test(path))) {
@@ -210,6 +236,17 @@ jobs:
             fi
           done
           exit "$fail"
+
+      - name: Report fixture parse performance
+        run: |
+          set -euo pipefail
+          stats=$(npx --yes --package=tree-sitter-cli@${{ env.TREE_SITTER_CLI_VERSION }} -- tree-sitter parse --quiet --time --stat test/fixtures/*.sql 2>&1 | grep '^Total parses:')
+          parser_bytes=$(wc -c < src/parser.c)
+          {
+            echo "### Fixture parse performance"
+            echo "- ${stats}"
+            echo "- \`src/parser.c\`: ${parser_bytes} bytes"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Format check
         run: cargo fmt --check

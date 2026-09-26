@@ -8,34 +8,34 @@ SET col = foo + 1, col2 = col1, ts = GETDATE();
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (update
-      (keyword_update)
-      (relation
+  (batch
+    (statement
+      (update
+        (keyword_update)
         (object_reference
-          (identifier)))
-      (keyword_set)
-      (assignment
-        (field
           (identifier))
-        (assignment_operator)
-        (binary_expression
+        (keyword_set)
+        (assignment
           (field
             (identifier))
-          (literal)))
-      (assignment
-        (field
-          (identifier))
-        (assignment_operator)
-        (field
-          (identifier)))
-      (assignment
-        (field
-          (identifier))
-        (assignment_operator)
-        (invocation
-          (object_reference
-            (identifier)))))))
+          (assignment_operator)
+          (binary_expression
+            (field
+              (identifier))
+            (literal)))
+        (assignment
+          (field
+            (identifier))
+          (assignment_operator)
+          (field
+            (identifier)))
+        (assignment
+          (field
+            (identifier))
+          (assignment_operator)
+          (invocation
+            (object_reference
+              (identifier))))))))
 
 ================================================================================
 Update with WHERE
@@ -48,27 +48,27 @@ WHERE b = a.uid;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (update
-      (keyword_update)
-      (relation
+  (batch
+    (statement
+      (update
+        (keyword_update)
         (object_reference
-          (identifier)))
-      (keyword_set)
-      (assignment
-        (field
           (identifier))
-        (assignment_operator)
-        (literal))
-      (where
-        (keyword_where)
-        (binary_expression
+        (keyword_set)
+        (assignment
           (field
             (identifier))
-          (field
-            (object_reference
+          (assignment_operator)
+          (literal))
+        (where
+          (keyword_where)
+          (binary_expression
+            (field
               (identifier))
-            (identifier)))))))
+            (field
+              (object_reference
+                (identifier))
+              (identifier))))))))
 
 ================================================================================
 Update with FROM and a join
@@ -83,32 +83,43 @@ WHERE b.a = table_a.uid;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (update
-      (keyword_update)
-      (relation
+  (batch
+    (statement
+      (update
+        (keyword_update)
         (object_reference
-          (identifier)))
-      (keyword_set)
-      (assignment
-        (field
           (identifier))
-        (assignment_operator)
-        (literal))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
+        (keyword_set)
+        (assignment
+          (field
             (identifier))
-          (identifier))
-        (join
-          (keyword_inner)
-          (keyword_join)
+          (assignment_operator)
+          (literal))
+        (from
+          (keyword_from)
           (relation
             (object_reference
               (identifier))
             (identifier))
-          (keyword_on)
+          (join
+            (keyword_inner)
+            (keyword_join)
+            (relation
+              (object_reference
+                (identifier))
+              (identifier))
+            (keyword_on)
+            (binary_expression
+              (field
+                (object_reference
+                  (identifier))
+                (identifier))
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))))
+        (where
+          (keyword_where)
           (binary_expression
             (field
               (object_reference
@@ -117,18 +128,7 @@ WHERE b.a = table_a.uid;
             (field
               (object_reference
                 (identifier))
-              (identifier)))))
-      (where
-        (keyword_where)
-        (binary_expression
-          (field
-            (object_reference
-              (identifier))
-            (identifier))
-          (field
-            (object_reference
-              (identifier))
-            (identifier)))))))
+              (identifier))))))))
 
 ================================================================================
 Update with a table hint
@@ -139,38 +139,38 @@ UPDATE dbo.t WITH (ROWLOCK) SET a = 1, b = b + 1 WHERE id = @id
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (update
-      (keyword_update)
-      (relation
+  (batch
+    (statement
+      (update
+        (keyword_update)
         (object_reference
           (identifier)
-          (identifier)))
-      (table_hint
-        (keyword_with)
-        (table_hint_item
-          (identifier)))
-      (keyword_set)
-      (assignment
-        (field
           (identifier))
-        (assignment_operator)
-        (literal))
-      (assignment
-        (field
-          (identifier))
-        (assignment_operator)
-        (binary_expression
+        (table_hint
+          (keyword_with)
+          (table_hint_item
+            (identifier)))
+        (keyword_set)
+        (assignment
           (field
             (identifier))
-          (literal)))
-      (where
-        (keyword_where)
-        (binary_expression
+          (assignment_operator)
+          (literal))
+        (assignment
           (field
             (identifier))
-          (field
-            (identifier)))))))
+          (assignment_operator)
+          (binary_expression
+            (field
+              (identifier))
+            (literal)))
+        (where
+          (keyword_where)
+          (binary_expression
+            (field
+              (identifier))
+            (field
+              (identifier))))))))
 
 ================================================================================
 Update through an alias
@@ -184,58 +184,58 @@ WHERE s.site = 'MAIN'
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (update
-      (keyword_update)
-      (relation
+  (batch
+    (statement
+      (update
+        (keyword_update)
         (object_reference
-          (identifier)))
-      (keyword_set)
-      (assignment
-        (field
-          (object_reference
-            (identifier))
           (identifier))
-        (assignment_operator)
-        (field
-          (object_reference
+        (keyword_set)
+        (assignment
+          (field
+            (object_reference
+              (identifier))
             (identifier))
-          (identifier)))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)
-            (identifier))
-          (keyword_as)
-          (identifier))
-        (join
-          (keyword_inner)
-          (keyword_join)
+          (assignment_operator)
+          (field
+            (object_reference
+              (identifier))
+            (identifier)))
+        (from
+          (keyword_from)
           (relation
             (object_reference
               (identifier)
               (identifier))
             (keyword_as)
             (identifier))
-          (keyword_on)
+          (join
+            (keyword_inner)
+            (keyword_join)
+            (relation
+              (object_reference
+                (identifier)
+                (identifier))
+              (keyword_as)
+              (identifier))
+            (keyword_on)
+            (binary_expression
+              (field
+                (object_reference
+                  (identifier))
+                (identifier))
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))))
+        (where
+          (keyword_where)
           (binary_expression
             (field
               (object_reference
                 (identifier))
               (identifier))
-            (field
-              (object_reference
-                (identifier))
-              (identifier)))))
-      (where
-        (keyword_where)
-        (binary_expression
-          (field
-            (object_reference
-              (identifier))
-            (identifier))
-          (literal))))))
+            (literal)))))))
 
 ================================================================================
 Update a temp table through a derived table
@@ -250,89 +250,89 @@ INNER JOIN #prod_info ON #prod_info.product_cat = a.product_cat;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (update
-      (keyword_update)
-      (relation
+  (batch
+    (statement
+      (update
+        (keyword_update)
         (object_reference
-          (identifier)))
-      (keyword_set)
-      (assignment
-        (field
-          (object_reference
-            (identifier))
           (identifier))
-        (assignment_operator)
-        (field
-          (object_reference
-            (identifier))
-          (identifier)))
-      (assignment
-        (field
-          (object_reference
-            (identifier))
-          (identifier))
-        (assignment_operator)
-        (field
-          (object_reference
-            (identifier))
-          (identifier)))
-      (from
-        (keyword_from)
-        (relation
-          (subquery
-            (select
-              (keyword_select)
-              (select_expression
-                (term
-                  (field
-                    (identifier)))
-                (term
-                  (invocation
-                    (object_reference
-                      (identifier))
-                    (term
-                      (field
-                        (identifier))))
-                  (keyword_as)
-                  (identifier))
-                (term
-                  (invocation
-                    (object_reference
-                      (identifier))
-                    (term
-                      (field
-                        (identifier))))
-                  (keyword_as)
-                  (identifier))))
-            (from
-              (keyword_from)
-              (relation
-                (object_reference
-                  (identifier))))
-            (group_by
-              (keyword_group)
-              (keyword_by)
-              (field
-                (identifier))))
-          (keyword_as)
-          (identifier))
-        (join
-          (keyword_inner)
-          (keyword_join)
-          (relation
+        (keyword_set)
+        (assignment
+          (field
             (object_reference
-              (identifier)))
-          (keyword_on)
-          (binary_expression
-            (field
-              (object_reference
-                (identifier))
               (identifier))
-            (field
+            (identifier))
+          (assignment_operator)
+          (field
+            (object_reference
+              (identifier))
+            (identifier)))
+        (assignment
+          (field
+            (object_reference
+              (identifier))
+            (identifier))
+          (assignment_operator)
+          (field
+            (object_reference
+              (identifier))
+            (identifier)))
+        (from
+          (keyword_from)
+          (relation
+            (subquery
+              (select
+                (keyword_select)
+                (select_expression
+                  (term
+                    (field
+                      (identifier)))
+                  (term
+                    (invocation
+                      (object_reference
+                        (identifier))
+                      (term
+                        (field
+                          (identifier))))
+                    (keyword_as)
+                    (identifier))
+                  (term
+                    (invocation
+                      (object_reference
+                        (identifier))
+                      (term
+                        (field
+                          (identifier))))
+                    (keyword_as)
+                    (identifier))))
+              (from
+                (keyword_from)
+                (relation
+                  (object_reference
+                    (identifier))))
+              (group_by
+                (keyword_group)
+                (keyword_by)
+                (field
+                  (identifier))))
+            (keyword_as)
+            (identifier))
+          (join
+            (keyword_inner)
+            (keyword_join)
+            (relation
               (object_reference
+                (identifier)))
+            (keyword_on)
+            (binary_expression
+              (field
+                (object_reference
+                  (identifier))
                 (identifier))
-              (identifier))))))))
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))))))))
 
 ================================================================================
 Update with compound assignment, variables, TOP and OUTPUT
@@ -346,61 +346,61 @@ WHERE id = @id;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (update
-      (keyword_update)
-      (top_clause
-        (keyword_top)
-        (literal))
-      (relation
+  (batch
+    (statement
+      (update
+        (keyword_update)
+        (top_clause
+          (keyword_top)
+          (literal))
         (object_reference
-          (identifier)))
-      (keyword_set)
-      (assignment
-        (field
           (identifier))
-        (assignment_operator)
-        (literal))
-      (assignment
-        (field
-          (identifier))
-        (assignment_operator)
-        (binary_expression
+        (keyword_set)
+        (assignment
           (field
             (identifier))
+          (assignment_operator)
+          (literal))
+        (assignment
+          (field
+            (identifier))
+          (assignment_operator)
+          (binary_expression
+            (field
+              (identifier))
+            (binary_expression
+              (field
+                (identifier))
+              (field
+                (identifier)))))
+        (output_clause
+          (keyword_output)
+          (term
+            (field
+              (object_reference
+                (identifier))
+              (identifier)))
+          (term
+            (field
+              (object_reference
+                (identifier))
+              (identifier)))
+          (keyword_into)
+          (object_reference
+            (identifier)))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier)
+              (identifier))))
+        (where
+          (keyword_where)
           (binary_expression
             (field
               (identifier))
             (field
-              (identifier)))))
-      (output_clause
-        (keyword_output)
-        (term
-          (field
-            (object_reference
-              (identifier))
-            (identifier)))
-        (term
-          (field
-            (object_reference
-              (identifier))
-            (identifier)))
-        (keyword_into)
-        (object_reference
-          (identifier)))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)
-            (identifier))))
-      (where
-        (keyword_where)
-        (binary_expression
-          (field
-            (identifier))
-          (field
-            (identifier)))))))
+              (identifier))))))))
 
 ================================================================================
 UPDATE with a bare .modify() call in the SET list
@@ -412,45 +412,44 @@ UPDATE JsonTable SET d.modify('$.a', 14859), name = 'x' WHERE id = 1;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (update
-      (keyword_update)
-      (relation
+  (batch
+    (statement
+      (update
+        (keyword_update)
         (object_reference
-          (identifier)))
-      (keyword_set)
-      (invocation
-        (object_reference
-          (identifier)
           (identifier))
-        (term
-          (literal)))))
-  (statement
-    (update
-      (keyword_update)
-      (relation
+        (keyword_set)
+        (invocation
+          (object_reference
+            (identifier)
+            (identifier))
+          (term
+            (literal)))))
+    (statement
+      (update
+        (keyword_update)
         (object_reference
-          (identifier)))
-      (keyword_set)
-      (invocation
-        (object_reference
-          (identifier)
           (identifier))
-        (term
-          (literal))
-        (term
-          (literal)))
-      (assignment
-        (field
-          (identifier))
-        (assignment_operator)
-        (literal))
-      (where
-        (keyword_where)
-        (binary_expression
+        (keyword_set)
+        (invocation
+          (object_reference
+            (identifier)
+            (identifier))
+          (term
+            (literal))
+          (term
+            (literal)))
+        (assignment
           (field
             (identifier))
-          (literal))))))
+          (assignment_operator)
+          (literal))
+        (where
+          (keyword_where)
+          (binary_expression
+            (field
+              (identifier))
+            (literal)))))))
 
 ================================================================================
 Update with OPTION
@@ -461,34 +460,62 @@ UPDATE dbo.t SET a = 1 FROM dbo.b WHERE b.id = 1 OPTION (RECOMPILE);
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (update
-      (keyword_update)
-      (relation
+  (batch
+    (statement
+      (update
+        (keyword_update)
         (object_reference
           (identifier)
-          (identifier)))
-      (keyword_set)
-      (assignment
-        (field
           (identifier))
-        (assignment_operator)
-        (literal))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)
-            (identifier))))
-      (where
-        (keyword_where)
-        (binary_expression
+        (keyword_set)
+        (assignment
           (field
-            (object_reference
-              (identifier))
             (identifier))
-          (literal)))
-      (option_clause
-        (keyword_option)
-        (query_hint
-          (keyword_recompile))))))
+          (assignment_operator)
+          (literal))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier)
+              (identifier))))
+        (where
+          (keyword_where)
+          (binary_expression
+            (field
+              (object_reference
+                (identifier))
+              (identifier))
+            (literal)))
+        (option_clause
+          (keyword_option)
+          (query_hint
+            (keyword_recompile)))))))
+
+================================================================================
+Update through a linked-server rowset function target (ARCH-6)
+================================================================================
+
+UPDATE OPENQUERY(lnk, 'SELECT a FROM t') SET a = 1;
+
+--------------------------------------------------------------------------------
+
+(program
+  (batch
+    (statement
+      (update
+        (keyword_update)
+        (invocation
+          (object_reference
+            (identifier))
+          (term
+            (field
+              (identifier)))
+          (term
+            (literal)))
+        (keyword_set)
+        (assignment
+          (field
+            (identifier))
+          (assignment_operator)
+          (literal))))))

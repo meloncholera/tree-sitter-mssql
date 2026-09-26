@@ -7,10 +7,11 @@ setvar with a quoted value
 --------------------------------------------------------------------------------
 
 (program
-  (sqlcmd_setvar
-    name: (identifier)
-    value: (object_reference
-      name: (identifier))))
+  (batch
+    (sqlcmd_setvar
+      name: (identifier)
+      value: (object_reference
+        name: (identifier)))))
 
 ================================================================================
 setvar with a bare numeric value
@@ -21,9 +22,10 @@ setvar with a bare numeric value
 --------------------------------------------------------------------------------
 
 (program
-  (sqlcmd_setvar
-    name: (identifier)
-    value: (literal)))
+  (batch
+    (sqlcmd_setvar
+      name: (identifier)
+      value: (literal))))
 
 ================================================================================
 Include directive
@@ -34,8 +36,9 @@ Include directive
 --------------------------------------------------------------------------------
 
 (program
-  (sqlcmd_include
-    (identifier)))
+  (batch
+    (sqlcmd_include
+      (identifier))))
 
 ================================================================================
 Scripting variable substitution inside a batch
@@ -50,35 +53,37 @@ GO
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (use_statement
-      (keyword_use)
-      (object_reference
-        name: (identifier))))
-  (go_statement
-    (keyword_go))
-  (statement
-    (select
-      (keyword_select)
-      (select_expression
-        (term
-          value: (all_fields))))
-    (from
-      (keyword_from)
-      (relation
+  (batch
+    (statement
+      (use_statement
+        (keyword_use)
         (object_reference
-          database: (identifier)
-          schema: (identifier)
           name: (identifier))))
-    (where
-      (keyword_where)
-      predicate: (binary_expression
-        left: (field
-          name: (identifier))
-        right: (field
-          name: (identifier)))))
-  (go_statement
-    (keyword_go)))
+    (go_statement
+      (keyword_go)))
+  (batch
+    (statement
+      (select
+        (keyword_select)
+        (select_expression
+          (term
+            value: (all_fields))))
+      (from
+        (keyword_from)
+        (relation
+          (object_reference
+            database: (identifier)
+            schema: (identifier)
+            name: (identifier))))
+      (where
+        (keyword_where)
+        predicate: (binary_expression
+          left: (field
+            name: (identifier))
+          right: (field
+            name: (identifier)))))
+    (go_statement
+      (keyword_go))))
 
 ================================================================================
 setvar with a schema-qualified value
@@ -90,19 +95,40 @@ SELECT * FROM $(TableName);
 --------------------------------------------------------------------------------
 
 (program
-  (sqlcmd_setvar
-    (identifier)
-    (object_reference
+  (batch
+    (sqlcmd_setvar
       (identifier)
-      (identifier)))
-  (statement
-    (select
-      (keyword_select)
-      (select_expression
-        (term
-          (all_fields))))
-    (from
-      (keyword_from)
-      (relation
-        (object_reference
-          (identifier))))))
+      (object_reference
+        (identifier)
+        (identifier)))
+    (statement
+      (select
+        (keyword_select)
+        (select_expression
+          (term
+            (all_fields))))
+      (from
+        (keyword_from)
+        (relation
+          (object_reference
+            (identifier)))))))
+
+================================================================================
+setvar with no value removes the scripting variable (ARCH-14)
+================================================================================
+
+:setvar MyVar
+SELECT 1;
+
+--------------------------------------------------------------------------------
+
+(program
+  (batch
+    (sqlcmd_setvar
+      (identifier))
+    (statement
+      (select
+        (keyword_select)
+        (select_expression
+          (term
+            (literal)))))))

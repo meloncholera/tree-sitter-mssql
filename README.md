@@ -29,10 +29,81 @@ by Derek Stride (MIT licensed; see `LICENSE` and `NOTICE`). The general-SQL core
 precedence, `SELECT`, CTEs, joins, window functions — comes from that project largely unchanged.
 The T-SQL-specific surface is added on top, and the upstream's other-dialect surface is gone.
 
+## Using it
+
+```sh
+cargo add tree-sitter tree-sitter-mssql
+```
+
+```rust
+let mut parser = tree_sitter::Parser::new();
+let language = tree_sitter_mssql::LANGUAGE;
+parser.set_language(&language.into()).expect("Error loading T-SQL parser");
+let tree = parser.parse("SELECT TOP (10) name FROM sys.objects WHERE type = 'U';", None).unwrap();
+assert!(!tree.root_node().has_error());
+```
+
+```sh
+npm install tree-sitter-mssql
+```
+
+```js
+import Parser from "tree-sitter";
+import SQL from "tree-sitter-mssql";
+
+const parser = new Parser();
+parser.setLanguage(SQL);
+```
+
+A GitHub Packages copy of the npm package is also published as
+`@meloncholic/tree-sitter-mssql`. Both bindings expose every query file —
+`HIGHLIGHTS_QUERY`, `INDENTS_QUERY`, `INJECTIONS_QUERY`, `LOCALS_QUERY`,
+`TAGS_QUERY` — so a consumer can load `queries/highlights.scm` without
+resolving the package's install path by hand: the Rust crate as real `pub
+const` named exports (`tree_sitter_mssql::HIGHLIGHTS_QUERY`), the Node
+binding as properties of its default export (`SQL.HIGHLIGHTS_QUERY`, not a
+named import).
+
+The npm package ships prebuilt native addons for linux-x64 and win32-x64, so
+`npm install tree-sitter-mssql` needs no C toolchain on those platforms — it
+falls back to compiling from the committed generated parser on any other
+platform/arch (macOS, ARM Linux, ARM Windows), the same as before this
+existed. A `tree-sitter-mssql.wasm` build is attached to
+every [GitHub Release](https://github.com/meloncholic/tree-sitter-mssql/releases)
+for `web-tree-sitter` consumers (browsers, sandboxed runtimes):
+
+```js
+import { Parser, Language } from "web-tree-sitter";
+await Parser.init();
+const language = await Language.load("tree-sitter-mssql.wasm");
+const parser = new Parser();
+parser.setLanguage(language);
+```
+
+## Consuming this grammar
+
+The exported C symbol is `tree_sitter_mssql` (not `tree_sitter_sql`), so linking this grammar
+alongside a general-SQL tree-sitter grammar in the same binary does not collide. The parser is
+`LANGUAGE_VERSION` (ABI) 15; the crate depends on `tree-sitter-language = "0.1"` at runtime and
+only dev-depends on `tree-sitter ~0.27`, so a consumer on `tree-sitter = "0.26"` or newer is
+compatible.
+
+**Node-kind stability.** `test/node-kinds.txt` is the public API surface: it is generated from
+`src/node-types.json`, drift-gated in CI on every PR (`.github/workflows/verify.yml`), and
+attached to every GitHub Release so two versions can be diffed mechanically. Before 1.0, treat
+node-kind additions as compatible and removals or renames as breaking; call out either in the
+PR/commit that makes the change so it is visible in `CHANGELOG.md`.
+
+**Version-specific and deprecated constructs.** `versions.json` maps the node kinds that are
+specific to a SQL Server release (e.g. `named_window`, requiring SQL Server 2022) or that model
+deprecated-but-still-executing syntax (e.g. `readtext_statement`), so a downstream linter can flag
+either without maintaining its own list. See the file's own `_meta` section for the node kinds it
+does not yet cover.
+
 ## Building
 
 ```sh
-npx --package=tree-sitter-cli@0.26.3 -- tree-sitter generate
+npx --yes --package=tree-sitter-cli@0.27.0 -- tree-sitter generate
 cargo build
 ```
 
@@ -52,16 +123,32 @@ leaves the previous parser in place.
 ## Testing
 
 ```sh
-tree-sitter test
+npx --yes --package=tree-sitter-cli@0.27.0 -- tree-sitter test
 ```
 
 On a machine without MSVC, point the CLI at another C compiler:
 
 ```sh
-CC=gcc CXX=g++ tree-sitter test
+CC=gcc CXX=g++ npx --yes --package=tree-sitter-cli@0.27.0 -- tree-sitter test
 ```
 
-`test/corpus/` holds the per-construct tree assertions.
+`test/corpus/` holds the per-construct tree assertions. Every file under `test/fixtures/*.sql`
+should also parse with zero `ERROR`/`MISSING`/zero-width nodes:
+
+```sh
+for f in test/fixtures/*.sql; do printf "%s: " "$f"; CC=gcc CXX=g++ npx --yes --package=tree-sitter-cli@0.27.0 -- tree-sitter parse "$f" 2>/dev/null | grep -c "ERROR\|MISSING"; done
+```
+
+`test/node-kinds.txt` is regenerated with:
+
+```sh
+node test/generate-node-kinds.mjs
+```
+
+Every `verify` CI run's job summary reports the fixture set's parse throughput (bytes/ms) and the
+current `src/parser.c` size, so a change's effect on either is visible without a separate
+benchmark step. A scheduled workflow (`.github/workflows/fuzz.yml`) also fuzzes the parser and
+`src/scanner.c` against arbitrary input weekly.
 
 ## License
 

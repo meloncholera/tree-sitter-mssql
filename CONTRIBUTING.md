@@ -3,7 +3,7 @@
 ## Build
 
 ```sh
-npx --package=tree-sitter-cli@0.26.3 -- tree-sitter generate
+npx --yes --package=tree-sitter-cli@0.27.0 -- tree-sitter generate
 cargo build
 ```
 
@@ -17,7 +17,7 @@ compiler even on a machine without MSVC.
 ## Test
 
 ```sh
-CC=gcc CXX=g++ tree-sitter test
+CC=gcc CXX=g++ npx --yes --package=tree-sitter-cli@0.27.0 -- tree-sitter test
 cargo test
 ```
 
@@ -26,9 +26,53 @@ files checked for zero `ERROR`/`MISSING`/zero-width nodes. `test/corpus/errors.t
 pins error recovery on invalid input and is hand-written — `tree-sitter test --update` refuses to
 touch it.
 
+Check every fixture for `ERROR`/`MISSING` nodes:
+
+```sh
+for f in test/fixtures/*.sql; do printf "%s: " "$f"; CC=gcc CXX=g++ npx --yes --package=tree-sitter-cli@0.27.0 -- tree-sitter parse "$f" 2>/dev/null | grep -c "ERROR\|MISSING"; done
+```
+
+Regenerate `test/node-kinds.txt` after any change to a node kind or field name:
+
+```sh
+node test/generate-node-kinds.mjs
+```
+
+Check that every `create_*`/`alter_*`/`drop_*` rule is registered in its statement's `choice()`:
+
+```sh
+node test/check-registries.mjs
+```
+
+## Lint and format
+
+`eslint` and `prettier` are devDependencies, not one-off CLI tools, since ESLint's flat config
+(`eslint.config.js`) imports `@eslint/js` and resolves it from this checkout's own `node_modules` —
+unlike `tree-sitter-cli`, they can't be run through a one-off `npx --package=...` invocation.
+Install them once (this skips the package's own `node-gyp-build` lifecycle script, which needs
+MSVC and isn't relevant to linting):
+
+```sh
+npm install --ignore-scripts
+```
+
+Then:
+
+```sh
+npm run lint
+npm run format:check
+```
+
+`npm run format` applies fixes. Both run against `grammar.js`, `grammar/**/*.js`, `test/*.mjs` and
+`bindings/node/*.js` — `src/**` is generated and excluded.
+
 ## Pull requests
 
 - Regenerate and commit `src/parser.c` and `test/node-kinds.txt` alongside any `grammar.js` change;
   CI diffs both against a fresh regenerate and fails on drift.
 - Add a corpus case (or extend a fixture) for any new construct.
-- `cargo fmt` and `cargo clippy` must pass with no warnings.
+- `cargo fmt` and `cargo clippy` must pass with no warnings; so must `npm run lint` and
+  `npm run format:check`.
+- A node-kind addition, removal, or rename is part of the grammar's published API surface
+  (see README's "Consuming this grammar" section) — call it out explicitly in the commit message
+  or PR description so it is visible in `CHANGELOG.md`.

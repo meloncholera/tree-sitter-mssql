@@ -9,28 +9,29 @@ ROLLBACK TRANSACTION;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (begin_transaction_statement
-      (keyword_begin)
-      (keyword_transaction)))
-  (statement
-    (alter_table
-      (keyword_alter)
-      (keyword_table)
-      (object_reference
-        (identifier))
-      (keyword_add)
-      (column_definition
-        (identifier)
-        (varchar
-          (keyword_varchar)
-          (literal))
-        (keyword_not)
-        (keyword_null))))
-  (statement
-    (rollback_statement
-      (keyword_rollback)
-      (keyword_transaction))))
+  (batch
+    (statement
+      (begin_transaction_statement
+        (keyword_begin)
+        (keyword_transaction)))
+    (statement
+      (alter_table
+        (keyword_alter)
+        (keyword_table)
+        (object_reference
+          (identifier))
+        (keyword_add)
+        (column_definition
+          (identifier)
+          (varchar
+            (keyword_varchar)
+            (literal))
+          (keyword_not)
+          (keyword_null))))
+    (statement
+      (rollback_statement
+        (keyword_rollback)
+        (keyword_transaction)))))
 
 ================================================================================
 Named transaction with savepoint
@@ -45,38 +46,38 @@ COMMIT TRAN outer_tx;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (begin_transaction_statement
-      (keyword_begin)
-      (keyword_tran)
-      (identifier)))
-  (statement
-    (save_transaction_statement
-      (keyword_save)
-      (keyword_transaction)
-      (identifier)))
-  (statement
-    (update
-      (keyword_update)
-      (relation
+  (batch
+    (statement
+      (begin_transaction_statement
+        (keyword_begin)
+        (keyword_tran)
+        (identifier)))
+    (statement
+      (save_transaction_statement
+        (keyword_save)
+        (keyword_transaction)
+        (identifier)))
+    (statement
+      (update
+        (keyword_update)
         (object_reference
-          (identifier)))
-      (keyword_set)
-      (assignment
-        (field
           (identifier))
-        (assignment_operator)
-        (literal))))
-  (statement
-    (rollback_statement
-      (keyword_rollback)
-      (keyword_tran)
-      (identifier)))
-  (statement
-    (commit_statement
-      (keyword_commit)
-      (keyword_tran)
-      (identifier))))
+        (keyword_set)
+        (assignment
+          (field
+            (identifier))
+          (assignment_operator)
+          (literal))))
+    (statement
+      (rollback_statement
+        (keyword_rollback)
+        (keyword_tran)
+        (identifier)))
+    (statement
+      (commit_statement
+        (keyword_commit)
+        (keyword_tran)
+        (identifier)))))
 
 ================================================================================
 Transaction control inside TRY CATCH
@@ -95,52 +96,52 @@ END CATCH
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (begin_transaction_statement
-      (keyword_begin)
-      (keyword_transaction)))
-  (statement
-    (try_catch_statement
-      (try_block
+  (batch
+    (statement
+      (begin_transaction_statement
         (keyword_begin)
-        (keyword_try)
-        (statement
-          (update
-            (keyword_update)
-            (relation
+        (keyword_transaction)))
+    (statement
+      (try_catch_statement
+        (try_block
+          (keyword_begin)
+          (keyword_try)
+          (statement
+            (update
+              (keyword_update)
               (object_reference
-                (identifier)))
-            (keyword_set)
-            (assignment
-              (field
                 (identifier))
-              (assignment_operator)
-              (literal))))
-        (statement
-          (commit_statement
-            (keyword_commit)))
-        (keyword_end)
-        (keyword_try))
-      (catch_block
-        (keyword_begin)
-        (keyword_catch)
-        (statement
-          (if_statement
-            (keyword_if)
-            (binary_expression
-              (field
-                (identifier))
-              (literal))
-            (statement
-              (rollback_statement
-                (keyword_rollback)
-                (keyword_transaction)))))
-        (statement
-          (commit_statement
-            (keyword_commit)
-            (keyword_work)))
-        (keyword_end)
-        (keyword_catch)))))
+              (keyword_set)
+              (assignment
+                (field
+                  (identifier))
+                (assignment_operator)
+                (literal))))
+          (statement
+            (commit_statement
+              (keyword_commit)))
+          (keyword_end)
+          (keyword_try))
+        (catch_block
+          (keyword_begin)
+          (keyword_catch)
+          (statement
+            (if_statement
+              (keyword_if)
+              (binary_expression
+                (field
+                  (identifier))
+                (literal))
+              (statement
+                (rollback_statement
+                  (keyword_rollback)
+                  (keyword_transaction)))))
+          (statement
+            (commit_statement
+              (keyword_commit)
+              (keyword_work)))
+          (keyword_end)
+          (keyword_catch))))))
 
 ================================================================================
 Transactions without separators
@@ -156,37 +157,38 @@ RETURN @Severity
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (begin_transaction_statement
-      (keyword_begin)
-      (keyword_transaction)))
-  (comment)
-  (statement
-    (set_statement
-      (keyword_set)
-      (object_reference
-        (identifier))
-      (keyword_on)))
-  (statement
-    (begin_transaction_statement
-      (keyword_begin)
-      (keyword_distributed)
-      (keyword_transaction)))
-  (statement
-    (begin_transaction_statement
-      (keyword_begin)
-      (keyword_tran)
-      (identifier)
-      (keyword_with)
-      (keyword_mark)
-      (literal)))
-  (statement
-    (commit_statement
-      (keyword_commit)
-      (keyword_transaction)))
-  (comment)
-  (statement
-    (return_statement
-      (keyword_return)
-      (field
-        (identifier)))))
+  (batch
+    (statement
+      (begin_transaction_statement
+        (keyword_begin)
+        (keyword_transaction)))
+    (comment)
+    (statement
+      (set_statement
+        (keyword_set)
+        (object_reference
+          (identifier))
+        (keyword_on)))
+    (statement
+      (begin_transaction_statement
+        (keyword_begin)
+        (keyword_distributed)
+        (keyword_transaction)))
+    (statement
+      (begin_transaction_statement
+        (keyword_begin)
+        (keyword_tran)
+        (identifier)
+        (keyword_with)
+        (keyword_mark)
+        (literal)))
+    (statement
+      (commit_statement
+        (keyword_commit)
+        (keyword_transaction)))
+    (comment)
+    (statement
+      (return_statement
+        (keyword_return)
+        (field
+          (identifier))))))

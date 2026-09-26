@@ -9,40 +9,41 @@ DROP SYNONYM IF EXISTS dbo.remote_t;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (create_synonym
-      (keyword_create)
-      (keyword_synonym)
-      (object_reference
-        (identifier)
-        (identifier))
-      (keyword_for)
-      (object_reference
-        (identifier)
-        (identifier)
-        (identifier))))
-  (statement
-    (create_synonym
-      (keyword_create)
-      (keyword_synonym)
-      (object_reference
-        (identifier)
-        (identifier))
-      (keyword_for)
-      (object_reference
-        (identifier)
-        (identifier)
-        (identifier)
-        (identifier))))
-  (statement
-    (drop_synonym
-      (keyword_drop)
-      (keyword_synonym)
-      (keyword_if)
-      (keyword_exists)
-      (object_reference
-        (identifier)
-        (identifier)))))
+  (batch
+    (statement
+      (create_synonym
+        (keyword_create)
+        (keyword_synonym)
+        (object_reference
+          (identifier)
+          (identifier))
+        (keyword_for)
+        (object_reference
+          (identifier)
+          (identifier)
+          (identifier))))
+    (statement
+      (create_synonym
+        (keyword_create)
+        (keyword_synonym)
+        (object_reference
+          (identifier)
+          (identifier))
+        (keyword_for)
+        (object_reference
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier))))
+    (statement
+      (drop_synonym
+        (keyword_drop)
+        (keyword_synonym)
+        (keyword_if)
+        (keyword_exists)
+        (object_reference
+          (identifier)
+          (identifier))))))
 
 ================================================================================
 Create, alter and drop sequence
@@ -57,85 +58,86 @@ DROP SEQUENCE IF EXISTS dbo.order_seq, dbo.seq2;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (create_sequence
-      (keyword_create)
-      (keyword_sequence)
-      (object_reference
-        (identifier)
-        (identifier))
-      (sequence_option
-        (keyword_as)
-        (keyword_bigint))
-      (sequence_option
-        (keyword_start)
-        (keyword_with)
-        (literal))
-      (sequence_option
-        (keyword_increment)
-        (keyword_by)
-        (literal))
-      (sequence_option
-        (keyword_minvalue)
-        (literal))
-      (sequence_option
-        (keyword_no)
-        (keyword_maxvalue))
-      (sequence_option
-        (keyword_no)
-        (keyword_cycle))
-      (sequence_option
-        (keyword_cache)
-        (literal))))
-  (statement
-    (create_sequence
-      (keyword_create)
-      (keyword_sequence)
-      (object_reference
-        (identifier)
-        (identifier))))
-  (statement
-    (alter_sequence
-      (keyword_alter)
-      (keyword_sequence)
-      (object_reference
-        (identifier)
-        (identifier))
-      (sequence_option
-        (keyword_restart)
-        (keyword_with)
-        (literal))
-      (sequence_option
-        (keyword_increment)
-        (keyword_by)
-        (unary_expression
-          (literal)))
-      (sequence_option
-        (keyword_no)
-        (keyword_cache))
-      (sequence_option
-        (keyword_cycle))))
-  (statement
-    (alter_sequence
-      (keyword_alter)
-      (keyword_sequence)
-      (object_reference
-        (identifier)
-        (identifier))
-      (sequence_option
-        (keyword_restart))))
-  (statement
-    (drop_sequence
-      (keyword_drop)
-      (keyword_sequence)
-      (keyword_if)
-      (keyword_exists)
-      (object_reference
-        (identifier)
-        (identifier))
-      (object_reference
-        (identifier)
-        (identifier)))))
+  (batch
+    (statement
+      (create_sequence
+        (keyword_create)
+        (keyword_sequence)
+        (object_reference
+          (identifier)
+          (identifier))
+        (sequence_option
+          (keyword_as)
+          (keyword_bigint))
+        (sequence_option
+          (keyword_start)
+          (keyword_with)
+          (literal))
+        (sequence_option
+          (keyword_increment)
+          (keyword_by)
+          (literal))
+        (sequence_option
+          (keyword_minvalue)
+          (literal))
+        (sequence_option
+          (keyword_no)
+          (keyword_maxvalue))
+        (sequence_option
+          (keyword_no)
+          (keyword_cycle))
+        (sequence_option
+          (keyword_cache)
+          (literal))))
+    (statement
+      (create_sequence
+        (keyword_create)
+        (keyword_sequence)
+        (object_reference
+          (identifier)
+          (identifier))))
+    (statement
+      (alter_sequence
+        (keyword_alter)
+        (keyword_sequence)
+        (object_reference
+          (identifier)
+          (identifier))
+        (sequence_option
+          (keyword_restart)
+          (keyword_with)
+          (literal))
+        (sequence_option
+          (keyword_increment)
+          (keyword_by)
+          (unary_expression
+            (literal)))
+        (sequence_option
+          (keyword_no)
+          (keyword_cache))
+        (sequence_option
+          (keyword_cycle))))
+    (statement
+      (alter_sequence
+        (keyword_alter)
+        (keyword_sequence)
+        (object_reference
+          (identifier)
+          (identifier))
+        (sequence_option
+          (keyword_restart))))
+    (statement
+      (drop_sequence
+        (keyword_drop)
+        (keyword_sequence)
+        (keyword_if)
+        (keyword_exists)
+        (object_reference
+          (identifier)
+          (identifier))
+        (object_reference
+          (identifier)
+          (identifier))))))
 
 ================================================================================
 Create and alter database
@@ -145,116 +147,157 @@ CREATE DATABASE hollywood
 CREATE DATABASE sales COLLATE Latin1_General_CI_AS;
 ALTER DATABASE sales SET RECOVERY SIMPLE;
 ALTER DATABASE sales SET READ_ONLY WITH ROLLBACK IMMEDIATE;
+ALTER DATABASE sales SET SINGLE_USER WITH ROLLBACK AFTER 60 SECONDS;
+ALTER DATABASE sales SET SINGLE_USER WITH ROLLBACK AFTER 60;
 ALTER DATABASE sales SET SINGLE_USER WITH NO_WAIT;
 ALTER DATABASE sales SET COMPATIBILITY_LEVEL = 150, AUTO_UPDATE_STATISTICS ON;
 ALTER DATABASE sales SET QUERY_STORE = ON (OPERATION_MODE = READ_WRITE);
 ALTER DATABASE sales MODIFY NAME = sales_archive;
 ALTER DATABASE sales COLLATE Latin1_General_BIN;
 ALTER DATABASE SCOPED CONFIGURATION SET MAXDOP = 4;
+ALTER DATABASE SCOPED CONFIGURATION FOR SECONDARY SET MAXDOP = 4;
 DROP DATABASE IF EXISTS hollywood;
 
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (create_database
-      (keyword_create)
-      (keyword_database)
-      (identifier)))
-  (statement
-    (create_database
-      (keyword_create)
-      (keyword_database)
-      (identifier)
-      (keyword_collate)
-      (identifier)))
-  (statement
-    (alter_database
-      (keyword_alter)
-      (keyword_database)
-      (identifier)
-      (keyword_set)
-      (option
-        (identifier)
-        (identifier))))
-  (statement
-    (alter_database
-      (keyword_alter)
-      (keyword_database)
-      (identifier)
-      (keyword_set)
-      (option
-        (identifier))
-      (keyword_with)
-      (keyword_rollback)
-      (identifier)))
-  (statement
-    (alter_database
-      (keyword_alter)
-      (keyword_database)
-      (identifier)
-      (keyword_set)
-      (option
-        (identifier))
-      (keyword_with)
-      (identifier)))
-  (statement
-    (alter_database
-      (keyword_alter)
-      (keyword_database)
-      (identifier)
-      (keyword_set)
-      (option
-        (identifier)
-        (literal))
-      (option
-        (identifier)
-        (keyword_on))))
-  (statement
-    (alter_database
-      (keyword_alter)
-      (keyword_database)
-      (identifier)
-      (keyword_set)
-      (option
-        (identifier)
-        (keyword_on)
+  (batch
+    (statement
+      (create_database
+        (keyword_create)
+        (keyword_database)
+        name: (identifier)))
+    (statement
+      (create_database
+        (keyword_create)
+        (keyword_database)
+        name: (identifier)
+        (keyword_collate)
+        (identifier)))
+    (statement
+      (alter_database
+        (keyword_alter)
+        (keyword_database)
+        name: (identifier)
+        (keyword_set)
         (option
-          (identifier)
-          (identifier)))))
-  (statement
-    (alter_database
-      (keyword_alter)
-      (keyword_database)
-      (identifier)
-      (keyword_modify)
-      (option
-        (identifier)
-        (identifier))))
-  (statement
-    (alter_database
-      (keyword_alter)
-      (keyword_database)
-      (identifier)
-      (keyword_collate)
-      (identifier)))
-  (statement
-    (alter_database
-      (keyword_alter)
-      (keyword_database)
-      (identifier)
-      (identifier)
-      (keyword_set)
-      (option
-        (identifier)
-        (literal))))
-  (statement
-    (drop_database
-      (keyword_drop)
-      (keyword_database)
-      (keyword_if)
-      (keyword_exists)
-      (identifier))))
+          name: (identifier)
+          value: (identifier))))
+    (statement
+      (alter_database
+        (keyword_alter)
+        (keyword_database)
+        name: (identifier)
+        (keyword_set)
+        (option
+          name: (identifier))
+        (keyword_with)
+        (keyword_rollback)
+        (identifier)))
+    (statement
+      (alter_database
+        (keyword_alter)
+        (keyword_database)
+        name: (identifier)
+        (keyword_set)
+        (option
+          name: (identifier))
+        (keyword_with)
+        (keyword_rollback)
+        (keyword_after)
+        seconds: (literal)
+        (keyword_seconds)))
+    (statement
+      (alter_database
+        (keyword_alter)
+        (keyword_database)
+        name: (identifier)
+        (keyword_set)
+        (option
+          name: (identifier))
+        (keyword_with)
+        (keyword_rollback)
+        (keyword_after)
+        seconds: (literal)))
+    (statement
+      (alter_database
+        (keyword_alter)
+        (keyword_database)
+        name: (identifier)
+        (keyword_set)
+        (option
+          name: (identifier))
+        (keyword_with)
+        (identifier)))
+    (statement
+      (alter_database
+        (keyword_alter)
+        (keyword_database)
+        name: (identifier)
+        (keyword_set)
+        (option
+          name: (identifier)
+          value: (literal))
+        (option
+          name: (identifier)
+          value: (keyword_on))))
+    (statement
+      (alter_database
+        (keyword_alter)
+        (keyword_database)
+        name: (identifier)
+        (keyword_set)
+        (option
+          name: (identifier)
+          value: (keyword_on)
+          value: (option
+            name: (identifier)
+            value: (identifier)))))
+    (statement
+      (alter_database
+        (keyword_alter)
+        (keyword_database)
+        name: (identifier)
+        (keyword_modify)
+        (option
+          name: (identifier)
+          value: (identifier))))
+    (statement
+      (alter_database
+        (keyword_alter)
+        (keyword_database)
+        name: (identifier)
+        (keyword_collate)
+        (identifier)))
+    (statement
+      (alter_database
+        (keyword_alter)
+        (keyword_database)
+        (keyword_scoped)
+        (keyword_configuration)
+        (keyword_set)
+        (option
+          name: (identifier)
+          value: (literal))))
+    (statement
+      (alter_database
+        (keyword_alter)
+        (keyword_database)
+        (keyword_scoped)
+        (keyword_configuration)
+        (keyword_for)
+        (keyword_secondary)
+        (keyword_set)
+        (option
+          name: (identifier)
+          value: (literal))))
+    (statement
+      (drop_database
+        (keyword_drop)
+        (keyword_database)
+        (keyword_if)
+        (keyword_exists)
+        name: (identifier)))))
 
 ================================================================================
 Full-text catalog, route, audit and assembly
@@ -284,133 +327,134 @@ DROP ASSEMBLY IF EXISTS asm2 WITH NO DEPENDENTS;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (create_fulltext_catalog
-      (keyword_create)
-      (keyword_fulltext)
-      (keyword_catalog)
-      (identifier)
-      (with_clause
-        (keyword_with)
-        (option
-          (identifier)
-          (keyword_on)))))
-  (statement
-    (create_fulltext_catalog
-      (keyword_create)
-      (keyword_fulltext)
-      (keyword_catalog)
-      (identifier)
-      (keyword_on)
-      (identifier)
-      (identifier)
-      (keyword_as)
-      (keyword_default)
-      (keyword_authorization)
-      (identifier)))
-  (statement
-    (create_route
-      (keyword_create)
-      (keyword_route)
-      (identifier)
-      (with_clause
-        (keyword_with)
-        (option
-          (identifier)
-          (literal)))))
-  (statement
-    (create_server_audit
-      (keyword_create)
-      (keyword_server)
-      (keyword_audit)
-      (identifier)
-      (keyword_to)
-      (identifier)
-      (option
+  (batch
+    (statement
+      (create_fulltext_catalog
+        (keyword_create)
+        (keyword_fulltext)
+        (keyword_catalog)
         (identifier)
-        (literal))
-      (option
+        (with_clause
+          (keyword_with)
+          (option
+            (identifier)
+            (keyword_on)))))
+    (statement
+      (create_fulltext_catalog
+        (keyword_create)
+        (keyword_fulltext)
+        (keyword_catalog)
         (identifier)
-        (literal)
-        (identifier))
-      (option
+        (keyword_on)
         (identifier)
-        (literal))
-      (option
         (identifier)
-        (keyword_on))
-      (with_options
-        (keyword_with)
+        (keyword_as)
+        (keyword_default)
+        (keyword_authorization)
+        (identifier)))
+    (statement
+      (create_route
+        (keyword_create)
+        (keyword_route)
+        (identifier)
+        (with_clause
+          (keyword_with)
+          (option
+            (identifier)
+            (literal)))))
+    (statement
+      (create_server_audit
+        (keyword_create)
+        (keyword_server)
+        (keyword_audit)
+        (identifier)
+        (keyword_to)
+        (identifier)
         (option
           (identifier)
           (literal))
         (option
           (identifier)
+          (literal)
           (identifier))
         (option
           (identifier)
-          (literal)))))
-  (statement
-    (alter_server_audit
-      (keyword_alter)
-      (keyword_server)
-      (keyword_audit)
-      (identifier)
-      (with_options
-        (keyword_with)
+          (literal))
         (option
           (identifier)
-          (keyword_on)))))
-  (statement
-    (create_server_audit
-      (keyword_create)
-      (keyword_server)
-      (keyword_audit)
-      (identifier)
-      (keyword_to)
-      (identifier)
-      (where
-        (keyword_where)
-        (binary_expression
-          (field
+          (keyword_on))
+        (with_options
+          (keyword_with)
+          (option
+            (identifier)
+            (literal))
+          (option
+            (identifier)
             (identifier))
-          (literal)))))
-  (statement
-    (create_assembly
-      (keyword_create)
-      (keyword_assembly)
-      (identifier)
-      (keyword_from)
-      (literal)
-      (with_clause
+          (option
+            (identifier)
+            (literal)))))
+    (statement
+      (alter_server_audit
+        (keyword_alter)
+        (keyword_server)
+        (keyword_audit)
+        (identifier)
+        (with_options
+          (keyword_with)
+          (option
+            (identifier)
+            (keyword_on)))))
+    (statement
+      (create_server_audit
+        (keyword_create)
+        (keyword_server)
+        (keyword_audit)
+        (identifier)
+        (keyword_to)
+        (identifier)
+        (where
+          (keyword_where)
+          (binary_expression
+            (field
+              (identifier))
+            (literal)))))
+    (statement
+      (create_assembly
+        (keyword_create)
+        (keyword_assembly)
+        (identifier)
+        (keyword_from)
+        (literal)
+        (with_clause
+          (keyword_with)
+          (option
+            (identifier)
+            (identifier)))))
+    (statement
+      (create_assembly
+        (keyword_create)
+        (keyword_assembly)
+        (identifier)
+        (keyword_authorization)
+        (identifier)
+        (keyword_from)
+        (literal)
+        (with_clause
+          (keyword_with)
+          (option
+            (identifier)
+            (identifier)))))
+    (statement
+      (drop_assembly
+        (keyword_drop)
+        (keyword_assembly)
+        (keyword_if)
+        (keyword_exists)
+        (identifier)
         (keyword_with)
-        (option
-          (identifier)
-          (identifier)))))
-  (statement
-    (create_assembly
-      (keyword_create)
-      (keyword_assembly)
-      (identifier)
-      (keyword_authorization)
-      (identifier)
-      (keyword_from)
-      (literal)
-      (with_clause
-        (keyword_with)
-        (option
-          (identifier)
-          (identifier)))))
-  (statement
-    (drop_assembly
-      (keyword_drop)
-      (keyword_assembly)
-      (keyword_if)
-      (keyword_exists)
-      (identifier)
-      (keyword_with)
-      (keyword_no)
-      (identifier))))
+        (keyword_no)
+        (identifier)))))
 
 ================================================================================
 DBCC and RECONFIGURE
@@ -426,44 +470,45 @@ RECONFIGURE
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (dbcc_statement
-      (keyword_dbcc)
-      (identifier)))
-  (statement
-    (dbcc_statement
-      (keyword_dbcc)
-      (identifier)
-      (literal)
-      (field
-        (identifier))
-      (with_clause
-        (keyword_with)
-        (option
+  (batch
+    (statement
+      (dbcc_statement
+        (keyword_dbcc)
+        (identifier)))
+    (statement
+      (dbcc_statement
+        (keyword_dbcc)
+        (identifier)
+        (literal)
+        (field
           (identifier))
-        (option
-          (identifier)))))
-  (statement
-    (dbcc_statement
-      (keyword_dbcc)
-      (identifier)))
-  (statement
-    (execute_statement
-      (keyword_exec)
-      (object_reference
-        (identifier))
-      (exec_argument
-        (literal))
-      (exec_argument
-        (literal))))
-  (statement
-    (reconfigure_statement
-      (keyword_reconfigure)
-      (keyword_with)
-      (keyword_override)))
-  (statement
-    (reconfigure_statement
-      (keyword_reconfigure))))
+        (with_clause
+          (keyword_with)
+          (option
+            (identifier))
+          (option
+            (identifier)))))
+    (statement
+      (dbcc_statement
+        (keyword_dbcc)
+        (identifier)))
+    (statement
+      (execute_statement
+        (keyword_exec)
+        (object_reference
+          (identifier))
+        (exec_argument
+          (literal))
+        (exec_argument
+          (literal))))
+    (statement
+      (reconfigure_statement
+        (keyword_reconfigure)
+        (keyword_with)
+        (keyword_override)))
+    (statement
+      (reconfigure_statement
+        (keyword_reconfigure)))))
 
 ================================================================================
 Use database
@@ -475,16 +520,17 @@ USE [AppDB]
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (use_statement
-      (keyword_use)
-      (object_reference
-        (identifier))))
-  (statement
-    (use_statement
-      (keyword_use)
-      (object_reference
-        (identifier)))))
+  (batch
+    (statement
+      (use_statement
+        (keyword_use)
+        (object_reference
+          (identifier))))
+    (statement
+      (use_statement
+        (keyword_use)
+        (object_reference
+          (identifier))))))
 
 ================================================================================
 Drop statistics
@@ -495,18 +541,19 @@ DROP STATISTICS dbo.t.st_a, dbo.t.st_b;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (drop_statistics
-      (keyword_drop)
-      (keyword_statistics)
-      (object_reference
-        (identifier)
-        (identifier)
-        (identifier))
-      (object_reference
-        (identifier)
-        (identifier)
-        (identifier)))))
+  (batch
+    (statement
+      (drop_statistics
+        (keyword_drop)
+        (keyword_statistics)
+        (object_reference
+          (identifier)
+          (identifier)
+          (identifier))
+        (object_reference
+          (identifier)
+          (identifier)
+          (identifier))))))
 
 ================================================================================
 KILL, SETUSER and BACKUP
@@ -522,52 +569,53 @@ BACKUP LOG MyDb TO MyDevice;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (kill_statement
-      (keyword_kill)
-      (literal)
-      (keyword_with)
-      (identifier)))
-  (statement
-    (kill_statement
-      (keyword_kill)
-      (literal)))
-  (statement
-    (setuser_statement
-      (keyword_setuser)
-      (literal)
-      (keyword_with)
-      (identifier)))
-  (statement
-    (setuser_statement
-      (keyword_setuser)))
-  (statement
-    (backup_statement
-      (keyword_backup)
-      (keyword_database)
-      (identifier)
-      (keyword_to)
-      (option
-        (identifier)
-        (literal))
-      (option
-        (identifier)
-        (literal))
-      (with_clause
+  (batch
+    (statement
+      (kill_statement
+        (keyword_kill)
+        (literal)
         (keyword_with)
+        (identifier)))
+    (statement
+      (kill_statement
+        (keyword_kill)
+        (literal)))
+    (statement
+      (setuser_statement
+        (keyword_setuser)
+        (literal)
+        (keyword_with)
+        (identifier)))
+    (statement
+      (setuser_statement
+        (keyword_setuser)))
+    (statement
+      (backup_statement
+        (keyword_backup)
+        (keyword_database)
+        (identifier)
+        (keyword_to)
         (option
           (identifier)
           (literal))
         (option
-          (identifier)))))
-  (statement
-    (backup_statement
-      (keyword_backup)
-      (keyword_log)
-      (identifier)
-      (keyword_to)
-      (option
-        (identifier)))))
+          (identifier)
+          (literal))
+        (with_clause
+          (keyword_with)
+          (option
+            (identifier)
+            (literal))
+          (option
+            (identifier)))))
+    (statement
+      (backup_statement
+        (keyword_backup)
+        (keyword_log)
+        (identifier)
+        (keyword_to)
+        (option
+          (identifier))))))
 
 ================================================================================
 The deprecated text-pointer statements READTEXT, WRITETEXT and UPDATETEXT
@@ -581,64 +629,65 @@ UPDATETEXT dbo.Customer.Notes @ptrval NULL NULL dbo.Customer.Notes @src;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (readtext_statement
-      (keyword_readtext)
-      (object_reference
-        (identifier)
-        (identifier)
-        (identifier))
-      (field
-        (identifier))
-      (literal)
-      (literal)
-      (keyword_holdlock)))
-  (statement
-    (writetext_statement
-      (keyword_writetext)
-      (object_reference
-        (identifier)
-        (identifier)
-        (identifier))
-      (field
-        (identifier))
-      (keyword_with)
-      (keyword_log)
-      (literal)))
-  (statement
-    (updatetext_statement
-      (keyword_updatetext)
-      (object_reference
-        (identifier)
-        (identifier)
-        (identifier))
-      (field
-        (identifier))
-      (field
-        (identifier))
-      (field
-        (identifier))
-      (literal)))
-  (statement
-    (updatetext_statement
-      (keyword_updatetext)
-      (object_reference
-        (identifier)
-        (identifier)
-        (identifier))
-      (field
-        (identifier))
-      (literal
-        (keyword_null))
-      (literal
-        (keyword_null))
-      (field
+  (batch
+    (statement
+      (readtext_statement
+        (keyword_readtext)
         (object_reference
           (identifier)
+          (identifier)
           (identifier))
-        (identifier))
-      (field
-        (identifier)))))
+        (field
+          (identifier))
+        (literal)
+        (literal)
+        (keyword_holdlock)))
+    (statement
+      (writetext_statement
+        (keyword_writetext)
+        (object_reference
+          (identifier)
+          (identifier)
+          (identifier))
+        (field
+          (identifier))
+        (keyword_with)
+        (keyword_log)
+        (literal)))
+    (statement
+      (updatetext_statement
+        (keyword_updatetext)
+        (object_reference
+          (identifier)
+          (identifier)
+          (identifier))
+        (field
+          (identifier))
+        (field
+          (identifier))
+        (field
+          (identifier))
+        (literal)))
+    (statement
+      (updatetext_statement
+        (keyword_updatetext)
+        (object_reference
+          (identifier)
+          (identifier)
+          (identifier))
+        (field
+          (identifier))
+        (literal
+          (keyword_null))
+        (literal
+          (keyword_null))
+        (field
+          (object_reference
+            (identifier)
+            (identifier))
+          (identifier))
+        (field
+          (identifier))))))
 
 ================================================================================
 CREATE EXTERNAL DATA SOURCE, FILE FORMAT and TABLE
@@ -652,65 +701,66 @@ WITH (DATA_SOURCE = mydatasource, LOCATION = '/webdata/employee.tbl', FILE_FORMA
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (create_external_data_source
-      (keyword_create)
-      (keyword_external)
-      (keyword_data)
-      (keyword_source)
-      (identifier)
-      (with_options
-        (keyword_with)
-        (option
-          (identifier)
-          (identifier))
-        (option
-          (identifier)
-          (literal)))))
-  (statement
-    (create_external_file_format
-      (keyword_create)
-      (keyword_external)
-      (keyword_file)
-      (keyword_format)
-      (identifier)
-      (with_options
-        (keyword_with)
-        (option
-          (identifier)
-          (identifier))
-        (option
-          (identifier)
+  (batch
+    (statement
+      (create_external_data_source
+        (keyword_create)
+        (keyword_external)
+        (keyword_data)
+        (keyword_source)
+        (identifier)
+        (with_options
+          (keyword_with)
           (option
             (identifier)
-            (literal))))))
-  (statement
-    (create_table
-      (keyword_create)
-      (keyword_external)
-      (keyword_table)
-      (object_reference
-        (identifier))
-      (column_definitions
-        (column_definition
-          (identifier)
-          (varchar
-            (keyword_varchar)
-            (literal)))
-        (column_definition
-          (identifier)
-          (keyword_date)))
-      (with_options
-        (keyword_with)
-        (option
-          (identifier)
+            (identifier))
+          (option
+            (identifier)
+            (literal)))))
+    (statement
+      (create_external_file_format
+        (keyword_create)
+        (keyword_external)
+        (keyword_file)
+        (keyword_format)
+        (identifier)
+        (with_options
+          (keyword_with)
+          (option
+            (identifier)
+            (identifier))
+          (option
+            (identifier)
+            (option
+              (identifier)
+              (literal))))))
+    (statement
+      (create_table
+        (keyword_create)
+        (keyword_external)
+        (keyword_table)
+        (object_reference
           (identifier))
-        (option
-          (identifier)
-          (literal))
-        (option
-          (identifier)
-          (identifier))))))
+        (column_definitions
+          (column_definition
+            (identifier)
+            (varchar
+              (keyword_varchar)
+              (literal)))
+          (column_definition
+            (identifier)
+            (keyword_date)))
+        (with_options
+          (keyword_with)
+          (option
+            (identifier)
+            (identifier))
+          (option
+            (identifier)
+            (literal))
+          (option
+            (identifier)
+            (identifier)))))))
 
 ================================================================================
 CREATE STATISTICS and an ordered clustered columnstore index (2022)
@@ -722,42 +772,43 @@ CREATE CLUSTERED COLUMNSTORE INDEX cci ON Sales.OrderLines ORDER (SHIPDATE, PROD
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (create_statistics
-      (keyword_create)
-      (keyword_statistics)
-      (identifier)
-      (keyword_on)
-      (object_reference
+  (batch
+    (statement
+      (create_statistics
+        (keyword_create)
+        (keyword_statistics)
         (identifier)
-        (identifier))
-      (identifier)
-      (identifier)
-      (with_clause
-        (keyword_with)
-        (option
+        (keyword_on)
+        (object_reference
           (identifier)
-          (literal)
-          (identifier)))))
-  (statement
-    (create_index
-      (keyword_create)
-      (keyword_clustered)
-      (identifier)
-      (keyword_index)
-      (identifier)
-      (keyword_on)
-      (object_reference
+          (identifier))
         (identifier)
-        (identifier))
-      (keyword_order)
-      (identifier)
-      (identifier)
-      (with_options
-        (keyword_with)
-        (option
+        (identifier)
+        (with_clause
+          (keyword_with)
+          (option
+            (identifier)
+            (literal)
+            (identifier)))))
+    (statement
+      (create_index
+        (keyword_create)
+        (keyword_clustered)
+        (keyword_columnstore)
+        (keyword_index)
+        (identifier)
+        (keyword_on)
+        (object_reference
           (identifier)
-          (keyword_on))))))
+          (identifier))
+        (keyword_order)
+        (identifier)
+        (identifier)
+        (with_options
+          (keyword_with)
+          (option
+            (identifier)
+            (keyword_on)))))))
 
 ================================================================================
 DBCC with a parenthesized sub-option list
@@ -768,22 +819,23 @@ DBCC SHRINKDATABASE ([AdventureWorks2025], 20) WITH WAIT_AT_LOW_PRIORITY (ABORT_
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (dbcc_statement
-      (keyword_dbcc)
-      (identifier)
-      (field
-        (identifier))
-      (literal)
-      (with_clause
-        (keyword_with)
-        (option
-          (identifier)
+  (batch
+    (statement
+      (dbcc_statement
+        (keyword_dbcc)
+        (identifier)
+        (field
+          (identifier))
+        (literal)
+        (with_clause
+          (keyword_with)
           (option
             (identifier)
-            (identifier)))
-        (option
-          (identifier))))))
+            (option
+              (identifier)
+              (identifier)))
+          (option
+            (identifier)))))))
 
 ================================================================================
 BULK INSERT
@@ -804,45 +856,46 @@ BULK INSERT dbo.Orders FROM 'C:\data\orders.dat';
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (bulk_insert_statement
-      (keyword_bulk)
-      (keyword_insert)
-      (object_reference
-        (identifier)
-        (identifier))
-      (keyword_from)
-      (literal)
-      (with_options
-        (keyword_with)
-        (option
+  (batch
+    (statement
+      (bulk_insert_statement
+        (keyword_bulk)
+        (keyword_insert)
+        (object_reference
           (identifier)
-          (literal))
-        (option
-          (identifier)
-          (literal))
-        (option
-          (identifier)
-          (literal))
-        (option
-          (identifier)
-          (literal))
-        (option
           (identifier))
-        (option
-          (identifier)
+        (keyword_from)
+        (literal)
+        (with_options
+          (keyword_with)
           (option
             (identifier)
-            (identifier))))))
-  (statement
-    (bulk_insert_statement
-      (keyword_bulk)
-      (keyword_insert)
-      (object_reference
-        (identifier)
-        (identifier))
-      (keyword_from)
-      (literal))))
+            (literal))
+          (option
+            (identifier)
+            (literal))
+          (option
+            (identifier)
+            (literal))
+          (option
+            (identifier)
+            (literal))
+          (option
+            (identifier))
+          (option
+            (identifier)
+            (option
+              (identifier)
+              (identifier))))))
+    (statement
+      (bulk_insert_statement
+        (keyword_bulk)
+        (keyword_insert)
+        (object_reference
+          (identifier)
+          (identifier))
+        (keyword_from)
+        (literal)))))
 
 ================================================================================
 CREATE, ALTER and DROP EVENT SESSION
@@ -875,109 +928,110 @@ DROP EVENT SESSION [Track_Deadlocks] ON SERVER;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (create_event_session
-      (keyword_create)
-      (keyword_event)
-      (keyword_session)
-      (identifier)
-      (keyword_on)
-      (keyword_server)
-      (keyword_add)
-      (keyword_event)
-      (event_session_event
-        (object_reference
-          (identifier)
-          (identifier))
-        (keyword_action)
-        (object_reference
-          (identifier)
-          (identifier))
-        (object_reference
-          (identifier)
-          (identifier))
-        (where
-          (keyword_where)
-          (parenthesized_expression
-            (binary_expression
-              (field
-                (object_reference
+  (batch
+    (statement
+      (create_event_session
+        (keyword_create)
+        (keyword_event)
+        (keyword_session)
+        (identifier)
+        (keyword_on)
+        (keyword_server)
+        (keyword_add)
+        (keyword_event)
+        (event_session_event
+          (object_reference
+            (identifier)
+            (identifier))
+          (keyword_action)
+          (object_reference
+            (identifier)
+            (identifier))
+          (object_reference
+            (identifier)
+            (identifier))
+          (where
+            (keyword_where)
+            (parenthesized_expression
+              (binary_expression
+                (field
+                  (object_reference
+                    (identifier))
                   (identifier))
-                (identifier))
-              (literal)))))
-      (keyword_add)
-      (keyword_event)
-      (event_session_event
-        (object_reference
-          (identifier)
-          (identifier)))
-      (keyword_add)
-      (keyword_target)
-      (event_session_target
-        (object_reference
-          (identifier)
-          (identifier))
-        (keyword_set)
-        (option
-          (identifier)
-          (literal)))
-      (with_options
-        (keyword_with)
-        (option
-          (identifier)
-          (literal)
-          (identifier))
-        (option
-          (identifier)
-          (identifier))
-        (option
-          (identifier)
-          (literal)
-          (identifier))
-        (option
-          (identifier)
-          (keyword_on))
-        (option
-          (identifier)
-          (keyword_off)))))
-  (statement
-    (alter_event_session
-      (keyword_alter)
-      (keyword_event)
-      (keyword_session)
-      (identifier)
-      (keyword_on)
-      (keyword_server)
-      (keyword_add)
-      (keyword_event)
-      (event_session_event
-        (object_reference
-          (identifier)
-          (identifier)))
-      (keyword_drop)
-      (keyword_event)
-      (object_reference
+                (literal)))))
+        (keyword_add)
+        (keyword_event)
+        (event_session_event
+          (object_reference
+            (identifier)
+            (identifier)))
+        (keyword_add)
+        (keyword_target)
+        (event_session_target
+          (object_reference
+            (identifier)
+            (identifier))
+          (keyword_set)
+          (option
+            (identifier)
+            (literal)))
+        (with_options
+          (keyword_with)
+          (option
+            (identifier)
+            (literal)
+            (identifier))
+          (option
+            (identifier)
+            (identifier))
+          (option
+            (identifier)
+            (literal)
+            (identifier))
+          (option
+            (identifier)
+            (keyword_on))
+          (option
+            (identifier)
+            (keyword_off)))))
+    (statement
+      (alter_event_session
+        (keyword_alter)
+        (keyword_event)
+        (keyword_session)
         (identifier)
-        (identifier))))
-  (statement
-    (alter_event_session
-      (keyword_alter)
-      (keyword_event)
-      (keyword_session)
-      (identifier)
-      (keyword_on)
-      (keyword_server)
-      (option
+        (keyword_on)
+        (keyword_server)
+        (keyword_add)
+        (keyword_event)
+        (event_session_event
+          (object_reference
+            (identifier)
+            (identifier)))
+        (keyword_drop)
+        (keyword_event)
+        (object_reference
+          (identifier)
+          (identifier))))
+    (statement
+      (alter_event_session
+        (keyword_alter)
+        (keyword_event)
+        (keyword_session)
         (identifier)
-        (identifier))))
-  (statement
-    (drop_event_session
-      (keyword_drop)
-      (keyword_event)
-      (keyword_session)
-      (identifier)
-      (keyword_on)
-      (keyword_server))))
+        (keyword_on)
+        (keyword_server)
+        (option
+          (identifier)
+          (identifier))))
+    (statement
+      (drop_event_session
+        (keyword_drop)
+        (keyword_event)
+        (keyword_session)
+        (identifier)
+        (keyword_on)
+        (keyword_server)))))
 
 ================================================================================
 XML schema collection: create, alter, drop
@@ -992,55 +1046,56 @@ DROP XML SCHEMA COLLECTION sc2;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (create_xml_schema_collection
-      (keyword_create)
-      (keyword_xml)
-      (keyword_schema)
-      (keyword_collection)
-      (object_reference
-        (identifier)
-        (identifier))
-      (keyword_as)
-      (literal)))
-  (statement
-    (create_xml_schema_collection
-      (keyword_create)
-      (keyword_xml)
-      (keyword_schema)
-      (keyword_collection)
-      (object_reference
-        (identifier))
-      (keyword_as)
-      (field
-        (identifier))))
-  (statement
-    (alter_xml_schema_collection
-      (keyword_alter)
-      (keyword_xml)
-      (keyword_schema)
-      (keyword_collection)
-      (object_reference
-        (identifier)
-        (identifier))
-      (keyword_add)
-      (literal)))
-  (statement
-    (drop_xml_schema_collection
-      (keyword_drop)
-      (keyword_xml)
-      (keyword_schema)
-      (keyword_collection)
-      (keyword_if)
-      (keyword_exists)
-      (object_reference
-        (identifier)
-        (identifier))))
-  (statement
-    (drop_xml_schema_collection
-      (keyword_drop)
-      (keyword_xml)
-      (keyword_schema)
-      (keyword_collection)
-      (object_reference
-        (identifier)))))
+  (batch
+    (statement
+      (create_xml_schema_collection
+        (keyword_create)
+        (keyword_xml)
+        (keyword_schema)
+        (keyword_collection)
+        (object_reference
+          (identifier)
+          (identifier))
+        (keyword_as)
+        (literal)))
+    (statement
+      (create_xml_schema_collection
+        (keyword_create)
+        (keyword_xml)
+        (keyword_schema)
+        (keyword_collection)
+        (object_reference
+          (identifier))
+        (keyword_as)
+        (field
+          (identifier))))
+    (statement
+      (alter_xml_schema_collection
+        (keyword_alter)
+        (keyword_xml)
+        (keyword_schema)
+        (keyword_collection)
+        (object_reference
+          (identifier)
+          (identifier))
+        (keyword_add)
+        (literal)))
+    (statement
+      (drop_xml_schema_collection
+        (keyword_drop)
+        (keyword_xml)
+        (keyword_schema)
+        (keyword_collection)
+        (keyword_if)
+        (keyword_exists)
+        (object_reference
+          (identifier)
+          (identifier))))
+    (statement
+      (drop_xml_schema_collection
+        (keyword_drop)
+        (keyword_xml)
+        (keyword_schema)
+        (keyword_collection)
+        (object_reference
+          (identifier))))))

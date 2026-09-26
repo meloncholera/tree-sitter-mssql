@@ -11,39 +11,40 @@ VALUES ('foo', 123, '2020'), ('baz', 124, '2021');
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (insert
-      (keyword_insert)
-      (keyword_into)
-      (object_reference
-        (identifier))
-      (keyword_values)
-      (list
-        (literal)
-        (literal)
-        (literal))))
-  (statement
-    (insert
-      (keyword_insert)
-      (keyword_into)
-      (object_reference
-        (identifier))
-      (list
-        (column
+  (batch
+    (statement
+      (insert
+        (keyword_insert)
+        (keyword_into)
+        (object_reference
           (identifier))
-        (column
+        (keyword_values)
+        (list
+          (literal)
+          (literal)
+          (literal))))
+    (statement
+      (insert
+        (keyword_insert)
+        (keyword_into)
+        (object_reference
           (identifier))
-        (column
-          (identifier)))
-      (keyword_values)
-      (list
-        (literal)
-        (literal)
-        (literal))
-      (list
-        (literal)
-        (literal)
-        (literal)))))
+        (list
+          (column
+            (identifier))
+          (column
+            (identifier))
+          (column
+            (identifier)))
+        (keyword_values)
+        (list
+          (literal)
+          (literal)
+          (literal))
+        (list
+          (literal)
+          (literal)
+          (literal))))))
 
 ================================================================================
 Insert without INTO
@@ -54,30 +55,31 @@ INSERT my_table (id, name) SELECT id, name FROM inserted;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (insert
-      (keyword_insert)
-      (object_reference
-        (identifier))
-      (list
-        (column
+  (batch
+    (statement
+      (insert
+        (keyword_insert)
+        (object_reference
           (identifier))
-        (column
-          (identifier)))
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (identifier)))
-          (term
-            (field
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))))
+        (list
+          (column
+            (identifier))
+          (column
+            (identifier)))
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))))
 
 ================================================================================
 Insert select
@@ -94,63 +96,66 @@ INSERT INTO some_table (field)
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (insert
-      (keyword_insert)
-      (keyword_into)
-      (object_reference
-        (identifier))
-      (list
-        (column
+  (batch
+    (statement
+      (insert
+        (keyword_insert)
+        (keyword_into)
+        (object_reference
           (identifier))
-        (column
-          (identifier))
-        (column
-          (identifier)))
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (identifier)))
-          (term
-            (field
-              (identifier)))
-          (term
-            (field
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
-      (where
-        (keyword_where)
-        (binary_expression
-          (field
+        (list
+          (column
             (identifier))
-          (literal)))))
-  (statement
-    (insert
-      (keyword_insert)
-      (keyword_into)
-      (object_reference
-        (identifier))
-      (list
-        (column
-          (identifier)))
-      (set_operation
+          (column
+            (identifier))
+          (column
+            (identifier)))
         (select
           (keyword_select)
           (select_expression
             (term
-              (literal))))
-        (keyword_union)
-        (select
-          (keyword_select)
-          (select_expression
+              (field
+                (identifier)))
             (term
-              (literal))))))))
+              (field
+                (identifier)))
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))
+        (where
+          (keyword_where)
+          (binary_expression
+            (field
+              (identifier))
+            (literal)))))
+    (statement
+      (insert
+        (keyword_insert)
+        (keyword_into)
+        (object_reference
+          (identifier))
+        (list
+          (column
+            (identifier)))
+        (set_operation
+          (query_specification
+            (select
+              (keyword_select)
+              (select_expression
+                (term
+                  (literal)))))
+          (keyword_union)
+          (query_specification
+            (select
+              (keyword_select)
+              (select_expression
+                (term
+                  (literal))))))))))
 
 ================================================================================
 Insert into a table variable and a temp table
@@ -163,47 +168,48 @@ INSERT @t VALUES (1);
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (insert
-      (keyword_insert)
-      (keyword_into)
-      (object_reference
-        (identifier))
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
+  (batch
+    (statement
+      (insert
+        (keyword_insert)
+        (keyword_into)
+        (object_reference
+          (identifier))
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier)))
+          (table_hint
+            (keyword_with)
+            (table_hint_item
+              (identifier))))))
+    (statement
+      (insert
+        (keyword_insert)
+        (keyword_into)
+        (object_reference
+          (identifier))
+        (list
+          (column
             (identifier)))
-        (table_hint
-          (keyword_with)
-          (table_hint_item
-            (identifier))))))
-  (statement
-    (insert
-      (keyword_insert)
-      (keyword_into)
-      (object_reference
-        (identifier))
-      (list
-        (column
-          (identifier)))
-      (keyword_values)
-      (list
-        (literal))))
-  (statement
-    (insert
-      (keyword_insert)
-      (object_reference
-        (identifier))
-      (keyword_values)
-      (list
-        (literal)))))
+        (keyword_values)
+        (list
+          (literal))))
+    (statement
+      (insert
+        (keyword_insert)
+        (object_reference
+          (identifier))
+        (keyword_values)
+        (list
+          (literal))))))
 
 ================================================================================
 Insert with TOP and a table hint
@@ -214,33 +220,34 @@ INSERT TOP (10) INTO my_table WITH (TABLOCK) (a) SELECT a FROM src;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (insert
-      (keyword_insert)
-      (top_clause
-        (keyword_top)
-        (literal))
-      (keyword_into)
-      (object_reference
-        (identifier))
-      (table_hint
-        (keyword_with)
-        (table_hint_item
-          (identifier)))
-      (list
-        (column
-          (identifier)))
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))))
+  (batch
+    (statement
+      (insert
+        (keyword_insert)
+        (top_clause
+          (keyword_top)
+          (literal))
+        (keyword_into)
+        (object_reference
+          (identifier))
+        (table_hint
+          (keyword_with)
+          (table_hint_item
+            (identifier)))
+        (list
+          (column
+            (identifier)))
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))))
 
 ================================================================================
 Insert with OUTPUT
@@ -255,61 +262,62 @@ INSERT INTO my_table (a) OUTPUT inserted.* SELECT a FROM src;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (insert
-      (keyword_insert)
-      (keyword_into)
-      (object_reference
-        (identifier))
-      (list
-        (column
-          (identifier)))
-      (output_clause
-        (keyword_output)
-        (term
-          (field
-            (object_reference
-              (identifier))
-            (identifier)))
-        (term
-          (field
-            (object_reference
-              (identifier))
-            (identifier)))
+  (batch
+    (statement
+      (insert
+        (keyword_insert)
         (keyword_into)
         (object_reference
           (identifier))
-        (identifier)
-        (identifier))
-      (keyword_values)
-      (list
-        (literal))))
-  (statement
-    (insert
-      (keyword_insert)
-      (keyword_into)
-      (object_reference
-        (identifier))
-      (list
-        (column
-          (identifier)))
-      (output_clause
-        (keyword_output)
-        (term
-          (all_fields
-            (object_reference
-              (identifier)))))
-      (select
-        (keyword_select)
-        (select_expression
+        (list
+          (column
+            (identifier)))
+        (output_clause
+          (keyword_output)
           (term
             (field
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
+              (object_reference
+                (identifier))
+              (identifier)))
+          (term
+            (field
+              (object_reference
+                (identifier))
+              (identifier)))
+          (keyword_into)
           (object_reference
-            (identifier)))))))
+            (identifier))
+          (identifier)
+          (identifier))
+        (keyword_values)
+        (list
+          (literal))))
+    (statement
+      (insert
+        (keyword_insert)
+        (keyword_into)
+        (object_reference
+          (identifier))
+        (list
+          (column
+            (identifier)))
+        (output_clause
+          (keyword_output)
+          (term
+            (all_fields
+              (object_reference
+                (identifier)))))
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))))
 
 ================================================================================
 Insert from EXEC and DEFAULT VALUES
@@ -322,34 +330,61 @@ INSERT INTO log_table DEFAULT VALUES;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (insert
-      (keyword_insert)
-      (keyword_into)
-      (object_reference
-        (identifier))
-      (execute_statement
-        (keyword_exec)
+  (batch
+    (statement
+      (insert
+        (keyword_insert)
+        (keyword_into)
         (object_reference
-          (identifier)
           (identifier))
-        (exec_argument
-          (identifier)
-          (literal)))))
-  (statement
-    (insert
-      (keyword_insert)
-      (keyword_into)
-      (object_reference
-        (identifier))
-      (execute_statement
-        (keyword_exec)
-        (literal))))
-  (statement
-    (insert
-      (keyword_insert)
-      (keyword_into)
-      (object_reference
-        (identifier))
-      (keyword_default)
-      (keyword_values))))
+        (execute_statement
+          (keyword_exec)
+          (object_reference
+            (identifier)
+            (identifier))
+          (exec_argument
+            (identifier)
+            (literal)))))
+    (statement
+      (insert
+        (keyword_insert)
+        (keyword_into)
+        (object_reference
+          (identifier))
+        (execute_statement
+          (keyword_exec)
+          (literal))))
+    (statement
+      (insert
+        (keyword_insert)
+        (keyword_into)
+        (object_reference
+          (identifier))
+        (keyword_default)
+        (keyword_values)))))
+
+================================================================================
+Insert with a column named after a deprecated table hint (ARCH-6)
+================================================================================
+
+INSERT INTO t (nolock, id) VALUES (1, 2);
+
+--------------------------------------------------------------------------------
+
+(program
+  (batch
+    (statement
+      (insert
+        (keyword_insert)
+        (keyword_into)
+        (object_reference
+          (identifier))
+        (list
+          (column
+            (identifier))
+          (column
+            (identifier)))
+        (keyword_values)
+        (list
+          (literal)
+          (literal))))))

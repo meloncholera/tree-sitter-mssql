@@ -12,7 +12,7 @@ WHERE m.id > 4
 -- <- keyword
      -- ^ field
         -- ^ operator
-          -- ^ string
+          -- ^ number
   AND m.title LIKE '%foo%';
   -- <- keyword.operator
                 -- ^ string

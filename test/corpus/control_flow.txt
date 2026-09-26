@@ -10,27 +10,28 @@ ELSE
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (if_statement
-      (keyword_if)
-      (binary_expression
-        (field
-          (identifier))
-        (literal))
-      (statement
-        (select
-          (keyword_select)
-          (select_expression
-            (term
-              (literal)))))
-      (else_clause
-        (keyword_else)
+  (batch
+    (statement
+      (if_statement
+        (keyword_if)
+        (binary_expression
+          (field
+            (identifier))
+          (literal))
         (statement
           (select
             (keyword_select)
             (select_expression
               (term
-                (literal)))))))))
+                (literal)))))
+        (else_clause
+          (keyword_else)
+          (statement
+            (select
+              (keyword_select)
+              (select_expression
+                (term
+                  (literal))))))))))
 
 ================================================================================
 IF with ELSE IF chain
@@ -46,42 +47,43 @@ ELSE
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (if_statement
-      (keyword_if)
-      (binary_expression
-        (field
-          (identifier))
-        (literal))
-      (statement
-        (select
-          (keyword_select)
-          (select_expression
-            (term
-              (literal)))))
-      (else_clause
-        (keyword_else)
+  (batch
+    (statement
+      (if_statement
+        (keyword_if)
+        (binary_expression
+          (field
+            (identifier))
+          (literal))
         (statement
-          (if_statement
-            (keyword_if)
-            (binary_expression
-              (field
-                (identifier))
-              (literal))
-            (statement
-              (select
-                (keyword_select)
-                (select_expression
-                  (term
-                    (literal)))))
-            (else_clause
-              (keyword_else)
+          (select
+            (keyword_select)
+            (select_expression
+              (term
+                (literal)))))
+        (else_clause
+          (keyword_else)
+          (statement
+            (if_statement
+              (keyword_if)
+              (binary_expression
+                (field
+                  (identifier))
+                (literal))
               (statement
                 (select
                   (keyword_select)
                   (select_expression
                     (term
-                      (literal))))))))))))
+                      (literal)))))
+              (else_clause
+                (keyword_else)
+                (statement
+                  (select
+                    (keyword_select)
+                    (select_expression
+                      (term
+                        (literal)))))))))))))
 
 ================================================================================
 IF with BEGIN END blocks
@@ -99,24 +101,14 @@ END
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (if_statement
-      (keyword_if)
-      (binary_expression
-        (field
-          (identifier))
-        (literal))
-      (block
-        (keyword_begin)
-        (statement
-          (select
-            (keyword_select)
-            (select_expression
-              (term
-                (literal)))))
-        (keyword_end))
-      (else_clause
-        (keyword_else)
+  (batch
+    (statement
+      (if_statement
+        (keyword_if)
+        (binary_expression
+          (field
+            (identifier))
+          (literal))
         (block
           (keyword_begin)
           (statement
@@ -125,7 +117,18 @@ END
               (select_expression
                 (term
                   (literal)))))
-          (keyword_end))))))
+          (keyword_end))
+        (else_clause
+          (keyword_else)
+          (block
+            (keyword_begin)
+            (statement
+              (select
+                (keyword_select)
+                (select_expression
+                  (term
+                    (literal)))))
+            (keyword_end)))))))
 
 ================================================================================
 IF without ELSE followed by another statement
@@ -143,63 +146,64 @@ SELECT 3
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (if_statement
-      (keyword_if)
-      (binary_expression
-        (field
-          (identifier))
-        (keyword_is)
-        (literal
-          (keyword_null)))
-      (statement
-        (return_statement
-          (keyword_return)))))
-  (statement
-    (if_statement
-      (keyword_if)
-      (binary_expression
-        (field
-          (identifier))
-        (literal))
-      (statement
-        (select
-          (keyword_select)
-          (select_expression
-            (term
-              (literal)))))))
-  (statement
-    (select
-      (keyword_select)
-      (select_expression
-        (term
-          (literal)))))
-  (statement
-    (if_statement
-      (keyword_if)
-      (binary_expression
-        (invocation
-          (object_reference
+  (batch
+    (statement
+      (if_statement
+        (keyword_if)
+        (binary_expression
+          (field
             (identifier))
-          (term
-            (literal)))
-        (is_not
           (keyword_is)
-          (keyword_not))
-        (literal
-          (keyword_null)))
-      (statement
-        (drop_table
-          (keyword_drop)
-          (keyword_table)
-          (object_reference
-            (identifier))))))
-  (statement
-    (select
-      (keyword_select)
-      (select_expression
-        (term
-          (literal))))))
+          (literal
+            (keyword_null)))
+        (statement
+          (return_statement
+            (keyword_return)))))
+    (statement
+      (if_statement
+        (keyword_if)
+        (binary_expression
+          (field
+            (identifier))
+          (literal))
+        (statement
+          (select
+            (keyword_select)
+            (select_expression
+              (term
+                (literal)))))))
+    (statement
+      (select
+        (keyword_select)
+        (select_expression
+          (term
+            (literal)))))
+    (statement
+      (if_statement
+        (keyword_if)
+        (binary_expression
+          (invocation
+            (object_reference
+              (identifier))
+            (term
+              (literal)))
+          (is_not
+            (keyword_is)
+            (keyword_not))
+          (literal
+            (keyword_null)))
+        (statement
+          (drop_table
+            (keyword_drop)
+            (keyword_table)
+            (object_reference
+              (identifier))))))
+    (statement
+      (select
+        (keyword_select)
+        (select_expression
+          (term
+            (literal)))))))
 
 ================================================================================
 IF with semicolon before ELSE
@@ -213,31 +217,32 @@ ELSE
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (if_statement
-      (keyword_if)
-      (binary_expression
-        (field
-          (identifier))
-        (keyword_is)
-        (literal
-          (keyword_null)))
-      (statement
-        (set_statement
-          (keyword_set)
-          (object_reference
+  (batch
+    (statement
+      (if_statement
+        (keyword_if)
+        (binary_expression
+          (field
             (identifier))
-          (assignment_operator)
-          (literal)))
-      (else_clause
-        (keyword_else)
+          (keyword_is)
+          (literal
+            (keyword_null)))
         (statement
           (set_statement
             (keyword_set)
             (object_reference
               (identifier))
             (assignment_operator)
-            (literal)))))))
+            (literal)))
+        (else_clause
+          (keyword_else)
+          (statement
+            (set_statement
+              (keyword_set)
+              (object_reference
+                (identifier))
+              (assignment_operator)
+              (literal))))))))
 
 ================================================================================
 IF with parenthesized condition and EXISTS
@@ -254,80 +259,81 @@ END
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (if_statement
-      (keyword_if)
-      (parenthesized_expression
-        (binary_expression
-          (field
-            (identifier))
-          (field
-            (identifier))))
-      (statement
-        (set_statement
-          (keyword_set)
-          (object_reference
-            (identifier))
-          (assignment_operator)
+  (batch
+    (statement
+      (if_statement
+        (keyword_if)
+        (parenthesized_expression
           (binary_expression
             (field
               (identifier))
             (field
-              (identifier)))))))
-  (statement
-    (if_statement
-      (keyword_if)
-      (unary_expression
-        (keyword_not)
-        (exists
-          (keyword_exists)
-          (subquery
-            (select
-              (keyword_select)
-              (select_expression
-                (term
-                  (all_fields))))
-            (from
-              (keyword_from)
-              (relation
-                (object_reference
-                  (identifier)
-                  (identifier))))
-            (where
-              (keyword_where)
-              (binary_expression
-                (binary_expression
-                  (field
-                    (identifier))
-                  (invocation
-                    (object_reference
-                      (identifier))
-                    (term
-                      (literal))))
-                (keyword_and)
-                (binary_expression
-                  (field
-                    (identifier))
-                  (keyword_in)
-                  (list
-                    (literal))))))))
-      (block
-        (keyword_begin)
+              (identifier))))
         (statement
-          (create_table
-            (keyword_create)
-            (keyword_table)
+          (set_statement
+            (keyword_set)
             (object_reference
-              (identifier)
               (identifier))
-            (column_definitions
-              (column_definition
-                (identifier)
-                (custom_type
+            (assignment_operator)
+            (binary_expression
+              (field
+                (identifier))
+              (field
+                (identifier)))))))
+    (statement
+      (if_statement
+        (keyword_if)
+        (unary_expression
+          (keyword_not)
+          (exists
+            (keyword_exists)
+            (subquery
+              (select
+                (keyword_select)
+                (select_expression
+                  (term
+                    (all_fields))))
+              (from
+                (keyword_from)
+                (relation
                   (object_reference
-                    (identifier)))
-                (keyword_null)))))
-        (keyword_end)))))
+                    (identifier)
+                    (identifier))))
+              (where
+                (keyword_where)
+                (binary_expression
+                  (binary_expression
+                    (field
+                      (identifier))
+                    (invocation
+                      (object_reference
+                        (identifier))
+                      (term
+                        (literal))))
+                  (keyword_and)
+                  (binary_expression
+                    (field
+                      (identifier))
+                    (keyword_in)
+                    (list
+                      (literal))))))))
+        (block
+          (keyword_begin)
+          (statement
+            (create_table
+              (keyword_create)
+              (keyword_table)
+              (object_reference
+                (identifier)
+                (identifier))
+              (column_definitions
+                (column_definition
+                  (identifier)
+                  (custom_type
+                    (object_reference
+                      (identifier)))
+                  (keyword_null)))))
+          (keyword_end))))))
 
 ================================================================================
 WHILE with a statement and with a block
@@ -354,100 +360,100 @@ END
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (while_statement
-      (keyword_while)
-      (binary_expression
-        (field
-          (identifier))
-        (literal))
-      (statement
-        (select
-          (keyword_select)
-          (select_expression
-            (term
-              (field
-                (identifier)))))
-        (from
-          (keyword_from)
-          (relation
-            (object_reference
-              (identifier)))))))
-  (statement
-    (while_statement
-      (keyword_while)
-      (binary_expression
-        (field
-          (identifier))
-        (literal))
-      (statement
-        (select
-          (keyword_select)
-          (select_expression
-            (term
-              (field
-                (identifier)))))
-        (from
-          (keyword_from)
-          (relation
-            (object_reference
-              (identifier)))))))
-  (statement
-    (while_statement
-      (keyword_while)
-      (binary_expression
-        (subquery
+  (batch
+    (statement
+      (while_statement
+        (keyword_while)
+        (binary_expression
+          (field
+            (identifier))
+          (literal))
+        (statement
           (select
             (keyword_select)
             (select_expression
               (term
-                (invocation
-                  (object_reference
-                    (identifier))
-                  (term
-                    (field
-                      (identifier)))))))
+                (field
+                  (identifier)))))
           (from
             (keyword_from)
             (relation
               (object_reference
-                (identifier)
-                (identifier)))))
-        (literal))
-      (block
-        (keyword_begin)
+                (identifier)))))))
+    (statement
+      (while_statement
+        (keyword_while)
+        (binary_expression
+          (field
+            (identifier))
+          (literal))
         (statement
-          (update
-            (keyword_update)
+          (select
+            (keyword_select)
+            (select_expression
+              (term
+                (field
+                  (identifier)))))
+          (from
+            (keyword_from)
             (relation
               (object_reference
+                (identifier)))))))
+    (statement
+      (while_statement
+        (keyword_while)
+        (binary_expression
+          (subquery
+            (select
+              (keyword_select)
+              (select_expression
+                (term
+                  (invocation
+                    (object_reference
+                      (identifier))
+                    (term
+                      (field
+                        (identifier)))))))
+            (from
+              (keyword_from)
+              (relation
+                (object_reference
+                  (identifier)
+                  (identifier)))))
+          (literal))
+        (block
+          (keyword_begin)
+          (statement
+            (update
+              (keyword_update)
+              (object_reference
                 (identifier)
-                (identifier)))
-            (keyword_set)
-            (assignment
-              (field
                 (identifier))
-              (assignment_operator)
+              (keyword_set)
+              (assignment
+                (field
+                  (identifier))
+                (assignment_operator)
+                (binary_expression
+                  (field
+                    (identifier))
+                  (literal)))))
+          (statement
+            (if_statement
+              (keyword_if)
               (binary_expression
                 (field
                   (identifier))
-                (literal)))))
-        (statement
-          (if_statement
-            (keyword_if)
-            (binary_expression
-              (field
-                (identifier))
-              (literal))
-            (statement
-              (break_statement
-                (keyword_break)))
-            (else_clause
-              (keyword_else)
+                (literal))
               (statement
-                (continue_statement
-                  (keyword_continue))))))
-        (keyword_end)))))
+                (break_statement
+                  (keyword_break)))
+              (else_clause
+                (keyword_else)
+                (statement
+                  (continue_statement
+                    (keyword_continue))))))
+          (keyword_end))))))
 
 ================================================================================
 TRY CATCH with THROW and RAISERROR
@@ -466,59 +472,59 @@ END CATCH
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (try_catch_statement
-      (try_block
-        (keyword_begin)
-        (keyword_try)
-        (statement
-          (update
-            (keyword_update)
-            (relation
+  (batch
+    (statement
+      (try_catch_statement
+        (try_block
+          (keyword_begin)
+          (keyword_try)
+          (statement
+            (update
+              (keyword_update)
               (object_reference
-                (identifier)))
-            (keyword_set)
-            (assignment
+                (identifier))
+              (keyword_set)
+              (assignment
+                (field
+                  (identifier))
+                (assignment_operator)
+                (literal))))
+          (statement
+            (throw_statement
+              (keyword_throw)
+              (literal)
+              (literal)
+              (literal)))
+          (keyword_end)
+          (keyword_try))
+        (catch_block
+          (keyword_begin)
+          (keyword_catch)
+          (statement
+            (raiserror_statement
+              (keyword_raiserror)
+              (literal)
+              (literal)
+              (literal)
               (field
                 (identifier))
-              (assignment_operator)
-              (literal))))
-        (statement
-          (throw_statement
-            (keyword_throw)
-            (literal)
-            (literal)
-            (literal)))
-        (keyword_end)
-        (keyword_try))
-      (catch_block
-        (keyword_begin)
-        (keyword_catch)
-        (statement
-          (raiserror_statement
-            (keyword_raiserror)
-            (literal)
-            (literal)
-            (literal)
-            (field
-              (identifier))
-            (keyword_with)
-            (identifier)
-            (identifier)))
-        (statement
-          (raiserror_statement
-            (keyword_raiserror)
-            (field
-              (identifier))
-            (field
-              (identifier))
-            (field
-              (identifier))))
-        (statement
-          (throw_statement
-            (keyword_throw)))
-        (keyword_end)
-        (keyword_catch)))))
+              (keyword_with)
+              (identifier)
+              (identifier)))
+          (statement
+            (raiserror_statement
+              (keyword_raiserror)
+              (field
+                (identifier))
+              (field
+                (identifier))
+              (field
+                (identifier))))
+          (statement
+            (throw_statement
+              (keyword_throw)))
+          (keyword_end)
+          (keyword_catch))))))
 
 ================================================================================
 GOTO and labels
@@ -532,29 +538,30 @@ RETURN
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (if_statement
-      (keyword_if)
-      (binary_expression
-        (field
-          (identifier))
-        (literal))
-      (statement
-        (goto_statement
-          (keyword_goto)
-          (identifier)))))
-  (statement
-    (select
-      (keyword_select)
-      (select_expression
-        (term
-          (literal)))))
-  (statement
-    (label_statement
-      (identifier)))
-  (statement
-    (return_statement
-      (keyword_return))))
+  (batch
+    (statement
+      (if_statement
+        (keyword_if)
+        (binary_expression
+          (field
+            (identifier))
+          (literal))
+        (statement
+          (goto_statement
+            (keyword_goto)
+            (identifier)))))
+    (statement
+      (select
+        (keyword_select)
+        (select_expression
+          (term
+            (literal)))))
+    (statement
+      (label_statement
+        (identifier)))
+    (statement
+      (return_statement
+        (keyword_return)))))
 
 ================================================================================
 RETURN with and without a value
@@ -567,18 +574,19 @@ RETURN @Severity
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (return_statement
-      (keyword_return)))
-  (statement
-    (return_statement
-      (keyword_return)
-      (literal)))
-  (statement
-    (return_statement
-      (keyword_return)
-      (field
-        (identifier)))))
+  (batch
+    (statement
+      (return_statement
+        (keyword_return)))
+    (statement
+      (return_statement
+        (keyword_return)
+        (literal)))
+    (statement
+      (return_statement
+        (keyword_return)
+        (field
+          (identifier))))))
 
 ================================================================================
 PRINT and WAITFOR
@@ -592,31 +600,32 @@ WAITFOR TIME @t;
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (print_statement
-      (keyword_print)
-      (literal)))
-  (statement
-    (print_statement
-      (keyword_print)
-      (binary_expression
+  (batch
+    (statement
+      (print_statement
+        (keyword_print)
+        (literal)))
+    (statement
+      (print_statement
+        (keyword_print)
         (binary_expression
+          (binary_expression
+            (field
+              (identifier))
+            (literal))
           (field
-            (identifier))
-          (literal))
+            (identifier)))))
+    (statement
+      (waitfor_statement
+        (keyword_waitfor)
+        (keyword_delay)
+        (literal)))
+    (statement
+      (waitfor_statement
+        (keyword_waitfor)
+        (keyword_time)
         (field
-          (identifier)))))
-  (statement
-    (waitfor_statement
-      (keyword_waitfor)
-      (keyword_delay)
-      (literal)))
-  (statement
-    (waitfor_statement
-      (keyword_waitfor)
-      (keyword_time)
-      (field
-        (identifier)))))
+          (identifier))))))
 
 ================================================================================
 Variable declarations
@@ -631,82 +640,83 @@ DECLARE @neg int = -1
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (var_declarations
-      (keyword_declare)
-      (var_declaration
-        (identifier)
-        (keyword_int))
-      (var_declaration
-        (identifier)
-        (nvarchar
-          (keyword_nvarchar)
-          (keyword_max))
-        (literal))
-      (var_declaration
-        (identifier)
-        (keyword_as)
-        (decimal
-          (keyword_decimal)
-          (literal)
+  (batch
+    (statement
+      (var_declarations
+        (keyword_declare)
+        (var_declaration
+          (identifier)
+          (keyword_int))
+        (var_declaration
+          (identifier)
+          (nvarchar
+            (keyword_nvarchar)
+            (keyword_max))
           (literal))
-        (literal))))
-  (statement
-    (var_declarations
-      (keyword_declare)
-      (var_declaration
-        (identifier)
-        (custom_type
-          (object_reference
-            (identifier)))
-        (invocation
-          (object_reference
-            (identifier)
-            (identifier))
-          (term
-            (invocation
-              (object_reference
-                (identifier))))))))
-  (statement
-    (var_declarations
-      (keyword_declare)
-      (var_declaration
-        (identifier)
-        (keyword_xml)
-        (invocation
-          (object_reference
-            (identifier))))
-      (var_declaration
-        (identifier)
-        (nvarchar
-          (keyword_nvarchar)
-          (literal))
-        (invocation
-          (object_reference
-            (identifier))
-          (term
-            (invocation
-              (object_reference
-                (identifier))))
-          (term
-            (literal))))))
-  (statement
-    (var_declarations
-      (keyword_declare)
-      (var_declaration
-        (identifier)
-        (keyword_as)
-        (nvarchar
-          (keyword_nvarchar)
-          (keyword_max)))))
-  (statement
-    (var_declarations
-      (keyword_declare)
-      (var_declaration
-        (identifier)
-        (keyword_int)
-        (unary_expression
-          (literal))))))
+        (var_declaration
+          (identifier)
+          (keyword_as)
+          (decimal
+            (keyword_decimal)
+            (literal)
+            (literal))
+          (literal))))
+    (statement
+      (var_declarations
+        (keyword_declare)
+        (var_declaration
+          (identifier)
+          (custom_type
+            (object_reference
+              (identifier)))
+          (invocation
+            (object_reference
+              (identifier)
+              (identifier))
+            (term
+              (invocation
+                (object_reference
+                  (identifier))))))))
+    (statement
+      (var_declarations
+        (keyword_declare)
+        (var_declaration
+          (identifier)
+          (keyword_xml)
+          (invocation
+            (object_reference
+              (identifier))))
+        (var_declaration
+          (identifier)
+          (nvarchar
+            (keyword_nvarchar)
+            (literal))
+          (invocation
+            (object_reference
+              (identifier))
+            (term
+              (invocation
+                (object_reference
+                  (identifier))))
+            (term
+              (literal))))))
+    (statement
+      (var_declarations
+        (keyword_declare)
+        (var_declaration
+          (identifier)
+          (keyword_as)
+          (nvarchar
+            (keyword_nvarchar)
+            (keyword_max)))))
+    (statement
+      (var_declarations
+        (keyword_declare)
+        (var_declaration
+          (identifier)
+          (keyword_int)
+          (unary_expression
+            (literal)))))))
 
 ================================================================================
 Set statements
@@ -728,150 +738,159 @@ SET CONTEXT_INFO @L_Context
 SET STATISTICS IO ON
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 SET TRANSACTION ISOLATION LEVEL SNAPSHOT;
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
 
 --------------------------------------------------------------------------------
 
 (program
-  (statement
-    (set_statement
-      (keyword_set)
-      (object_reference
-        (identifier))
-      (assignment_operator)
-      (binary_expression
-        (field
-          (identifier))
-        (field
-          (identifier)))))
-  (statement
-    (set_statement
-      (keyword_set)
-      (object_reference
-        (identifier))
-      (assignment_operator)
-      (subquery
-        (select
-          (keyword_select)
-          (top_clause
-            (keyword_top)
-            (literal))
-          (select_expression
-            (term
-              (field
-                (identifier)))))
-        (from
-          (keyword_from)
-          (relation
-            (object_reference
-              (identifier)))))))
-  (statement
-    (set_statement
-      (keyword_set)
-      (object_reference
-        (identifier))
-      (assignment_operator)
-      (unary_expression
-        (literal))))
-  (statement
-    (set_statement
-      (keyword_set)
-      (object_reference
-        (identifier))
-      (keyword_on)))
-  (statement
-    (set_statement
-      (keyword_set)
-      (object_reference
-        (identifier))
-      (object_reference
-        (identifier))
-      (keyword_on)))
-  (statement
-    (set_statement
-      (keyword_set)
-      (object_reference
-        (identifier))
-      (keyword_on)))
-  (statement
-    (set_statement
-      (keyword_set)
-      (object_reference
-        (identifier))
-      (field
+  (batch
+    (statement
+      (set_statement
+        (keyword_set)
         (object_reference
           (identifier))
-        (identifier))
-      (keyword_on)))
-  (statement
-    (set_statement
-      (keyword_set)
-      (object_reference
-        (identifier))
-      (literal)))
-  (statement
-    (set_statement
-      (keyword_set)
-      (object_reference
-        (identifier))
-      (field
-        (identifier))))
-  (statement
-    (set_statement
-      (keyword_set)
-      (object_reference
-        (identifier))
-      (field
-        (identifier))))
-  (statement
-    (set_statement
-      (keyword_set)
-      (object_reference
-        (identifier))
-      (field
-        (identifier))))
-  (statement
-    (set_statement
-      (keyword_set)
-      (object_reference
-        (identifier))
-      (unary_expression
-        (literal))))
-  (statement
-    (set_statement
-      (keyword_set)
-      (object_reference
-        (identifier))
-      (field
-        (identifier))))
-  (statement
-    (set_statement
-      (keyword_set)
-      (object_reference
-        (identifier))
-      (field
-        (identifier))
-      (keyword_on)))
-  (statement
-    (set_statement
-      (keyword_set)
-      (keyword_transaction)
-      (keyword_isolation)
-      (keyword_level)
-      (keyword_read)
-      (keyword_uncommitted)))
-  (statement
-    (set_statement
-      (keyword_set)
-      (keyword_transaction)
-      (keyword_isolation)
-      (keyword_level)
-      (keyword_snapshot)))
-  (statement
-    (set_statement
-      (keyword_set)
-      (keyword_transaction)
-      (keyword_isolation)
-      (keyword_level)
-      (keyword_repeatable)
-      (keyword_read))))
+        (assignment_operator)
+        (binary_expression
+          (field
+            (identifier))
+          (field
+            (identifier)))))
+    (statement
+      (set_statement
+        (keyword_set)
+        (object_reference
+          (identifier))
+        (assignment_operator)
+        (subquery
+          (select
+            (keyword_select)
+            (top_clause
+              (keyword_top)
+              (literal))
+            (select_expression
+              (term
+                (field
+                  (identifier)))))
+          (from
+            (keyword_from)
+            (relation
+              (object_reference
+                (identifier)))))))
+    (statement
+      (set_statement
+        (keyword_set)
+        (object_reference
+          (identifier))
+        (assignment_operator)
+        (unary_expression
+          (literal))))
+    (statement
+      (set_statement
+        (keyword_set)
+        (object_reference
+          (identifier))
+        (keyword_on)))
+    (statement
+      (set_statement
+        (keyword_set)
+        (object_reference
+          (identifier))
+        (object_reference
+          (identifier))
+        (keyword_on)))
+    (statement
+      (set_statement
+        (keyword_set)
+        (object_reference
+          (identifier))
+        (keyword_on)))
+    (statement
+      (set_statement
+        (keyword_set)
+        (object_reference
+          (identifier))
+        (field
+          (object_reference
+            (identifier))
+          (identifier))
+        (keyword_on)))
+    (statement
+      (set_statement
+        (keyword_set)
+        (object_reference
+          (identifier))
+        (literal)))
+    (statement
+      (set_statement
+        (keyword_set)
+        (object_reference
+          (identifier))
+        (field
+          (identifier))))
+    (statement
+      (set_statement
+        (keyword_set)
+        (object_reference
+          (identifier))
+        (field
+          (identifier))))
+    (statement
+      (set_statement
+        (keyword_set)
+        (object_reference
+          (identifier))
+        (field
+          (identifier))))
+    (statement
+      (set_statement
+        (keyword_set)
+        (object_reference
+          (identifier))
+        (unary_expression
+          (literal))))
+    (statement
+      (set_statement
+        (keyword_set)
+        (object_reference
+          (identifier))
+        (field
+          (identifier))))
+    (statement
+      (set_statement
+        (keyword_set)
+        (object_reference
+          (identifier))
+        (field
+          (identifier))
+        (keyword_on)))
+    (statement
+      (set_statement
+        (keyword_set)
+        (keyword_transaction)
+        (keyword_isolation)
+        (keyword_level)
+        (keyword_read)
+        (keyword_uncommitted)))
+    (statement
+      (set_statement
+        (keyword_set)
+        (keyword_transaction)
+        (keyword_isolation)
+        (keyword_level)
+        (keyword_snapshot)))
+    (statement
+      (set_statement
+        (keyword_set)
+        (keyword_transaction)
+        (keyword_isolation)
+        (keyword_level)
+        (keyword_repeatable)
+        (keyword_read)))
+    (statement
+      (set_statement
+        (keyword_set)
+        (keyword_transaction)
+        (keyword_isolation)
+        (keyword_level)
+        (keyword_serializable)))))
