@@ -35,6 +35,8 @@ concurrency:
 
 env:
   TREE_SITTER_CLI_VERSION: '0.27.0'
+  ESLINT_VERSION: '9.39.5'
+  PRETTIER_VERSION: '3.9.9'
 
 jobs:
   pr-title:
@@ -151,6 +153,15 @@ jobs:
           git ls-files --error-unmatch test/node-kinds.txt
           node test/generate-node-kinds.mjs
           git diff --exit-code -- test/node-kinds.txt
+
+      - name: Fail if a create/alter/drop rule is defined but not registered
+        run: node test/check-registries.mjs
+
+      - name: Lint the grammar JS
+        run: npx --yes --package=eslint@${{ env.ESLINT_VERSION }} --package=@eslint/js@${{ env.ESLINT_VERSION }} -- eslint grammar.js "grammar/**/*.js" "test/*.mjs" "bindings/node/*.js"
+
+      - name: Check formatting of the grammar JS
+        run: npx --yes --package=prettier@${{ env.PRETTIER_VERSION }} -- prettier --check grammar.js "grammar/**/*.js" "test/*.mjs" "bindings/node/*.js"
 
       - name: Verify publishable package contents
         run: |

@@ -396,7 +396,7 @@ CREATE TABLE dbo.t (a int) foo bar baz qux quux corge
       (create_table
         (keyword_create)
         (keyword_table)
-        (object_reference
+        name: (object_reference
           schema: (identifier)
           name: (identifier))
         (column_definitions

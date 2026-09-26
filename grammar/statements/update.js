@@ -1,4 +1,4 @@
-import { write_target } from "../helpers.js";
+import { write_target } from '../helpers.js';
 
 // T-SQL UPDATE:
 //
@@ -14,18 +14,19 @@ import { write_target } from "../helpers.js";
 // takes GROUP BY/HAVING/ORDER BY/OFFSET FETCH — OPTION is the only one of
 // `from`'s former trailing clauses real T-SQL allows here.
 export default {
+  _update_statement: ($) => $.update,
 
-  _update_statement: $ => $.update,
-
-  update: $ => prec.right(seq(
-    $.keyword_update,
-    optional($.top_clause),
-    write_target($, { allowRowsetFunction: true }),
-    $._set_values,
-    optional($.output_clause),
-    optional($.from),
-    optional($.where),
-    optional($.option_clause),
-  )),
-
+  update: ($) =>
+    prec.right(
+      seq(
+        $.keyword_update,
+        optional($.top_clause),
+        write_target($, { allowRowsetFunction: true }),
+        $._set_values,
+        optional($.output_clause),
+        optional($.from),
+        optional($.where),
+        optional($.option_clause),
+      ),
+    ),
 };
