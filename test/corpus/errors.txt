@@ -696,3 +696,56 @@ ALTER PARTITION SCHEME ps NEXT USED mylabel: SELECT 1;
         (select_expression
           (term
             value: (literal)))))))
+
+================================================================================
+CREATE QUEUE rejects ON before WITH
+================================================================================
+
+CREATE QUEUE q ON fg WITH STATUS = ON;
+
+---
+
+(program
+  (batch
+    (statement
+      (create_queue
+        (keyword_create)
+        (keyword_queue)
+        name: (object_reference
+          name: (identifier))
+        (on_filegroup
+          (keyword_on)
+          (identifier)))))
+  (ERROR
+    (keyword_with)
+    (identifier)
+    (keyword_on)))
+
+================================================================================
+CREATE QUEUE rejects a repeated WITH after ON
+================================================================================
+
+CREATE QUEUE q WITH STATUS = ON ON fg2 WITH STATUS = OFF;
+
+---
+
+(program
+  (batch
+    (statement
+      (create_queue
+        (keyword_create)
+        (keyword_queue)
+        name: (object_reference
+          name: (identifier))
+        (with_clause
+          (keyword_with)
+          (option
+            name: (identifier)
+            value: (keyword_on)))
+        (on_filegroup
+          (keyword_on)
+          (identifier)))))
+  (ERROR
+    (keyword_with)
+    (identifier)
+    (keyword_off)))

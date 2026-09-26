@@ -672,6 +672,14 @@
       "type": "PATTERN",
       "value": "[sS][eE][cC][oO][nN][dD][aA][rR][yY]"
     },
+    "keyword_clear": {
+      "type": "PATTERN",
+      "value": "[cC][lL][eE][aA][rR]"
+    },
+    "keyword_procedure_cache": {
+      "type": "PATTERN",
+      "value": "[pP][rR][oO][cC][eE][dD][uU][rR][eE][__][cC][aA][cC][hH][eE]"
+    },
     "keyword_goto": {
       "type": "PATTERN",
       "value": "[gG][oO][tT][oO]"
@@ -14084,45 +14092,49 @@
       ]
     },
     "create_queue": {
-      "type": "PREC_RIGHT",
-      "value": 0,
-      "content": {
-        "type": "SEQ",
-        "members": [
-          {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "keyword_create"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "keyword_queue"
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
             "type": "SYMBOL",
-            "name": "keyword_create"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "keyword_queue"
-          },
-          {
-            "type": "FIELD",
-            "name": "name",
-            "content": {
-              "type": "SYMBOL",
-              "name": "object_reference"
-            }
-          },
-          {
-            "type": "REPEAT",
-            "content": {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "with_clause"
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "on_filegroup"
-                }
-              ]
-            }
+            "name": "object_reference"
           }
-        ]
-      }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "with_clause"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "on_filegroup"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
     },
     "create_contract": {
       "type": "SEQ",
@@ -14418,7 +14430,7 @@
                   "members": [
                     {
                       "type": "SYMBOL",
-                      "name": "literal"
+                      "name": "_expression"
                     },
                     {
                       "type": "REPEAT",
@@ -14431,7 +14443,7 @@
                           },
                           {
                             "type": "SYMBOL",
-                            "name": "literal"
+                            "name": "_expression"
                           }
                         ]
                       }
@@ -16378,27 +16390,76 @@
                     "type": "SEQ",
                     "members": [
                       {
-                        "type": "SYMBOL",
-                        "name": "keyword_for"
+                        "type": "CHOICE",
+                        "members": [
+                          {
+                            "type": "SEQ",
+                            "members": [
+                              {
+                                "type": "SYMBOL",
+                                "name": "keyword_for"
+                              },
+                              {
+                                "type": "SYMBOL",
+                                "name": "keyword_secondary"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "BLANK"
+                          }
+                        ]
                       },
                       {
                         "type": "SYMBOL",
-                        "name": "keyword_secondary"
+                        "name": "keyword_set"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "option"
                       }
                     ]
                   },
                   {
-                    "type": "BLANK"
+                    "type": "SEQ",
+                    "members": [
+                      {
+                        "type": "SYMBOL",
+                        "name": "keyword_clear"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "keyword_procedure_cache"
+                      },
+                      {
+                        "type": "CHOICE",
+                        "members": [
+                          {
+                            "type": "CHOICE",
+                            "members": [
+                              {
+                                "type": "SYMBOL",
+                                "name": "literal"
+                              },
+                              {
+                                "type": "ALIAS",
+                                "content": {
+                                  "type": "SYMBOL",
+                                  "name": "_tsql_parameter"
+                                },
+                                "named": true,
+                                "value": "identifier"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "BLANK"
+                          }
+                        ]
+                      }
+                    ]
                   }
                 ]
-              },
-              {
-                "type": "SYMBOL",
-                "name": "keyword_set"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "option"
               }
             ]
           }
@@ -26422,6 +26483,9 @@
     ],
     [
       "create_message_type"
+    ],
+    [
+      "create_queue"
     ],
     [
       "truncate_statement"

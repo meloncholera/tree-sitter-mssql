@@ -234,6 +234,7 @@ keyword_changes
 keyword_changetable
 keyword_char
 keyword_check
+keyword_clear
 keyword_close
 keyword_clustered
 keyword_collate
@@ -407,6 +408,7 @@ keyword_prior
 keyword_private
 keyword_proc
 keyword_procedure
+keyword_procedure_cache
 keyword_provider
 keyword_queue
 keyword_raiserror

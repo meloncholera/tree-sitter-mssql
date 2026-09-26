@@ -445,14 +445,18 @@ export default {
     seq(field('name', $.identifier), repeat(choice($.identifier, $.literal))),
 
   // CREATE QUEUE name [WITH options] [ON filegroup]   (Service Broker)
+  // Each clause is optional and appears at most once, WITH then ON. An
+  // unbounded repeat of the two accepted both any number of times and in
+  // either order. No prec.right: when ON is omitted the WITH list is the
+  // trailing clause, and forcing that shift swallows a following CTE. The
+  // [$.create_queue] conflicts entry forks that case instead.
   create_queue: ($) =>
-    prec.right(
-      seq(
-        $.keyword_create,
-        $.keyword_queue,
-        field('name', $.object_reference),
-        repeat(choice($.with_clause, $.on_filegroup)),
-      ),
+    seq(
+      $.keyword_create,
+      $.keyword_queue,
+      field('name', $.object_reference),
+      optional($.with_clause),
+      optional($.on_filegroup),
     ),
 
   // CREATE CONTRACT name ( {DEFAULT | message_type} SENT BY {INITIATOR|TARGET|ANY} [, ...] )   (Service Broker)
@@ -513,6 +517,10 @@ export default {
     ),
 
   // CREATE PARTITION FUNCTION name (type) AS RANGE [LEFT|RIGHT] FOR VALUES (boundary [, ...])
+  // Boundary values are expressions, not literals. Sliding-window maintenance
+  // computes the next boundary into a variable and passes that here, the
+  // same way ALTER PARTITION FUNCTION's SPLIT/MERGE boundary already accepts
+  // an expression.
   create_partition_function: ($) =>
     seq(
       $.keyword_create,
@@ -525,7 +533,7 @@ export default {
       optional(choice($.keyword_left, $.keyword_right)),
       $.keyword_for,
       $.keyword_values,
-      paren_list($.literal, false),
+      paren_list($._expression, false),
     ),
 
   // CREATE EXTERNAL DATA SOURCE name WITH (TYPE = ..., LOCATION = '...', ...)

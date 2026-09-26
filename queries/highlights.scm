@@ -219,6 +219,8 @@
   (keyword_index)
   (keyword_column)
   (keyword_procedure)
+  (keyword_clear)
+  (keyword_procedure_cache)
   (keyword_proc)
   (keyword_function)
   (keyword_returns)

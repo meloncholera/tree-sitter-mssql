@@ -27,14 +27,16 @@ export default grammar({
     // A `(` after a DBCC command may open its argument list or start the
     // next statement; a `WITH` after RECONFIGURE, RAISERROR, an
     // unterminated CREATE MESSAGE TYPE's VALIDATION clause, TRUNCATE
-    // TABLE, ALTER QUEUE's REBUILD/REORGANIZE, ALTER ASSEMBLY, ALTER
-    // FULLTEXT CATALOG's REBUILD, ALTER FULLTEXT INDEX's SET/ADD/DROP, or
-    // ALTER ROUTE may be its own option list (or WITH SCHEMA COLLECTION
-    // suffix) or the next statement's CTE.
+    // TABLE, CREATE QUEUE (when its ON filegroup is omitted), ALTER QUEUE's
+    // REBUILD/REORGANIZE, ALTER ASSEMBLY, ALTER FULLTEXT CATALOG's REBUILD,
+    // ALTER FULLTEXT INDEX's SET/ADD/DROP, or ALTER ROUTE may be its own
+    // option list (or WITH SCHEMA COLLECTION suffix) or the next
+    // statement's CTE.
     [$.dbcc_statement],
     [$.reconfigure_statement],
     [$.raiserror_statement],
     [$.create_message_type],
+    [$.create_queue],
     [$.truncate_statement],
     [$.alter_queue],
     [$.alter_assembly],
