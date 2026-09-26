@@ -59,6 +59,7 @@
     "queries/*",
     "src/**",
     "tree-sitter.json",
+    "versions.json",
     "NOTICE"
   ],
   "allowScripts": {

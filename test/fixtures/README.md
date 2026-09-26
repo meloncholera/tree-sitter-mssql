@@ -211,13 +211,16 @@ SQL Server 2012), nothing the grammar's consumers run can execute them, and no c
 
 Every file above parses with zero `ERROR`/`MISSING` nodes; nothing is pending. The T-SQL shapes
 the grammar knowingly leaves out, so a new fixture does not go looking for a rule that was
-decided against:
+decided against. `../../docs/accepted-gaps.md` is the ledger of the ones that are genuine
+mismatches with SQL Server's own behavior (a ledger entry there means the grammar and SQL Server
+disagree; a row here means only that a fixture shouldn't go looking for this rule, whether or not
+they disagree):
 
 | Construct | Why |
 |---|---|
-| `COMPUTE`, the `*=`/`=*` outer-join operators | Removed from SQL Server; out of scope (see above) |
+| `COMPUTE`, the `*=`/`=*` outer-join operators | Removed from SQL Server; out of scope (see above) — the grammar's rejection matches SQL Server's own, so this is not an accepted-gaps entry |
 | `FROM a HASH JOIN b`, `LOOP JOIN`, `MERGE JOIN`, `REMOTE JOIN` — a physical join hint with no join type | With no join type the hint word sits where an AS-less alias goes, so `FROM dbo.t hash` would stop parsing and `FROM dbo.a remote JOIN dbo.b` would silently lose its alias; and after an unterminated `FROM`, `MERGE` is also the start of a `MERGE` statement, a fork that tripled `generate` time. `INNER HASH JOIN` and the other typed forms parse. |
 | `WRITETEXT BULK ...`, `BACKUP ... MIRROR TO`, `KILL STATS JOB`/`KILL QUERY NOTIFICATION` | Rare sub-forms of deprecated or console statements, not modeled |
-| `EXEC p 1 + 2`, `EXEC p @a = 1, 2` | Rejected here because SQL Server rejects them: a procedure argument is a constant, a variable or `DEFAULT`, and a positional argument cannot follow a named one (Msg 119) |
+| `EXEC p 1 + 2`, `EXEC p @a = 1, 2` | Rejected here because SQL Server rejects them: a procedure argument is a constant, a variable or `DEFAULT`, and a positional argument cannot follow a named one (Msg 119) — the grammar's rejection matches SQL Server's own, so this is not an accepted-gaps entry |
 | `(SELECT TOP 1 a FROM t ORDER BY a) UNION ALL (SELECT TOP 1 b FROM u ORDER BY b)` — a parenthesized union branch with its own `ORDER BY` alongside `TOP`/`OFFSET`/`FETCH` | Not modeled either way; not a new gap from the `query_specification` split — this already failed to parse before that rule existed |
-| `ALTER MESSAGE TYPE` | Service Broker message types have no `ALTER` statement in real SQL Server — only `CREATE`/`DROP` — so this is deliberately absent, unlike the other six object kinds `CREATE MESSAGE TYPE`'s siblings gained an `ALTER` for |
+| `ALTER MESSAGE TYPE name VALIDATION = ...` | Valid, documented T-SQL the grammar doesn't yet model — unlike the other six object kinds `CREATE MESSAGE TYPE`'s siblings gained an `ALTER` for, message types were assumed immutable and given none. See `../../docs/accepted-gaps.md` for this one — it's a genuine gap, not a deliberate decision. |
