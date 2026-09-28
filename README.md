@@ -56,7 +56,7 @@ parser.setLanguage(SQL);
 ```
 
 A GitHub Packages copy of the npm package is also published as
-`@meloncholic/tree-sitter-mssql`. Both bindings expose every query file —
+`@meloncholera/tree-sitter-mssql`. Both bindings expose every query file —
 `HIGHLIGHTS_QUERY`, `INDENTS_QUERY`, `INJECTIONS_QUERY`, `LOCALS_QUERY`,
 `TAGS_QUERY` — so a consumer can load `queries/highlights.scm` without
 resolving the package's install path by hand: the Rust crate as real `pub
@@ -69,7 +69,7 @@ The npm package ships prebuilt native addons for linux-x64 and win32-x64, so
 falls back to compiling from the committed generated parser on any other
 platform/arch (macOS, ARM Linux, ARM Windows), the same as before this
 existed. A `tree-sitter-mssql.wasm` build is attached to
-every [GitHub Release](https://github.com/meloncholic/tree-sitter-mssql/releases)
+every [GitHub Release](https://github.com/meloncholera/tree-sitter-mssql/releases)
 for `web-tree-sitter` consumers (browsers, sandboxed runtimes):
 
 ```js

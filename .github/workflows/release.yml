@@ -15,7 +15,7 @@
 #                      tag re-dispatched by hand predates both files).
 #                      GitHub Packages requires an npm package name
 #                      scoped to the repository owner, so that job publishes
-#                      under @meloncholic/tree-sitter-mssql in its own
+#                      under @meloncholera/tree-sitter-mssql in its own
 #                      ephemeral checkout only — the public npm package stays
 #                      unscoped. Prebuilt native addons (Linux/Windows,
 #                      Node-API) are built by the prebuild matrix job and
@@ -324,7 +324,7 @@ jobs:
         with:
           node-version: '24.x'
           registry-url: https://npm.pkg.github.com
-          scope: '@meloncholic'
+          scope: '@meloncholera'
 
       - name: Download the prebuilt native addons
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
@@ -340,7 +340,7 @@ jobs:
           # GitHub Packages requires the npm package name to be scoped to the
           # repository owner; this only ever changes this job's own ephemeral
           # checkout, never the committed package.json.
-          npm pkg set "name=@meloncholic/tree-sitter-mssql"
+          npm pkg set "name=@meloncholera/tree-sitter-mssql"
           npm pkg set "version=${version}"
 
       - name: Publish (skip if this version is already live)
@@ -349,8 +349,8 @@ jobs:
         run: |
           set -euo pipefail
           version="${TAG#v}"
-          if npm view "@meloncholic/tree-sitter-mssql@${version}" version >/dev/null 2>&1; then
-            echo "@meloncholic/tree-sitter-mssql@${version} is already published, skipping"
+          if npm view "@meloncholera/tree-sitter-mssql@${version}" version >/dev/null 2>&1; then
+            echo "@meloncholera/tree-sitter-mssql@${version} is already published, skipping"
           else
             npm publish --access public
           fi
