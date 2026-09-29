@@ -3,24 +3,13 @@
 # -----------------------------------------------------------------------------
 #  File                sync-dev-from-main.yml
 #  Workflow name       Sync dev from main
-#  Type                Entrypoint
+#  Type                Entrypoint (runs in this repo only)
 #  Triggers            push (main branch)
-#                      workflow_dispatch
-#  Purpose             Opens or updates a pull request merging main back into
-#                      dev after a promotion or release, so dev stays a
-#                      descendant of main. This repo's rulesets block a direct
-#                      push to dev (every change needs a PR, and the required
-#                      status check rule can't be bypassed by any actor), so
-#                      this workflow can only open the PR — merging it is a
-#                      manual `gh pr merge`, though this repo's owner is
-#                      exempt from dev's review requirement, so no separate
-#                      approval click is needed.
-#
-#                      The PR's head is a disposable sync/main-into-dev
-#                      branch pointing at main's tip, never main itself —
-#                      this repo has delete_branch_on_merge enabled, and a PR
-#                      opened with head: main would delete the main branch
-#                      the instant it's merged.
+#  Purpose             Opens (or updates) a PR merging main back into dev
+#                      after a promotion or release, so dev stays a
+#                      descendant of main. The branch is pushed with
+#                      GITHUB_TOKEN, which never triggers a pull_request
+#                      run, so this workflow dispatches verify.yml on it.
 # =============================================================================
 
 name: Sync dev from main
@@ -28,19 +17,18 @@ name: Sync dev from main
 on:
   push:
     branches: [main]
-  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: write
+  pull-requests: write
 
 concurrency:
   group: sync-dev
   cancel-in-progress: false
 
-permissions:
-  contents: write
-  pull-requests: write
-
 jobs:
   sync:
-    name: Open a PR merging main into dev
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -69,3 +57,4 @@ jobs:
               --title "chore: sync dev from main" \
               --body "Merges main back into dev after a promotion or release so dev stays a descendant of main. Merge once Verify passes; a conflict here needs manual resolution on a separate branch."
           fi
+          gh workflow run verify.yml --ref "$branch"
