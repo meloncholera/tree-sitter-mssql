@@ -21,7 +21,9 @@
 #                      branch it then opens a PR from. Merging that PR is a
 #                      manual step: this repo's owner is exempt from its
 #                      review requirement, so no separate approval is needed,
-#                      just running `gh pr merge`.
+#                      just running `gh pr merge`. Because a GITHUB_TOKEN
+#                      push never triggers a pull_request run, this workflow
+#                      dispatches verify.yml on the release branch itself.
 # =============================================================================
 
 name: Release-plz
@@ -36,11 +38,13 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
+  actions: write
   contents: write
   pull-requests: write
 
 jobs:
   release-plz:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -96,3 +100,6 @@ jobs:
               --title "chore(release): v${version}" \
               --body "Automated version bump and CHANGELOG.md entry computed by release-plz from Conventional Commits. Merge this once Verify passes to trigger the tag-and-publish sequence in release-tag.yml/release.yml."
           fi
+          # A GITHUB_TOKEN push never starts a pull_request run, so dispatch
+          # Verify on the branch to give its head commit the required status.
+          gh workflow run verify.yml --ref "$branch"
