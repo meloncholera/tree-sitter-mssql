@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.2](https://github.com/meloncholera/tree-sitter-mssql/compare/v0.2.1...v0.2.2) - 2026-10-04
+
+### Other
+
+- *(release)* promote dev to main — shared release pipeline ([#57](https://github.com/meloncholera/tree-sitter-mssql/pull/57))
+- *(release)* align the release pipeline with the shared grammar repository standard ([#56](https://github.com/meloncholera/tree-sitter-mssql/pull/56))
+
 ## [0.2.1](https://github.com/meloncholera/tree-sitter-mssql/compare/v0.2.0...v0.2.1) - 2026-10-04
 
 ### Fixed
