@@ -1,6 +1,6 @@
 {
   "name": "tree-sitter-mssql",
-  "version": "0.1.0",
+  "version": "0.2.2",
   "description": "Tree-sitter grammar for Microsoft SQL Server T-SQL",
   "main": "bindings/node",
   "types": "bindings/node",
