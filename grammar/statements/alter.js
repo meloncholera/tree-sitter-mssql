@@ -216,9 +216,21 @@ export default {
           $.keyword_database,
           $.keyword_scoped,
           $.keyword_configuration,
-          optional(seq($.keyword_for, $.keyword_secondary)),
-          $.keyword_set,
-          $.option,
+          choice(
+            seq(optional(seq($.keyword_for, $.keyword_secondary)), $.keyword_set, $.option),
+            // CLEAR PROCEDURE_CACHE [plan_handle]. PROCEDURE_CACHE is one
+            // word, so it is its own keyword rather than two keywords or a
+            // free identifier (a free identifier would also accept CLEAR
+            // followed by any name). The handle is a varbinary literal or a
+            // variable. A bare identifier would also match, and an optional
+            // one in this trailing slot swallows a following statement's
+            // label.
+            seq(
+              $.keyword_clear,
+              $.keyword_procedure_cache,
+              optional(choice($.literal, alias($._tsql_parameter, $.identifier))),
+            ),
+          ),
         ),
       ),
     ),

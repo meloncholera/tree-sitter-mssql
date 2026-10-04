@@ -26,17 +26,29 @@ function trailing_sort_and_hint_clauses($) {
   );
 }
 
-// The SELECT/INTO/FROM/WHERE/GROUP BY/HAVING/WINDOW body shared by a lone
-// query and each branch of a set_operation — everything except the
-// trailing sort/hint clauses, which scope to the outermost position only
-// (see `query_specification` and `_select_statement` below).
+// FROM/WHERE/GROUP BY/HAVING/WINDOW — shared by every query body. WHERE,
+// GROUP BY and HAVING stay nested under FROM: real T-SQL rejects all three
+// on a FROM-less SELECT.
+function query_specification_rest($) {
+  return seq(
+    optional(seq($.from, optional($.where), optional($.group_by), optional($.having))),
+    optional($.window_clause),
+  );
+}
+
+// SELECT [INTO] plus that rest. INTO is legal on a lone query and on the
+// first branch of a set operation only, so later branches use
+// `query_specification_body_no_into`.
 function query_specification_body($) {
   return seq(
     $.select,
     optional(seq($.keyword_into, $.object_reference)),
-    optional(seq($.from, optional($.where), optional($.group_by), optional($.having))),
-    optional($.window_clause),
+    query_specification_rest($),
   );
+}
+
+function query_specification_body_no_into($) {
+  return seq($.select, query_specification_rest($));
 }
 
 export default {
@@ -63,7 +75,10 @@ export default {
       $.identifier,
       optional(paren_list(field('argument', $.identifier))),
       $.keyword_as,
-      wrapped_in_parenthesis(alias($._dml_read, $.statement)),
+      // A CTE body is a query, not another `_dml_read`: that rule's leading
+      // CTE would accept `WITH a AS (WITH b AS (...) SELECT ...)`, which
+      // T-SQL rejects.
+      wrapped_in_parenthesis(alias($._query_expression, $.statement)),
     ),
 
   // A union's own ORDER BY/OFFSET FETCH/OPTION sort and hint the combined
@@ -81,10 +96,10 @@ export default {
   // either way — it already failed to parse before this rule existed, and
   // this change does not resolve or worsen that gap; see
   // test/fixtures/README.md's "Not parsed on purpose" section.
-  // `query_specification`'s shared body also does not yet distinguish a
-  // first branch from a later one, so `SELECT ... INTO` is still (wrongly)
-  // reachable on every branch, not just the first — a pre-existing
-  // over-acceptance this split does not introduce or close.
+  // The first branch may carry INTO. Every later branch is the same node
+  // kind with INTO removed, so `SELECT a INTO #x UNION SELECT b INTO #y`
+  // does not parse. Parentheses stay on the branch, not on the union's
+  // trailing ORDER BY / OPTION / FOR.
   set_operation: ($) =>
     prec.right(
       seq(
@@ -99,41 +114,41 @@ export default {
                 $.keyword_intersect,
               ),
             ),
-            $.query_specification,
+            alias($._query_specification_later, $.query_specification),
           ),
         ),
         trailing_sort_and_hint_clauses($),
       ),
     ),
 
-  // One branch of a set_operation — a real named node so a consumer can
-  // tell where one branch ends and the next begins, instead of every
-  // branch's children splicing directly into `set_operation` as a flat
-  // sibling list with no boundary (the same root cause AGENTS.md already
-  // records for `alias()` on an inline helper call: a tree-visible
-  // boundary has to be a real named rule). WHERE/GROUP BY/HAVING are
-  // nested under FROM (real T-SQL rejects all three on a FROM-less
-  // SELECT), not independently optional the way the sort/hint clauses are
-  // — a bare `SELECT 1 WHERE 1=1` must still error.
-  //
-  // A lone (non-union) query does NOT reach this rule — `_select_statement`
-  // below composes `query_specification_body($)` directly rather than
-  // through `$.query_specification`, so `SELECT a FROM t;` alone produces
-  // no `query_specification` node at all. A consumer matching on this node
-  // kind — now in test/node-kinds.txt — sees union branches only.
-  query_specification: ($) => optional_parenthesis(query_specification_body($)),
+  // The body without its own parenthesis wrapper. `_select_statement`
+  // aliases this so a lone SELECT still has one `query_specification`
+  // node, while the parentheses around `(SELECT 1 ORDER BY 1)` stay
+  // outside that node and around the trailing clauses too.
+  _query_specification_core: ($) => query_specification_body($),
+
+  // One branch of a set_operation. A named rule, not an inline helper, so
+  // the branch is one node rather than a flat list of its children.
+  // WHERE/GROUP BY/HAVING stay nested under FROM.
+  query_specification: ($) => optional_parenthesis($._query_specification_core),
+
+  // Later set-operation branches: identical tree, no INTO.
+  _query_specification_later: ($) => optional_parenthesis(query_specification_body_no_into($)),
 
   // SELECT ... [INTO new_table] [FROM ... [WHERE ...] [GROUP BY ...]
   // [HAVING ...]] [WINDOW ...] [ORDER BY ...] [OFFSET ... FETCH ...]
   // [OPTION (...)] [FOR XML ... | FOR JSON ... | FOR UPDATE]
   //
-  // = `query_specification` + trailing sort/hint clauses. The clauses sit
-  // here rather than on `query_specification` itself for the same reason
-  // they're duplicated on `set_operation` above: they scope to the
-  // outermost position of a lone query, never to a `query_specification`
-  // that is (or might become) one branch of a union.
+  // The trailing clauses sit here, and on `set_operation`, rather than on
+  // `query_specification`: they scope to the outermost query, never to one
+  // branch of a union.
   _select_statement: ($) =>
-    optional_parenthesis(seq(query_specification_body($), trailing_sort_and_hint_clauses($))),
+    optional_parenthesis(
+      seq(
+        alias($._query_specification_core, $.query_specification),
+        trailing_sort_and_hint_clauses($),
+      ),
+    ),
 
   select: ($) =>
     seq(

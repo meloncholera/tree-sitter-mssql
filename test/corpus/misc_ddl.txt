@@ -300,6 +300,65 @@ DROP DATABASE IF EXISTS hollywood;
         name: (identifier)))))
 
 ================================================================================
+ALTER DATABASE SCOPED CONFIGURATION CLEAR PROCEDURE_CACHE
+================================================================================
+
+ALTER DATABASE SCOPED CONFIGURATION CLEAR PROCEDURE_CACHE;
+ALTER DATABASE SCOPED CONFIGURATION CLEAR PROCEDURE_CACHE 0x1234;
+ALTER DATABASE SCOPED CONFIGURATION CLEAR PROCEDURE_CACHE @handle;
+ALTER DATABASE SCOPED CONFIGURATION CLEAR PROCEDURE_CACHE
+mylabel: SELECT 1;
+
+--------------------------------------------------------------------------------
+
+(program
+  (batch
+    (statement
+      (alter_database
+        (keyword_alter)
+        (keyword_database)
+        (keyword_scoped)
+        (keyword_configuration)
+        (keyword_clear)
+        (keyword_procedure_cache)))
+    (statement
+      (alter_database
+        (keyword_alter)
+        (keyword_database)
+        (keyword_scoped)
+        (keyword_configuration)
+        (keyword_clear)
+        (keyword_procedure_cache)
+        (literal)))
+    (statement
+      (alter_database
+        (keyword_alter)
+        (keyword_database)
+        (keyword_scoped)
+        (keyword_configuration)
+        (keyword_clear)
+        (keyword_procedure_cache)
+        (identifier)))
+    (statement
+      (alter_database
+        (keyword_alter)
+        (keyword_database)
+        (keyword_scoped)
+        (keyword_configuration)
+        (keyword_clear)
+        (keyword_procedure_cache)))
+    (statement
+      (label_statement
+        (identifier)))
+    (statement
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              value: (literal))))))))
+
+================================================================================
 Full-text catalog, route, audit and assembly
 ================================================================================
 

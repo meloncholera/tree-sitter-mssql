@@ -13,6 +13,12 @@
     "format": "prettier --write grammar.js \"grammar/**/*.js\" \"test/*.mjs\" \"bindings/node/*.js\"",
     "format:check": "prettier --check grammar.js \"grammar/**/*.js\" \"test/*.mjs\" \"bindings/node/*.js\""
   },
+  "prettier": {
+    "tabWidth": 2,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "printWidth": 100
+  },
   "author": "M. Reifschneider",
   "contributors": [
     "Derek Stride"
@@ -23,9 +29,9 @@
     "node-gyp-build": "4.8.4"
   },
   "devDependencies": {
-    "@eslint/js": "9.39.5",
-    "eslint": "9.39.5",
-    "node-gyp": "13.0.2",
+    "@eslint/js": "10.0.1",
+    "eslint": "10.12.0",
+    "node-gyp": "13.1.0",
     "prettier": "3.9.9",
     "tree-sitter": "0.25.1"
   },
@@ -44,12 +50,12 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/meloncholic/tree-sitter-mssql.git"
+    "url": "git+https://github.com/meloncholera/tree-sitter-mssql.git"
   },
   "bugs": {
-    "url": "https://github.com/meloncholic/tree-sitter-mssql/issues"
+    "url": "https://github.com/meloncholera/tree-sitter-mssql/issues"
   },
-  "homepage": "https://github.com/meloncholic/tree-sitter-mssql#readme",
+  "homepage": "https://github.com/meloncholera/tree-sitter-mssql#readme",
   "keywords": [
     "parser",
     "sql",

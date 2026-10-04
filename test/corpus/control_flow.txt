@@ -19,19 +19,21 @@ ELSE
             (identifier))
           (literal))
         (statement
-          (select
-            (keyword_select)
-            (select_expression
-              (term
-                (literal)))))
-        (else_clause
-          (keyword_else)
-          (statement
+          (query_specification
             (select
               (keyword_select)
               (select_expression
                 (term
-                  (literal))))))))))
+                  (literal))))))
+        (else_clause
+          (keyword_else)
+          (statement
+            (query_specification
+              (select
+                (keyword_select)
+                (select_expression
+                  (term
+                    (literal)))))))))))
 
 ================================================================================
 IF with ELSE IF chain
@@ -56,11 +58,12 @@ ELSE
             (identifier))
           (literal))
         (statement
-          (select
-            (keyword_select)
-            (select_expression
-              (term
-                (literal)))))
+          (query_specification
+            (select
+              (keyword_select)
+              (select_expression
+                (term
+                  (literal))))))
         (else_clause
           (keyword_else)
           (statement
@@ -71,19 +74,21 @@ ELSE
                   (identifier))
                 (literal))
               (statement
-                (select
-                  (keyword_select)
-                  (select_expression
-                    (term
-                      (literal)))))
-              (else_clause
-                (keyword_else)
-                (statement
+                (query_specification
                   (select
                     (keyword_select)
                     (select_expression
                       (term
-                        (literal)))))))))))))
+                        (literal))))))
+              (else_clause
+                (keyword_else)
+                (statement
+                  (query_specification
+                    (select
+                      (keyword_select)
+                      (select_expression
+                        (term
+                          (literal))))))))))))))
 
 ================================================================================
 IF with BEGIN END blocks
@@ -112,22 +117,24 @@ END
         (block
           (keyword_begin)
           (statement
-            (select
-              (keyword_select)
-              (select_expression
-                (term
-                  (literal)))))
+            (query_specification
+              (select
+                (keyword_select)
+                (select_expression
+                  (term
+                    (literal))))))
           (keyword_end))
         (else_clause
           (keyword_else)
           (block
             (keyword_begin)
             (statement
-              (select
-                (keyword_select)
-                (select_expression
-                  (term
-                    (literal)))))
+              (query_specification
+                (select
+                  (keyword_select)
+                  (select_expression
+                    (term
+                      (literal))))))
             (keyword_end)))))))
 
 ================================================================================
@@ -167,17 +174,19 @@ SELECT 3
             (identifier))
           (literal))
         (statement
-          (select
-            (keyword_select)
-            (select_expression
-              (term
-                (literal)))))))
+          (query_specification
+            (select
+              (keyword_select)
+              (select_expression
+                (term
+                  (literal))))))))
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (literal)))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (literal))))))
     (statement
       (if_statement
         (keyword_if)
@@ -199,11 +208,12 @@ SELECT 3
             (object_reference
               (identifier))))))
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (literal)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (literal))))))))
 
 ================================================================================
 IF with semicolon before ELSE
@@ -288,35 +298,36 @@ END
           (exists
             (keyword_exists)
             (subquery
-              (select
-                (keyword_select)
-                (select_expression
-                  (term
-                    (all_fields))))
-              (from
-                (keyword_from)
-                (relation
-                  (object_reference
-                    (identifier)
-                    (identifier))))
-              (where
-                (keyword_where)
-                (binary_expression
+              (query_specification
+                (select
+                  (keyword_select)
+                  (select_expression
+                    (term
+                      (all_fields))))
+                (from
+                  (keyword_from)
+                  (relation
+                    (object_reference
+                      (identifier)
+                      (identifier))))
+                (where
+                  (keyword_where)
                   (binary_expression
-                    (field
-                      (identifier))
-                    (invocation
-                      (object_reference
+                    (binary_expression
+                      (field
                         (identifier))
-                      (term
-                        (literal))))
-                  (keyword_and)
-                  (binary_expression
-                    (field
-                      (identifier))
-                    (keyword_in)
-                    (list
-                      (literal))))))))
+                      (invocation
+                        (object_reference
+                          (identifier))
+                        (term
+                          (literal))))
+                    (keyword_and)
+                    (binary_expression
+                      (field
+                        (identifier))
+                      (keyword_in)
+                      (list
+                        (literal)))))))))
         (block
           (keyword_begin)
           (statement
@@ -369,17 +380,18 @@ END
             (identifier))
           (literal))
         (statement
-          (select
-            (keyword_select)
-            (select_expression
-              (term
-                (field
-                  (identifier)))))
-          (from
-            (keyword_from)
-            (relation
-              (object_reference
-                (identifier)))))))
+          (query_specification
+            (select
+              (keyword_select)
+              (select_expression
+                (term
+                  (field
+                    (identifier)))))
+            (from
+              (keyword_from)
+              (relation
+                (object_reference
+                  (identifier))))))))
     (statement
       (while_statement
         (keyword_while)
@@ -388,38 +400,40 @@ END
             (identifier))
           (literal))
         (statement
-          (select
-            (keyword_select)
-            (select_expression
-              (term
-                (field
-                  (identifier)))))
-          (from
-            (keyword_from)
-            (relation
-              (object_reference
-                (identifier)))))))
+          (query_specification
+            (select
+              (keyword_select)
+              (select_expression
+                (term
+                  (field
+                    (identifier)))))
+            (from
+              (keyword_from)
+              (relation
+                (object_reference
+                  (identifier))))))))
     (statement
       (while_statement
         (keyword_while)
         (binary_expression
           (subquery
-            (select
-              (keyword_select)
-              (select_expression
-                (term
-                  (invocation
-                    (object_reference
-                      (identifier))
-                    (term
-                      (field
-                        (identifier)))))))
-            (from
-              (keyword_from)
-              (relation
-                (object_reference
-                  (identifier)
-                  (identifier)))))
+            (query_specification
+              (select
+                (keyword_select)
+                (select_expression
+                  (term
+                    (invocation
+                      (object_reference
+                        (identifier))
+                      (term
+                        (field
+                          (identifier)))))))
+              (from
+                (keyword_from)
+                (relation
+                  (object_reference
+                    (identifier)
+                    (identifier))))))
           (literal))
         (block
           (keyword_begin)
@@ -551,11 +565,12 @@ RETURN
             (keyword_goto)
             (identifier)))))
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (literal)))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (literal))))))
     (statement
       (label_statement
         (identifier)))
@@ -763,20 +778,21 @@ SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
           (identifier))
         (assignment_operator)
         (subquery
-          (select
-            (keyword_select)
-            (top_clause
-              (keyword_top)
-              (literal))
-            (select_expression
-              (term
-                (field
-                  (identifier)))))
-          (from
-            (keyword_from)
-            (relation
-              (object_reference
-                (identifier)))))))
+          (query_specification
+            (select
+              (keyword_select)
+              (top_clause
+                (keyword_top)
+                (literal))
+              (select_expression
+                (term
+                  (field
+                    (identifier)))))
+            (from
+              (keyword_from)
+              (relation
+                (object_reference
+                  (identifier))))))))
     (statement
       (set_statement
         (keyword_set)

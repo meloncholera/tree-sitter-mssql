@@ -5,14 +5,19 @@
 ; a CTE name. APPLY, PIVOT and MERGE's two-relation scope are not yet
 ; covered.
 ;
-; `statement` is the scope, not `query_specification` — a lone (non-union)
-; query has no `query_specification` node at all (its body inlines directly
-; into `statement`; see grammar/statements/select.js's own note on this),
-; and a CTE's name needs to sit in the same scope as the query that
-; references it, not nested inside the CTE's own body. `query_specification`
-; is still a scope in its own right for a UNION branch, so sibling branches
-; can each reuse the same alias without colliding.
-[(statement) (query_specification)] @local.scope
+; `statement` is the scope of a lone query. Its `ORDER BY` sits beside
+; `query_specification`, not inside it, so the table alias has to be
+; visible from that outer scope. A `query_specification` is its own scope
+; when it is one arm of a set operation, or the body of a subquery, so
+; those aliases do not leak into the enclosing statement. A CTE name stays
+; in the outer statement scope, next to the query that references it.
+(statement) @local.scope
+
+(set_operation
+  (query_specification) @local.scope)
+
+(subquery
+  (query_specification) @local.scope)
 
 (relation
   alias: (identifier) @local.definition)

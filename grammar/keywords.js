@@ -149,10 +149,15 @@ export default {
   keyword_catch: (_) => make_keyword('catch'),
   keyword_break: (_) => make_keyword('break'),
   keyword_continue: (_) => make_keyword('continue'),
-  // ALTER DATABASE SCOPED CONFIGURATION [FOR SECONDARY] SET option.
+  // ALTER DATABASE SCOPED CONFIGURATION { [FOR SECONDARY] SET option
+  // | CLEAR PROCEDURE_CACHE [plan_handle] }.
   keyword_scoped: (_) => make_keyword('scoped'),
   keyword_configuration: (_) => make_keyword('configuration'),
   keyword_secondary: (_) => make_keyword('secondary'),
+  // Probed clean as an AS-less alias, a bare column, and a cursor name
+  // after OPEN and CLOSE. PROCEDURE_CACHE is one word.
+  keyword_clear: (_) => make_keyword('clear'),
+  keyword_procedure_cache: (_) => make_keyword('procedure_cache'),
   keyword_goto: (_) => make_keyword('goto'),
   keyword_return: (_) => make_keyword('return'),
   keyword_throw: (_) => make_keyword('throw'),

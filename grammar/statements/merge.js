@@ -1,4 +1,9 @@
-import { optional_parenthesis, comma_list, write_target } from '../helpers.js';
+import {
+  aliased_with_columns,
+  optional_parenthesis,
+  comma_list,
+  write_target,
+} from '../helpers.js';
 
 // The optional `AND <predicate>` a match condition may carry, shared by
 // all three `_when_*` rules below.
@@ -33,7 +38,7 @@ export default {
       $.keyword_using,
       choice($.subquery, $.invocation, $.object_reference),
       optional($.table_hint),
-      optional(seq($._alias, optional(alias($._column_list, $.list)))),
+      aliased_with_columns($),
       $.keyword_on,
       optional_parenthesis(field('predicate', $._expression)),
       repeat1($._merge_when_clause),

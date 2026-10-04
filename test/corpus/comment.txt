@@ -14,19 +14,21 @@ SELECT 2;
   (comment)
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (literal)))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (literal))))))
     (comment)
     (comment)
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (literal))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (literal)))))))
   (comment))
 
 ================================================================================
@@ -61,46 +63,49 @@ FROM my_table;
   (marginalia)
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (identifier)))))
-      (marginalia)
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))))
+        (marginalia)
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))
     (marginalia)
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (identifier)))))
-      (marginalia)
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))))
+        (marginalia)
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))
     (marginalia)
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (identifier)))))
-      (marginalia)
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))))
+        (marginalia)
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))))
 
 ================================================================================
 Block comments with more symbols
@@ -120,18 +125,19 @@ FROM my_table;
   (marginalia)
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (identifier)))))
-      (marginalia)
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))))
+        (marginalia)
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))))
 
 ================================================================================
 Comment between a statement and its terminator
@@ -174,40 +180,41 @@ END
   (marginalia)
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (identifier)))
-          (marginalia)
-          (term
-            (binary_expression
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
               (field
-                (identifier))
-              (marginalia)
-              (literal)))
-          (term
-            (binary_expression
-              (field
-                (identifier))
-              (marginalia)
-              (literal)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
-      (marginalia)
-      (where
-        (keyword_where)
-        (binary_expression
-          (binary_expression
-            (field
-              (identifier))
+                (identifier)))
             (marginalia)
-            (literal))
-          (literal))))
+            (term
+              (binary_expression
+                (field
+                  (identifier))
+                (marginalia)
+                (literal)))
+            (term
+              (binary_expression
+                (field
+                  (identifier))
+                (marginalia)
+                (literal)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))
+        (marginalia)
+        (where
+          (keyword_where)
+          (binary_expression
+            (binary_expression
+              (field
+                (identifier))
+              (marginalia)
+              (literal))
+            (literal)))))
     (statement
       (create_procedure
         (keyword_create)
@@ -220,15 +227,16 @@ END
             (keyword_begin)
             (marginalia)
             (statement
-              (select
-                (keyword_select)
-                (select_expression
-                  (term
-                    (all_fields))))
-              (marginalia)
-              (from
-                (keyword_from)
-                (relation
-                  (object_reference
-                    (identifier)))))
+              (query_specification
+                (select
+                  (keyword_select)
+                  (select_expression
+                    (term
+                      (all_fields))))
+                (marginalia)
+                (from
+                  (keyword_from)
+                  (relation
+                    (object_reference
+                      (identifier))))))
             (keyword_end)))))))

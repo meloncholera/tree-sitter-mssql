@@ -11,31 +11,32 @@ WHERE m.is_visible AND NOT m.is_deleted;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))
-          (identifier)))
-      (where
-        (keyword_where)
-        (binary_expression
-          (field
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
             (object_reference
               (identifier))
-            (identifier))
-          (keyword_and)
-          (unary_expression
-            (keyword_not)
+            (identifier)))
+        (where
+          (keyword_where)
+          (binary_expression
             (field
               (object_reference
                 (identifier))
-              (identifier))))))))
+              (identifier))
+            (keyword_and)
+            (unary_expression
+              (keyword_not)
+              (field
+                (object_reference
+                  (identifier))
+                (identifier)))))))))
 
 ================================================================================
 Mixed and disjunctive predicates
@@ -53,49 +54,50 @@ WHERE m.status = 'success'
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))
-          (identifier)))
-      (where
-        (keyword_where)
-        (binary_expression
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))
+            (identifier)))
+        (where
+          (keyword_where)
           (binary_expression
             (binary_expression
-              (field
-                (object_reference
+              (binary_expression
+                (field
+                  (object_reference
+                    (identifier))
                   (identifier))
-                (identifier))
-              (literal))
-            (keyword_and)
+                (literal))
+              (keyword_and)
+              (binary_expression
+                (field
+                  (object_reference
+                    (identifier))
+                  (identifier))
+                (literal)))
+            (keyword_or)
             (binary_expression
-              (field
-                (object_reference
+              (binary_expression
+                (field
+                  (object_reference
+                    (identifier))
                   (identifier))
-                (identifier))
-              (literal)))
-          (keyword_or)
-          (binary_expression
-            (binary_expression
-              (field
-                (object_reference
+                (literal))
+              (keyword_and)
+              (binary_expression
+                (field
+                  (object_reference
+                    (identifier))
                   (identifier))
-                (identifier))
-              (literal))
-            (keyword_and)
-            (binary_expression
-              (field
-                (object_reference
-                  (identifier))
-                (identifier))
-              (literal))))))))
+                (literal)))))))))
 
 ================================================================================
 IS NULL, IS NOT NULL, IS [NOT] DISTINCT FROM
@@ -113,57 +115,58 @@ WHERE id IS NOT NULL
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
-      (where
-        (keyword_where)
-        (binary_expression
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))
+        (where
+          (keyword_where)
           (binary_expression
             (binary_expression
               (binary_expression
-                (field
-                  (identifier))
-                (is_not
+                (binary_expression
+                  (field
+                    (identifier))
+                  (is_not
+                    (keyword_is)
+                    (keyword_not))
+                  (literal
+                    (keyword_null)))
+                (keyword_and)
+                (binary_expression
+                  (field
+                    (identifier))
                   (keyword_is)
-                  (keyword_not))
-                (literal
-                  (keyword_null)))
+                  (literal
+                    (keyword_null))))
               (keyword_and)
               (binary_expression
                 (field
                   (identifier))
-                (keyword_is)
+                (distinct_from
+                  (keyword_is)
+                  (keyword_distinct)
+                  (keyword_from))
                 (literal
                   (keyword_null))))
             (keyword_and)
             (binary_expression
               (field
                 (identifier))
-              (distinct_from
+              (not_distinct_from
                 (keyword_is)
+                (keyword_not)
                 (keyword_distinct)
                 (keyword_from))
-              (literal
-                (keyword_null))))
-          (keyword_and)
-          (binary_expression
-            (field
-              (identifier))
-            (not_distinct_from
-              (keyword_is)
-              (keyword_not)
-              (keyword_distinct)
-              (keyword_from))
-            (field
-              (identifier))))))))
+              (field
+                (identifier)))))))))
 
 ================================================================================
 Comparison operators
@@ -178,27 +181,33 @@ WHERE a <> 'x' AND b != 1 AND c !< 2 AND d !> 3 AND e >= 4 AND f <= 5;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
-      (where
-        (keyword_where)
-        (binary_expression
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))
+        (where
+          (keyword_where)
           (binary_expression
             (binary_expression
               (binary_expression
                 (binary_expression
                   (binary_expression
-                    (field
-                      (identifier))
-                    (literal))
+                    (binary_expression
+                      (field
+                        (identifier))
+                      (literal))
+                    (keyword_and)
+                    (binary_expression
+                      (field
+                        (identifier))
+                      (literal)))
                   (keyword_and)
                   (binary_expression
                     (field
@@ -218,12 +227,7 @@ WHERE a <> 'x' AND b != 1 AND c !< 2 AND d !> 3 AND e >= 4 AND f <= 5;
             (binary_expression
               (field
                 (identifier))
-              (literal)))
-          (keyword_and)
-          (binary_expression
-            (field
-              (identifier))
-            (literal)))))))
+              (literal))))))))
 
 ================================================================================
 LIKE and NOT LIKE
@@ -238,39 +242,40 @@ WHERE a LIKE '%a' AND a NOT LIKE '%a' AND a LIKE N'[_]all';
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
-      (where
-        (keyword_where)
-        (binary_expression
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))
+        (where
+          (keyword_where)
           (binary_expression
             (binary_expression
-              (field
-                (identifier))
-              (keyword_like)
-              (literal))
+              (binary_expression
+                (field
+                  (identifier))
+                (keyword_like)
+                (literal))
+              (keyword_and)
+              (binary_expression
+                (field
+                  (identifier))
+                (not_like
+                  (keyword_not)
+                  (keyword_like))
+                (literal)))
             (keyword_and)
             (binary_expression
               (field
                 (identifier))
-              (not_like
-                (keyword_not)
-                (keyword_like))
-              (literal)))
-          (keyword_and)
-          (binary_expression
-            (field
-              (identifier))
-            (keyword_like)
-            (literal)))))))
+              (keyword_like)
+              (literal))))))))
 
 ================================================================================
 BETWEEN and NOT BETWEEN
@@ -286,36 +291,37 @@ WHERE a BETWEEN '2022-01-01' AND '2023-01-01'
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
-      (where
-        (keyword_where)
-        (binary_expression
-          (between_expression
-            (field
-              (identifier))
-            (keyword_between)
-            (literal)
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))
+        (where
+          (keyword_where)
+          (binary_expression
+            (between_expression
+              (field
+                (identifier))
+              (keyword_between)
+              (literal)
+              (keyword_and)
+              (literal))
             (keyword_and)
-            (literal))
-          (keyword_and)
-          (between_expression
-            (field
-              (identifier))
-            (keyword_not)
-            (keyword_between)
-            (literal)
-            (keyword_and)
-            (literal)))))))
+            (between_expression
+              (field
+                (identifier))
+              (keyword_not)
+              (keyword_between)
+              (literal)
+              (keyword_and)
+              (literal))))))))
 
 ================================================================================
 Arithmetic, string concatenation and modulo
@@ -330,56 +336,57 @@ WHERE a >= -14 AND b >= -3.14;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (binary_expression
-              (field
-                (identifier))
-              (literal)))
-          (term
-            (binary_expression
-              (field
-                (identifier))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (binary_expression
+                (field
+                  (identifier))
+                (literal)))
+            (term
+              (binary_expression
+                (field
+                  (identifier))
+                (binary_expression
+                  (binary_expression
+                    (field
+                      (identifier))
+                    (field
+                      (identifier)))
+                  (literal))))
+            (term
+              (binary_expression
+                (field
+                  (identifier))
+                (literal)))
+            (term
               (binary_expression
                 (binary_expression
-                  (field
-                    (identifier))
+                  (literal)
                   (field
                     (identifier)))
-                (literal))))
-          (term
+                (literal)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))
+        (where
+          (keyword_where)
+          (binary_expression
             (binary_expression
               (field
                 (identifier))
-              (literal)))
-          (term
+              (unary_expression
+                (literal)))
+            (keyword_and)
             (binary_expression
-              (binary_expression
-                (literal)
-                (field
-                  (identifier)))
-              (literal)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
-      (where
-        (keyword_where)
-        (binary_expression
-          (binary_expression
-            (field
-              (identifier))
-            (unary_expression
-              (literal)))
-          (keyword_and)
-          (binary_expression
-            (field
-              (identifier))
-            (unary_expression
-              (literal))))))))
+              (field
+                (identifier))
+              (unary_expression
+                (literal)))))))))
 
 ================================================================================
 Unary operators
@@ -392,37 +399,38 @@ SELECT -@x, +@y, ~@flags, -(a + b), NOT (a = 1);
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (unary_expression
-              (field
-                (identifier))))
-          (term
-            (unary_expression
-              (field
-                (identifier))))
-          (term
-            (unary_expression
-              (field
-                (identifier))))
-          (term
-            (unary_expression
-              (parenthesized_expression
-                (binary_expression
-                  (field
-                    (identifier))
-                  (field
-                    (identifier))))))
-          (term
-            (unary_expression
-              (keyword_not)
-              (parenthesized_expression
-                (binary_expression
-                  (field
-                    (identifier))
-                  (literal))))))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (unary_expression
+                (field
+                  (identifier))))
+            (term
+              (unary_expression
+                (field
+                  (identifier))))
+            (term
+              (unary_expression
+                (field
+                  (identifier))))
+            (term
+              (unary_expression
+                (parenthesized_expression
+                  (binary_expression
+                    (field
+                      (identifier))
+                    (field
+                      (identifier))))))
+            (term
+              (unary_expression
+                (keyword_not)
+                (parenthesized_expression
+                  (binary_expression
+                    (field
+                      (identifier))
+                    (literal)))))))))))
 
 ================================================================================
 Bitwise operators
@@ -437,59 +445,60 @@ WHERE ISNULL(IS_SRVROLEMEMBER('sysadmin'), 0) | ISNULL(IS_SRVROLEMEMBER('servera
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (binary_expression
-              (field
-                (identifier))
-              (op_other)
-              (literal)))
-          (term
-            (binary_expression
-              (field
-                (identifier))
-              (op_other)
-              (literal)))
-          (term
-            (binary_expression
-              (field
-                (identifier))
-              (literal)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
-      (where
-        (keyword_where)
-        (binary_expression
-          (binary_expression
-            (invocation
-              (object_reference
-                (identifier))
-              (term
-                (invocation
-                  (object_reference
-                    (identifier))
-                  (term
-                    (literal))))
-              (term
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (binary_expression
+                (field
+                  (identifier))
+                (op_other)
                 (literal)))
-            (op_other)
-            (invocation
-              (object_reference
-                (identifier))
-              (term
-                (invocation
-                  (object_reference
-                    (identifier))
-                  (term
-                    (literal))))
-              (term
-                (literal))))
-          (literal))))))
+            (term
+              (binary_expression
+                (field
+                  (identifier))
+                (op_other)
+                (literal)))
+            (term
+              (binary_expression
+                (field
+                  (identifier))
+                (literal)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))
+        (where
+          (keyword_where)
+          (binary_expression
+            (binary_expression
+              (invocation
+                (object_reference
+                  (identifier))
+                (term
+                  (invocation
+                    (object_reference
+                      (identifier))
+                    (term
+                      (literal))))
+                (term
+                  (literal)))
+              (op_other)
+              (invocation
+                (object_reference
+                  (identifier))
+                (term
+                  (invocation
+                    (object_reference
+                      (identifier))
+                    (term
+                      (literal))))
+                (term
+                  (literal))))
+            (literal)))))))
 
 ================================================================================
 COLLATE in an expression
@@ -504,32 +513,33 @@ WHERE name = @name COLLATE Latin1_General_BIN;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (binary_expression
+                (field
+                  (identifier))
+                (keyword_collate)
+                (field
+                  (identifier))))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))
+        (where
+          (keyword_where)
+          (binary_expression
+            (field
+              (identifier))
             (binary_expression
               (field
                 (identifier))
               (keyword_collate)
               (field
-                (identifier))))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
-      (where
-        (keyword_where)
-        (binary_expression
-          (field
-            (identifier))
-          (binary_expression
-            (field
-              (identifier))
-            (keyword_collate)
-            (field
-              (identifier))))))))
+                (identifier)))))))))
 
 ================================================================================
 Simple CASE
@@ -543,32 +553,33 @@ FROM my_table;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (identifier)))
-          (term
-            (case
-              (keyword_case)
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
               (field
-                (identifier))
-              (when_clause
-                (keyword_when)
+                (identifier)))
+            (term
+              (case
+                (keyword_case)
+                (field
+                  (identifier))
+                (when_clause
+                  (keyword_when)
+                  (literal)
+                  (keyword_then)
+                  (literal))
+                (keyword_else)
                 (literal)
-                (keyword_then)
-                (literal))
-              (keyword_else)
-              (literal)
-              (keyword_end))
-            (keyword_as)
-            (identifier))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))))
+                (keyword_end))
+              (keyword_as)
+              (identifier))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))))
 
 ================================================================================
 Searched CASE
@@ -590,79 +601,80 @@ FROM my_table;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (field
-              (identifier)))
-          (term
-            (case
-              (keyword_case)
-              (when_clause
-                (keyword_when)
-                (between_expression
-                  (field
-                    (identifier))
-                  (keyword_between)
-                  (literal)
-                  (keyword_and)
-                  (literal))
-                (keyword_then)
-                (literal))
-              (when_clause
-                (keyword_when)
-                (parenthesized_expression
-                  (binary_expression
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))
+            (term
+              (case
+                (keyword_case)
+                (when_clause
+                  (keyword_when)
+                  (between_expression
                     (field
                       (identifier))
-                    (literal)))
-                (keyword_then)
-                (literal))
-              (when_clause
-                (keyword_when)
-                (parenthesized_expression
-                  (binary_expression
-                    (parenthesized_expression
-                      (binary_expression
-                        (field
-                          (identifier))
-                        (literal)))
+                    (keyword_between)
+                    (literal)
                     (keyword_and)
-                    (parenthesized_expression
-                      (binary_expression
-                        (field
-                          (identifier))
-                        (literal)))))
-                (keyword_then)
-                (literal))
-              (keyword_else)
-              (literal)
-              (keyword_end))
-            (keyword_as)
-            (identifier))
-          (term
-            (case
-              (keyword_case)
-              (field
-                (identifier))
-              (when_clause
-                (keyword_when)
+                    (literal))
+                  (keyword_then)
+                  (literal))
+                (when_clause
+                  (keyword_when)
+                  (parenthesized_expression
+                    (binary_expression
+                      (field
+                        (identifier))
+                      (literal)))
+                  (keyword_then)
+                  (literal))
+                (when_clause
+                  (keyword_when)
+                  (parenthesized_expression
+                    (binary_expression
+                      (parenthesized_expression
+                        (binary_expression
+                          (field
+                            (identifier))
+                          (literal)))
+                      (keyword_and)
+                      (parenthesized_expression
+                        (binary_expression
+                          (field
+                            (identifier))
+                          (literal)))))
+                  (keyword_then)
+                  (literal))
+                (keyword_else)
                 (literal)
-                (keyword_then)
-                (literal))
-              (when_clause
-                (keyword_when)
-                (literal)
-                (keyword_then)
-                (literal))
-              (keyword_end))
-            (identifier))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))))
+                (keyword_end))
+              (keyword_as)
+              (identifier))
+            (term
+              (case
+                (keyword_case)
+                (field
+                  (identifier))
+                (when_clause
+                  (keyword_when)
+                  (literal)
+                  (keyword_then)
+                  (literal))
+                (when_clause
+                  (keyword_when)
+                  (literal)
+                  (keyword_then)
+                  (literal))
+                (keyword_end))
+              (identifier))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))))
 
 ================================================================================
 CASE as an operand
@@ -676,51 +688,52 @@ FROM projcost c;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (invocation
-              (object_reference
-                (identifier))
-              (term
-                (binary_expression
-                  (case
-                    (keyword_case)
-                    (when_clause
-                      (keyword_when)
-                      (binary_expression
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (invocation
+                (object_reference
+                  (identifier))
+                (term
+                  (binary_expression
+                    (case
+                      (keyword_case)
+                      (when_clause
+                        (keyword_when)
+                        (binary_expression
+                          (field
+                            (object_reference
+                              (identifier))
+                            (identifier))
+                          (literal))
+                        (keyword_then)
                         (field
                           (object_reference
                             (identifier))
-                          (identifier))
-                        (literal))
-                      (keyword_then)
+                          (identifier)))
+                      (keyword_else)
                       (field
                         (object_reference
                           (identifier))
-                        (identifier)))
-                    (keyword_else)
-                    (field
-                      (object_reference
                         (identifier))
-                      (identifier))
-                    (keyword_end))
-                  (parenthesized_expression
-                    (binary_expression
-                      (literal)
+                      (keyword_end))
+                    (parenthesized_expression
                       (binary_expression
-                        (field
-                          (object_reference
+                        (literal)
+                        (binary_expression
+                          (field
+                            (object_reference
+                              (identifier))
                             (identifier))
-                          (identifier))
-                        (literal))))))))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))
-          (identifier))))))
+                          (literal))))))))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))
+            (identifier)))))))
 
 ================================================================================
 Subquery expressions: IN, EXISTS, NOT EXISTS, ANY, ALL
@@ -739,69 +752,92 @@ WHERE id IN (SELECT 1 FROM bar)
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
-      (where
-        (keyword_where)
-        (binary_expression
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))
+        (where
+          (keyword_where)
           (binary_expression
             (binary_expression
               (binary_expression
                 (binary_expression
-                  (field
-                    (identifier))
-                  (keyword_in)
-                  (subquery
-                    (select
-                      (keyword_select)
-                      (select_expression
-                        (term
-                          (literal))))
-                    (from
-                      (keyword_from)
-                      (relation
-                        (object_reference
-                          (identifier))))))
-                (keyword_and)
-                (parenthesized_expression
                   (binary_expression
-                    (unary_expression
-                      (keyword_not)
-                      (exists
-                        (keyword_exists)
-                        (subquery
-                          (select
-                            (keyword_select)
-                            (select_expression
-                              (term
-                                (literal))))
-                          (from
-                            (keyword_from)
-                            (relation
-                              (object_reference
-                                (identifier))))
-                          (where
-                            (keyword_where)
-                            (binary_expression
-                              (literal)
-                              (literal))))))
-                    (keyword_or)
-                    (exists
-                      (keyword_exists)
-                      (subquery
+                    (field
+                      (identifier))
+                    (keyword_in)
+                    (subquery
+                      (query_specification
                         (select
                           (keyword_select)
                           (select_expression
                             (term
                               (literal))))
+                        (from
+                          (keyword_from)
+                          (relation
+                            (object_reference
+                              (identifier)))))))
+                  (keyword_and)
+                  (parenthesized_expression
+                    (binary_expression
+                      (unary_expression
+                        (keyword_not)
+                        (exists
+                          (keyword_exists)
+                          (subquery
+                            (query_specification
+                              (select
+                                (keyword_select)
+                                (select_expression
+                                  (term
+                                    (literal))))
+                              (from
+                                (keyword_from)
+                                (relation
+                                  (object_reference
+                                    (identifier))))
+                              (where
+                                (keyword_where)
+                                (binary_expression
+                                  (literal)
+                                  (literal)))))))
+                      (keyword_or)
+                      (exists
+                        (keyword_exists)
+                        (subquery
+                          (query_specification
+                            (select
+                              (keyword_select)
+                              (select_expression
+                                (term
+                                  (literal))))
+                            (from
+                              (keyword_from)
+                              (relation
+                                (object_reference
+                                  (identifier))))))))))
+                (keyword_and)
+                (binary_expression
+                  (field
+                    (identifier))
+                  (unary_expression
+                    (keyword_any)
+                    (subquery
+                      (query_specification
+                        (select
+                          (keyword_select)
+                          (select_expression
+                            (term
+                              (field
+                                (identifier)))))
                         (from
                           (keyword_from)
                           (relation
@@ -812,28 +848,31 @@ WHERE id IN (SELECT 1 FROM bar)
                 (field
                   (identifier))
                 (unary_expression
-                  (keyword_any)
+                  (keyword_all)
                   (subquery
-                    (select
-                      (keyword_select)
-                      (select_expression
-                        (term
-                          (field
-                            (identifier)))))
-                    (from
-                      (keyword_from)
-                      (relation
-                        (object_reference
-                          (identifier))))))))
+                    (query_specification
+                      (select
+                        (keyword_select)
+                        (select_expression
+                          (term
+                            (field
+                              (identifier)))))
+                      (from
+                        (keyword_from)
+                        (relation
+                          (object_reference
+                            (identifier)))))))))
             (keyword_and)
             (binary_expression
               (field
                 (identifier))
-              (unary_expression
-                (keyword_all)
-                (subquery
+              (subquery
+                (query_specification
                   (select
                     (keyword_select)
+                    (top_clause
+                      (keyword_top)
+                      (literal))
                     (select_expression
                       (term
                         (field
@@ -842,26 +881,7 @@ WHERE id IN (SELECT 1 FROM bar)
                     (keyword_from)
                     (relation
                       (object_reference
-                        (identifier))))))))
-          (keyword_and)
-          (binary_expression
-            (field
-              (identifier))
-            (subquery
-              (select
-                (keyword_select)
-                (top_clause
-                  (keyword_top)
-                  (literal))
-                (select_expression
-                  (term
-                    (field
-                      (identifier)))))
-              (from
-                (keyword_from)
-                (relation
-                  (object_reference
-                    (identifier)))))))))))
+                        (identifier)))))))))))))
 
 ================================================================================
 SOME as an ANY synonym (TEST-2)
@@ -874,35 +894,37 @@ SELECT * FROM t WHERE id = SOME (SELECT id FROM u);
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
-      (where
-        (keyword_where)
-        (binary_expression
-          (field
-            (identifier))
-          (unary_expression
-            (keyword_some)
-            (subquery
-              (select
-                (keyword_select)
-                (select_expression
-                  (term
-                    (field
-                      (identifier)))))
-              (from
-                (keyword_from)
-                (relation
-                  (object_reference
-                    (identifier)))))))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))
+        (where
+          (keyword_where)
+          (binary_expression
+            (field
+              (identifier))
+            (unary_expression
+              (keyword_some)
+              (subquery
+                (query_specification
+                  (select
+                    (keyword_select)
+                    (select_expression
+                      (term
+                        (field
+                          (identifier)))))
+                  (from
+                    (keyword_from)
+                    (relation
+                      (object_reference
+                        (identifier)))))))))))))
 
 ================================================================================
 Parenthesized predicates
@@ -917,35 +939,36 @@ WHERE (foo = 1 OR bar = 2) AND baz = 3
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (literal))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
-      (where
-        (keyword_where)
-        (binary_expression
-          (parenthesized_expression
-            (binary_expression
-              (binary_expression
-                (field
-                  (identifier))
-                (literal))
-              (keyword_or)
-              (binary_expression
-                (field
-                  (identifier))
-                (literal))))
-          (keyword_and)
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (literal))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))
+        (where
+          (keyword_where)
           (binary_expression
-            (field
-              (identifier))
-            (literal)))))))
+            (parenthesized_expression
+              (binary_expression
+                (binary_expression
+                  (field
+                    (identifier))
+                  (literal))
+                (keyword_or)
+                (binary_expression
+                  (field
+                    (identifier))
+                  (literal))))
+            (keyword_and)
+            (binary_expression
+              (field
+                (identifier))
+              (literal))))))))
 
 ================================================================================
 CAST and TRY_CAST
@@ -965,82 +988,83 @@ SELECT CAST(1 AS nvarchar(10)) AS fieldname,
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (cast
-              (keyword_cast)
-              (literal)
-              (keyword_as)
-              (nvarchar
-                (keyword_nvarchar)
-                (literal)))
-            (keyword_as)
-            (identifier))
-          (term
-            (cast
-              (keyword_cast)
-              (literal)
-              (keyword_as)
-              (keyword_int)))
-          (term
-            (cast
-              (keyword_cast)
-              (literal)
-              (keyword_as)
-              (numeric
-                (keyword_numeric)
-                (literal))))
-          (term
-            (cast
-              (keyword_cast)
-              (field
-                (identifier))
-              (keyword_as)
-              (decimal
-                (keyword_decimal)
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (cast
+                (keyword_cast)
                 (literal)
-                (literal))))
-          (term
-            (cast
-              (keyword_cast)
-              (field
-                (identifier))
+                (keyword_as)
+                (nvarchar
+                  (keyword_nvarchar)
+                  (literal)))
               (keyword_as)
-              (varbinary
-                (keyword_varbinary)
-                (keyword_max))))
-          (term
-            (cast
-              (keyword_try_cast)
-              (invocation
-                (object_reference
-                  (identifier)))
-              (keyword_as)
-              (nvarchar
-                (keyword_nvarchar)
-                (literal))))
-          (term
-            (cast
-              (keyword_cast)
-              (invocation
-                (object_reference
-                  (identifier)))
-              (keyword_as)
-              (nvarchar
-                (keyword_nvarchar)
-                (literal))))
-          (term
-            (cast
-              (keyword_cast)
-              (field
-                (identifier))
-              (keyword_as)
-              (custom_type
-                (object_reference
+              (identifier))
+            (term
+              (cast
+                (keyword_cast)
+                (literal)
+                (keyword_as)
+                (keyword_int)))
+            (term
+              (cast
+                (keyword_cast)
+                (literal)
+                (keyword_as)
+                (numeric
+                  (keyword_numeric)
+                  (literal))))
+            (term
+              (cast
+                (keyword_cast)
+                (field
                   (identifier))
-                (literal)))))))))
+                (keyword_as)
+                (decimal
+                  (keyword_decimal)
+                  (literal)
+                  (literal))))
+            (term
+              (cast
+                (keyword_cast)
+                (field
+                  (identifier))
+                (keyword_as)
+                (varbinary
+                  (keyword_varbinary)
+                  (keyword_max))))
+            (term
+              (cast
+                (keyword_try_cast)
+                (invocation
+                  (object_reference
+                    (identifier)))
+                (keyword_as)
+                (nvarchar
+                  (keyword_nvarchar)
+                  (literal))))
+            (term
+              (cast
+                (keyword_cast)
+                (invocation
+                  (object_reference
+                    (identifier)))
+                (keyword_as)
+                (nvarchar
+                  (keyword_nvarchar)
+                  (literal))))
+            (term
+              (cast
+                (keyword_cast)
+                (field
+                  (identifier))
+                (keyword_as)
+                (custom_type
+                  (object_reference
+                    (identifier))
+                  (literal))))))))))
 
 ================================================================================
 CONVERT with a type name as its first argument
@@ -1056,65 +1080,66 @@ SELECT CONVERT(datetime, '1/1/' + CAST(@year AS varchar(4)), 101),
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (invocation
-              (object_reference
-                (identifier))
-              (term
-                (field
-                  (identifier)))
-              (term
-                (binary_expression
-                  (literal)
-                  (cast
-                    (keyword_cast)
-                    (field
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (invocation
+                (object_reference
+                  (identifier))
+                (term
+                  (field
+                    (identifier)))
+                (term
+                  (binary_expression
+                    (literal)
+                    (cast
+                      (keyword_cast)
+                      (field
+                        (identifier))
+                      (keyword_as)
+                      (varchar
+                        (keyword_varchar)
+                        (literal)))))
+                (term
+                  (literal))))
+            (term
+              (invocation
+                (object_reference
+                  (identifier))
+                (term
+                  (field
+                    (identifier)))
+                (term
+                  (field
+                    (identifier)))))
+            (term
+              (invocation
+                (object_reference
+                  (identifier))
+                (term
+                  (invocation
+                    (object_reference
                       (identifier))
-                    (keyword_as)
-                    (varchar
-                      (keyword_varchar)
-                      (literal)))))
-              (term
-                (literal))))
-          (term
-            (invocation
-              (object_reference
-                (identifier))
-              (term
-                (field
-                  (identifier)))
-              (term
-                (field
-                  (identifier)))))
-          (term
-            (invocation
-              (object_reference
-                (identifier))
-              (term
-                (invocation
-                  (object_reference
-                    (identifier))
-                  (term
-                    (literal))))
-              (term
-                (invocation
-                  (object_reference
-                    (identifier))))
-              (term
-                (literal))))
-          (term
-            (invocation
-              (object_reference
-                (identifier))
-              (term
-                (field
-                  (identifier)))
-              (term
-                (field
-                  (identifier))))))))))
+                    (term
+                      (literal))))
+                (term
+                  (invocation
+                    (object_reference
+                      (identifier))))
+                (term
+                  (literal))))
+            (term
+              (invocation
+                (object_reference
+                  (identifier))
+                (term
+                  (field
+                    (identifier)))
+                (term
+                  (field
+                    (identifier)))))))))))
 
 ================================================================================
 NEXT VALUE FOR
@@ -1127,26 +1152,27 @@ SELECT NEXT VALUE FOR dbo.order_seq, NEXT VALUE FOR seq2 AS n;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (next_value_for
-              (keyword_next)
-              (keyword_value)
-              (keyword_for)
-              (object_reference
-                (identifier)
-                (identifier))))
-          (term
-            (next_value_for
-              (keyword_next)
-              (keyword_value)
-              (keyword_for)
-              (object_reference
-                (identifier)))
-            (keyword_as)
-            (identifier)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (next_value_for
+                (keyword_next)
+                (keyword_value)
+                (keyword_for)
+                (object_reference
+                  (identifier)
+                  (identifier))))
+            (term
+              (next_value_for
+                (keyword_next)
+                (keyword_value)
+                (keyword_for)
+                (object_reference
+                  (identifier)))
+              (keyword_as)
+              (identifier))))))))
 
 ================================================================================
 ODBC function escape
@@ -1159,24 +1185,25 @@ SELECT {fn OCTET_LENGTH(@x)}, {fn CURDATE()};
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (odbc_function_escape
-              (keyword_fn)
-              (invocation
-                (object_reference
-                  (identifier))
-                (term
-                  (field
-                    (identifier))))))
-          (term
-            (odbc_function_escape
-              (keyword_fn)
-              (invocation
-                (object_reference
-                  (identifier))))))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (odbc_function_escape
+                (keyword_fn)
+                (invocation
+                  (object_reference
+                    (identifier))
+                  (term
+                    (field
+                      (identifier))))))
+            (term
+              (odbc_function_escape
+                (keyword_fn)
+                (invocation
+                  (object_reference
+                    (identifier)))))))))))
 
 ================================================================================
 Money and dollar action
@@ -1189,21 +1216,22 @@ SELECT $300, $1,234.56, $action FROM t;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (literal))
-          (term
-            (literal))
-          (term
-            (field
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (literal))
+            (term
+              (literal))
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))))
 
 ================================================================================
 TRIM with a FROM argument and LEADING, TRAILING, BOTH (2022)
@@ -1216,44 +1244,45 @@ SELECT TRIM('x'), TRIM('.,! ' FROM @s), TRIM(LEADING '.' FROM @s), TRIM(TRAILING
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (trim
-              (keyword_trim)
-              (literal)))
-          (term
-            (trim
-              (keyword_trim)
-              (literal)
-              (keyword_from)
-              (field
-                (identifier))))
-          (term
-            (trim
-              (keyword_trim)
-              (keyword_leading)
-              (literal)
-              (keyword_from)
-              (field
-                (identifier))))
-          (term
-            (trim
-              (keyword_trim)
-              (keyword_trailing)
-              (literal)
-              (keyword_from)
-              (field
-                (identifier))))
-          (term
-            (trim
-              (keyword_trim)
-              (keyword_both)
-              (literal)
-              (keyword_from)
-              (field
-                (identifier)))))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (trim
+                (keyword_trim)
+                (literal)))
+            (term
+              (trim
+                (keyword_trim)
+                (literal)
+                (keyword_from)
+                (field
+                  (identifier))))
+            (term
+              (trim
+                (keyword_trim)
+                (keyword_leading)
+                (literal)
+                (keyword_from)
+                (field
+                  (identifier))))
+            (term
+              (trim
+                (keyword_trim)
+                (keyword_trailing)
+                (literal)
+                (keyword_from)
+                (field
+                  (identifier))))
+            (term
+              (trim
+                (keyword_trim)
+                (keyword_both)
+                (literal)
+                (keyword_from)
+                (field
+                  (identifier))))))))))
 
 ================================================================================
 AI_GENERATE_EMBEDDINGS with USE MODEL and PARAMETERS (2025)
@@ -1266,38 +1295,39 @@ SELECT AI_GENERATE_EMBEDDINGS(large_text USE MODEL MyModel), AI_GENERATE_EMBEDDI
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (ai_generate_embeddings
-              (keyword_ai_generate_embeddings)
-              (field
-                (identifier))
-              (keyword_use)
-              (keyword_model)
-              (object_reference
-                (identifier))))
-          (term
-            (ai_generate_embeddings
-              (keyword_ai_generate_embeddings)
-              (field
-                (object_reference
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (ai_generate_embeddings
+                (keyword_ai_generate_embeddings)
+                (field
                   (identifier))
-                (identifier))
-              (keyword_use)
-              (keyword_model)
-              (object_reference
-                (identifier)
-                (identifier))
-              (keyword_parameters)
-              (field
-                (identifier))))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))))
+                (keyword_use)
+                (keyword_model)
+                (object_reference
+                  (identifier))))
+            (term
+              (ai_generate_embeddings
+                (keyword_ai_generate_embeddings)
+                (field
+                  (object_reference
+                    (identifier))
+                  (identifier))
+                (keyword_use)
+                (keyword_model)
+                (object_reference
+                  (identifier)
+                  (identifier))
+                (keyword_parameters)
+                (field
+                  (identifier))))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))))
 
 ================================================================================
 AT TIME ZONE
@@ -1310,23 +1340,24 @@ SELECT d AT TIME ZONE 'UTC' FROM t;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (binary_expression
-              (field
-                (identifier))
-              (at_time_zone
-                (keyword_at)
-                (keyword_time)
-                (keyword_zone))
-              (literal)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (binary_expression
+                (field
+                  (identifier))
+                (at_time_zone
+                  (keyword_at)
+                  (keyword_time)
+                  (keyword_zone))
+                (literal)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))))
 
 ================================================================================
 Chained AT TIME ZONE is left-associative
@@ -1339,29 +1370,30 @@ SELECT d AT TIME ZONE 'UTC' AT TIME ZONE 'Eastern Standard Time' FROM t;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (binary_expression
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
               (binary_expression
-                (field
-                  (identifier))
+                (binary_expression
+                  (field
+                    (identifier))
+                  (at_time_zone
+                    (keyword_at)
+                    (keyword_time)
+                    (keyword_zone))
+                  (literal))
                 (at_time_zone
                   (keyword_at)
                   (keyword_time)
                   (keyword_zone))
-                (literal))
-              (at_time_zone
-                (keyword_at)
-                (keyword_time)
-                (keyword_zone))
-              (literal)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier)))))))
+                (literal)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))))))
 
 ================================================================================
 NOT binds looser than comparison, LIKE and BETWEEN (ARCH-1)
@@ -1374,25 +1406,26 @@ SELECT * FROM t WHERE NOT a = b;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
-      (where
-        (keyword_where)
-        (unary_expression
-          (keyword_not)
-          (binary_expression
-            (field
-              (identifier))
-            (field
-              (identifier))))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))
+        (where
+          (keyword_where)
+          (unary_expression
+            (keyword_not)
+            (binary_expression
+              (field
+                (identifier))
+              (field
+                (identifier)))))))))
 
 ================================================================================
 NOT a LIKE 'x' (ARCH-1)
@@ -1405,25 +1438,26 @@ SELECT * FROM t WHERE NOT a LIKE 'x';
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
-      (where
-        (keyword_where)
-        (unary_expression
-          (keyword_not)
-          (binary_expression
-            (field
-              (identifier))
-            (keyword_like)
-            (literal)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))
+        (where
+          (keyword_where)
+          (unary_expression
+            (keyword_not)
+            (binary_expression
+              (field
+                (identifier))
+              (keyword_like)
+              (literal))))))))
 
 ================================================================================
 NOT a BETWEEN 1 AND 2 (ARCH-1)
@@ -1436,27 +1470,28 @@ SELECT * FROM t WHERE NOT a BETWEEN 1 AND 2;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (all_fields))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
-      (where
-        (keyword_where)
-        (unary_expression
-          (keyword_not)
-          (between_expression
-            (field
-              (identifier))
-            (keyword_between)
-            (literal)
-            (keyword_and)
-            (literal)))))))
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (all_fields))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))
+        (where
+          (keyword_where)
+          (unary_expression
+            (keyword_not)
+            (between_expression
+              (field
+                (identifier))
+              (keyword_between)
+              (literal)
+              (keyword_and)
+              (literal))))))))
 
 ================================================================================
 ^ groups with + - & | rather than above * (ARCH-2)
@@ -1469,12 +1504,13 @@ SELECT 1 ^ 2 * 3;
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (binary_expression
-              (literal)
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
               (binary_expression
                 (literal)
-                (literal)))))))))
+                (binary_expression
+                  (literal)
+                  (literal))))))))))

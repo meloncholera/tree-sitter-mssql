@@ -14,43 +14,45 @@ WHERE id < (
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (field
+                (identifier)))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))))
+        (where
+          (keyword_where)
+          (binary_expression
             (field
-              (identifier)))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))))
-      (where
-        (keyword_where)
-        (binary_expression
-          (field
-            (identifier))
-          (subquery
-            (select
-              (keyword_select)
-              (top_clause
-                (keyword_top)
-                (literal))
-              (select_expression
-                (term
+              (identifier))
+            (subquery
+              (query_specification
+                (select
+                  (keyword_select)
+                  (top_clause
+                    (keyword_top)
+                    (literal))
+                  (select_expression
+                    (term
+                      (field
+                        (identifier)))))
+                (from
+                  (keyword_from)
+                  (relation
+                    (object_reference
+                      (identifier)))))
+              (order_by
+                (keyword_order)
+                (keyword_by)
+                (order_target
                   (field
-                    (identifier)))))
-            (from
-              (keyword_from)
-              (relation
-                (object_reference
-                  (identifier))))
-            (order_by
-              (keyword_order)
-              (keyword_by)
-              (order_target
-                (field
-                  (identifier))))))))))
+                    (identifier)))))))))))
 
 ================================================================================
 Correlated subquery in a select list and a set statement
@@ -66,46 +68,48 @@ SET @SiteRef = (select site_group from apparms with (readuncommitted))
 (program
   (batch
     (statement
-      (select
-        (keyword_select)
-        (select_expression
-          (term
-            (subquery
-              (select
-                (keyword_select)
-                (select_expression
-                  (term
-                    (invocation
+      (query_specification
+        (select
+          (keyword_select)
+          (select_expression
+            (term
+              (subquery
+                (query_specification
+                  (select
+                    (keyword_select)
+                    (select_expression
+                      (term
+                        (invocation
+                          (object_reference
+                            (identifier))
+                          (term
+                            (field
+                              (identifier)))))))
+                  (from
+                    (keyword_from)
+                    (relation
                       (object_reference
                         (identifier))
-                      (term
-                        (field
-                          (identifier)))))))
-              (from
-                (keyword_from)
-                (relation
-                  (object_reference
-                    (identifier))
-                  (identifier)))
-              (where
-                (keyword_where)
-                (binary_expression
-                  (field
-                    (object_reference
-                      (identifier))
-                    (identifier))
-                  (field
-                    (object_reference
-                      (identifier))
-                    (identifier)))))
-            (keyword_as)
-            (identifier))))
-      (from
-        (keyword_from)
-        (relation
-          (object_reference
-            (identifier))
-          (identifier))))
+                      (identifier)))
+                  (where
+                    (keyword_where)
+                    (binary_expression
+                      (field
+                        (object_reference
+                          (identifier))
+                        (identifier))
+                      (field
+                        (object_reference
+                          (identifier))
+                        (identifier))))))
+              (keyword_as)
+              (identifier))))
+        (from
+          (keyword_from)
+          (relation
+            (object_reference
+              (identifier))
+            (identifier)))))
     (statement
       (set_statement
         (keyword_set)
@@ -113,18 +117,19 @@ SET @SiteRef = (select site_group from apparms with (readuncommitted))
           (identifier))
         (assignment_operator)
         (subquery
-          (select
-            (keyword_select)
-            (select_expression
-              (term
-                (field
-                  (identifier)))))
-          (from
-            (keyword_from)
-            (relation
-              (object_reference
-                (identifier)))
-            (table_hint
-              (keyword_with)
-              (table_hint_item
-                (identifier)))))))))
+          (query_specification
+            (select
+              (keyword_select)
+              (select_expression
+                (term
+                  (field
+                    (identifier)))))
+            (from
+              (keyword_from)
+              (relation
+                (object_reference
+                  (identifier)))
+              (table_hint
+                (keyword_with)
+                (table_hint_item
+                  (identifier))))))))))
