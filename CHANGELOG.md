@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1](https://github.com/meloncholera/tree-sitter-mssql/compare/v0.2.0...v0.2.1) - 2026-10-04
+
+### Fixed
+
+- *(release)* point repository metadata and package scope at meloncholera ([#48](https://github.com/meloncholera/tree-sitter-mssql/pull/48))
+- *(grammar)* give every SELECT a query_specification node ([#46](https://github.com/meloncholera/tree-sitter-mssql/pull/46))
+- *(grammar)* accept the documented forms of four statements ([#45](https://github.com/meloncholera/tree-sitter-mssql/pull/45))
+- *(linguist)* mark generated grammar JSON as linguist-generated ([#44](https://github.com/meloncholera/tree-sitter-mssql/pull/44))
+
+### Other
+
+- *(deps)* update eslint and node-gyp ([#51](https://github.com/meloncholera/tree-sitter-mssql/pull/51))
+- align tooling with the shared grammar repository standard ([#50](https://github.com/meloncholera/tree-sitter-mssql/pull/50))
+- *(deps)* bump actions/upload-artifact from 4.6.2 to 7.0.1 in the github-actions-major group across 1 directory ([#21](https://github.com/meloncholera/tree-sitter-mssql/pull/21))
+- sync dev from main ([#43](https://github.com/meloncholera/tree-sitter-mssql/pull/43))
+
 ## [0.2.0](https://github.com/meloncholic/tree-sitter-mssql/compare/v0.1.6...v0.2.0) - 2026-09-26
 
 ### Added
