@@ -171,7 +171,11 @@ jobs:
         # this checkout's node_modules, so this step is required — an
         # npx --package= invocation installs into a separate ephemeral
         # cache the config file's own import can't see.
-        run: npm install --ignore-scripts
+        run: |
+          npm install --ignore-scripts
+          # --ignore-scripts skips the CLI's binary download; fetch it so
+          # later steps that call tree-sitter through npx find a working copy.
+          npm rebuild tree-sitter-cli
 
       - name: Lint the grammar JS
         run: npm run lint
